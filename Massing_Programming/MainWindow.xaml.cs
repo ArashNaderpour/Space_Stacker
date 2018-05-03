@@ -34,10 +34,13 @@ namespace Massing_Programming
             InitializeComponent();
 
             // ProjectBox Visualization
-            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text)*0.5);
+            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
             float[] projectBoxDims = { float.Parse(this.ProjectWidth.Text), float.Parse(this.ProjectLength.Text), float.Parse(this.ProjectHeight.Text) };
             Material projectBoxMaterial = MaterialHelper.CreateMaterial(Colors.BlueViolet);
-            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter, projectBoxDims, projectBoxMaterial);
+            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Transparent);
+            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter, projectBoxDims,
+                projectBoxMaterial, projectBoxInsideMaterial);
+            projectBox.SetName("ProjectBox");
             stackingVisualization.Children.Add(projectBox);
 
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
@@ -51,6 +54,16 @@ namespace Massing_Programming
                 ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
 
                 this.DepartmentsWrapper.Children.Add(department);
+
+                // Setting up initial Departments' visualization
+                Point3D departmentBoxCenter = new Point3D(0, 0, 50 * i);
+                float[] departmentBoxDims = { 30, 30, i*50 };
+                Material departmentBoxMaterial = MaterialHelper.CreateMaterial(Colors.Red);
+                GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                    departmentBoxMaterial, departmentBoxMaterial);
+                departmentBox.SetName(department.Name+"Box");
+
+                stackingVisualization.Children.Add(departmentBox);
             }
 
             this.Visualization.Content = stackingVisualization;

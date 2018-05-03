@@ -11,7 +11,7 @@ namespace Massing_Programming
 {
     class VisualizationMethods
     {
-        public static GeometryModel3D GenerateBox(Point3D center, float[] dimenstions, Material material)
+        public static GeometryModel3D GenerateBox(Point3D center, float[] dimenstions, Material material, Material insideMaterial)
         {
             // Create a mesh builder and add a box to it
             var meshBuilder = new MeshBuilder(false, false);
@@ -19,8 +19,6 @@ namespace Massing_Programming
 
             // Create a mesh from the builder (and freeze it)
             var mesh = meshBuilder.ToMesh(true);
-
-            Material insideMaterial = MaterialHelper.CreateMaterial(Colors.Yellow);
 
             GeometryModel3D box = new GeometryModel3D { Geometry = mesh, Material = material, BackMaterial = insideMaterial };
 
