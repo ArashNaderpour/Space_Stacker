@@ -28,7 +28,7 @@ namespace Massing_Programming
             var mesh = meshBuilder.ToMesh(true);
 
             // Create some materials
-            var greenMaterial = MaterialHelper.CreateMaterial(Colors.Green);
+            Material greenMaterial = MaterialHelper.CreateMaterial(Colors.Green);
             var redMaterial = MaterialHelper.CreateMaterial(Colors.Red);
             var blueMaterial = MaterialHelper.CreateMaterial(Colors.Blue);
             var insideMaterial = MaterialHelper.CreateMaterial(Colors.Yellow);

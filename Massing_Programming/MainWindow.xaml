@@ -329,7 +329,7 @@
                 <HelixToolkit:SunLight/>
 
                 <!-- The content of this visual is defined in MainViewModel.cs -->
-                <ModelVisual3D Content="{Binding Model}"/>
+                <ModelVisual3D x:Name="Visualization" Content="{Binding Model}"/>
 
                 <!-- You can also add elements here in the xaml -->
                 <HelixToolkit:GridLinesVisual3D Width="8" Length="8" MinorDistance="1" MajorDistance="1" Thickness="0.01"/>

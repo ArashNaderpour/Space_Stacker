@@ -9,9 +9,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HelixToolkit.Wpf;
 
 namespace Massing_Programming
 {
@@ -21,7 +23,7 @@ namespace Massing_Programming
     public partial class MainWindow : Window
     {
         /*----- Initial Parameters -----*/
-        Stacking visualization;
+        Model3DGroup stackingVisualization = new Model3DGroup();
 
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
@@ -30,14 +32,19 @@ namespace Massing_Programming
         public MainWindow()
         {
             InitializeComponent();
-            visualization = new Stacking();
 
-            this.DataContext = visualization;
+            // ProjectBox Visualization
+            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text)*0.5);
+            float[] projectBoxDims = { float.Parse(this.ProjectWidth.Text), float.Parse(this.ProjectLength.Text), float.Parse(this.ProjectHeight.Text) };
+            Material projectBoxMaterial = MaterialHelper.CreateMaterial(Colors.BlueViolet);
+            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter, projectBoxDims, projectBoxMaterial);
+            stackingVisualization.Children.Add(projectBox);
 
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
 
             for (int i = 0; i < initialNumberOfDepartments; i++)
             {
+                // Setting up initial Departments' expanders
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 namesOfDepartments.Add(department.Name);
 
@@ -45,6 +52,8 @@ namespace Massing_Programming
 
                 this.DepartmentsWrapper.Children.Add(department);
             }
+
+            this.Visualization.Content = stackingVisualization;
         }
 
         /* -----Handeling Button Event-----*/
