@@ -21,6 +21,8 @@ namespace Massing_Programming
     public partial class MainWindow : Window
     {
         /*----- Initial Parameters -----*/
+        Stacking visualization;
+
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
         List<String> namesOfDepartments = new List<string>();
@@ -28,6 +30,9 @@ namespace Massing_Programming
         public MainWindow()
         {
             InitializeComponent();
+            visualization = new Stacking();
+
+            this.DataContext = visualization;
 
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
 
