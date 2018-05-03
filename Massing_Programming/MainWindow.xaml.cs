@@ -218,6 +218,11 @@ namespace Massing_Programming
                 }
             }
         }
+
+        private void ProjectSize_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Clicked!!");
+        }
     }
 }
 
