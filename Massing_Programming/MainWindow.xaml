@@ -332,7 +332,7 @@
                 <ModelVisual3D x:Name="Visualization" Content="{Binding Model}"/>
 
                 <!-- You can also add elements here in the xaml -->
-                <HelixToolkit:GridLinesVisual3D Width="8" Length="8" MinorDistance="1" MajorDistance="1" Thickness="0.01"/>
+                <HelixToolkit:GridLinesVisual3D Width="300" Length="300" MinorDistance="10" MajorDistance="100" Thickness="0.5"/>
             </HelixToolkit:HelixViewport3D>
             <!--===================-->
         </Grid>
