@@ -29,7 +29,8 @@ namespace Massing_Programming
         int initialNumberOfPrograms = 4;
         List<String> namesOfDepartments = new List<string>();
 
-        Random rnd = new Random();
+        // Random Object
+        Random random = new Random();
 
         public MainWindow()
         {
@@ -57,21 +58,28 @@ namespace Massing_Programming
 
                 this.DepartmentsWrapper.Children.Add(department);
 
-                // Setting up initial Departments' visualization
-                float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
-                Point3D departmentBoxCenter = new Point3D(0, 
-                    ((departmentBoxDims[1]*0.5)+(i* departmentBoxDims[1])) - (projectBoxDims[1] * 0.5), 
-                    float.Parse(this.FloorHeight.Text) * 0.5);
-                Byte R = Convert.ToByte(rnd.NextDouble()*255);
-                Byte G = Convert.ToByte(rnd.NextDouble()*255);
-                Byte B = Convert.ToByte(rnd.NextDouble()*255);
+                // Setting up initial Departments and Programs visualization
+                for (int j = 0; j < initialNumberOfPrograms; j++)
+                {
+                    float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
+                    Point3D departmentBoxCenter = new Point3D(0,
+                        ((departmentBoxDims[1] * 0.5) + (i * departmentBoxDims[1])) - (projectBoxDims[1] * 0.5),
+                        float.Parse(this.FloorHeight.Text) * 0.5 + (j* float.Parse(this.FloorHeight.Text)));
 
-                Material departmentBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(R, G, B));
-                GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
-                    departmentBoxMaterial, departmentBoxMaterial);
-                departmentBox.SetName(department.Name + "Box");
+                    // Generating Random R, G, B Values
+                    Byte R = Convert.ToByte(random.Next(255));
+                    Byte G = Convert.ToByte(random.Next(255));
+                    Byte B = Convert.ToByte(random.Next(255));
 
-                stackingVisualization.Children.Add(departmentBox);
+
+
+                    Material departmentBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(R, G, B));
+                    GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                        departmentBoxMaterial, departmentBoxMaterial);
+                    departmentBox.SetName(department.Name + "Box");
+
+                    stackingVisualization.Children.Add(departmentBox);
+                }
             }
 
             this.Visualization.Content = stackingVisualization;
