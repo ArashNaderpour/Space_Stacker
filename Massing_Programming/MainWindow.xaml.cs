@@ -30,7 +30,7 @@ namespace Massing_Programming
         List<String> namesOfDepartments = new List<string>();
 
         // Random Object
-        Random random = new Random();
+        Random random = new Random(14);
 
         public MainWindow()
         {
