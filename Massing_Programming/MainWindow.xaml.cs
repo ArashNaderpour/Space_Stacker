@@ -285,12 +285,23 @@ namespace Massing_Programming
                 {
                     for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
                     {
-                        this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectWidth, 1, 1);
+                        if (i == 0)
+                        {
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectWidth,
+                                this.stackingVisualization.Children[0].Bounds.SizeY / this.initialProjectLength,
+                                this.stackingVisualization.Children[0].Bounds.SizeZ / this.initialProjectHeight, 0, 0, 0);
+                        }
+                        else
+                        {
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectWidth, 1, 1);
+                        }
                     }
                 }
                 else
                 {
                     MessageBox.Show("Please enter a number larger than zero.");
+                    this.ProjectWidth.Text = this.stackingVisualization.Children[0].Bounds.SizeX.ToString();
+                    return;
                 }
             }
 
@@ -311,7 +322,10 @@ namespace Massing_Programming
                 }
                 if (projectLengthInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(1, projectLengthInput / this.initialProjectLength, 1, 0, this.initialProjectLength * -0.5, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectWidth,
+                        projectLengthInput / this.initialProjectLength,
+                        this.stackingVisualization.Children[0].Bounds.SizeZ / this.initialProjectHeight,
+                        0, this.initialProjectLength * -0.5, 0);
                 }
                 else
                 {
@@ -333,12 +347,14 @@ namespace Massing_Programming
                 catch
                 {
                     MessageBox.Show("Please enter a number.");
-                    this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
+                    this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeZ.ToString();
                     return;
                 }
                 if (projectHeightInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(1, 1, projectHeightInput / this.initialProjectHeight, 0, 0, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectWidth,
+                        this.stackingVisualization.Children[0].Bounds.SizeY / this.initialProjectLength,
+                        projectHeightInput / this.initialProjectHeight, 0, this.initialProjectLength * -0.5, 0);
                 }
                 else
                 {
