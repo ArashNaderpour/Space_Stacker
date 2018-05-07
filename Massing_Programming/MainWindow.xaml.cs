@@ -64,12 +64,10 @@ namespace Massing_Programming
                 this.DepartmentsWrapper.Children.Add(department);
 
                 /*--- Setting up initial Departments and Programs visualization ---*/
-                // Generating Random R, G, B Values
-                Byte R = Convert.ToByte(random.Next(255));
-                Byte G = Convert.ToByte(random.Next(255));
-                Byte B = Convert.ToByte(random.Next(255));
+                // Generating a random color in the format of an array that contains three bytes
+                byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
 
-                Material departmentBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(R, G, B));
+                Material departmentBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(color[0], color[1], color[2]));
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
@@ -310,7 +308,7 @@ namespace Massing_Programming
                 }
                 if (projectLengthInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(1, projectLengthInput / this.initialProjectLength , 1, 0, this.initialProjectLength * -0.5, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(1, projectLengthInput / this.initialProjectLength, 1, 0, this.initialProjectLength * -0.5, 0);
                 }
                 else
                 {
