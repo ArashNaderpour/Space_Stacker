@@ -25,12 +25,17 @@ namespace Massing_Programming
         /*----- Initial Parameters -----*/
         Model3DGroup stackingVisualization = new Model3DGroup();
 
+        float initialProjectWidth = 200;
+        float initialProjectLength = 200;
+        float initialProjectHeight = 100;
+        float initialFloorHeight = 15;
+
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
         List<String> namesOfDepartments = new List<string>();
 
         // Random Object
-        Random random = new Random(14);
+        Random random = new Random(23);
 
         public MainWindow()
         {
@@ -38,7 +43,7 @@ namespace Massing_Programming
 
             // ProjectBox Visualization
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
-            float[] projectBoxDims = { float.Parse(this.ProjectWidth.Text), float.Parse(this.ProjectLength.Text), float.Parse(this.ProjectHeight.Text) };
+            float[] projectBoxDims = { initialProjectWidth, initialProjectLength, initialProjectHeight };
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
             Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
             GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter, projectBoxDims,
@@ -258,7 +263,89 @@ namespace Massing_Programming
 
         private void ProjectSize_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Clicked!!");
+            Button btn = sender as Button;
+
+            // Handeling Project Width changes events
+            if (btn.Name == "ProjectWidthButton")
+            {
+                float projectWidthInput = 0;
+
+                try
+                {
+                    projectWidthInput = float.Parse(this.ProjectWidth.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Please enter a number.");
+                    this.ProjectWidth.Text = this.stackingVisualization.Children[0].Bounds.SizeX.ToString();
+                    return;
+                }
+                if (projectWidthInput > 0)
+                {
+                    for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
+                    {
+                        this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectWidth, 1, 1);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a number larger than zero.");
+                }
+            }
+
+            // Handeling Project Length changes events
+            if (btn.Name == "ProjectLengthButton")
+            {
+                float projectLengthInput = 0;
+
+                try
+                {
+                    projectLengthInput = float.Parse(this.ProjectLength.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Please enter a number.");
+                    this.ProjectLength.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
+                    return;
+                }
+                if (projectLengthInput > 0)
+                {
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(1, projectLengthInput / this.initialProjectLength , 1, 0, this.initialProjectLength * -0.5, 0);
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a number larger than zero.");
+                    this.ProjectLength.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
+                    return;
+                }
+            }
+
+            // Handeling Project Height changes events
+            if (btn.Name == "ProjectHeightButton")
+            {
+                float projectHeightInput = 0;
+
+                try
+                {
+                    projectHeightInput = float.Parse(this.ProjectHeight.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Please enter a number.");
+                    this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
+                    return;
+                }
+                if (projectHeightInput > 0)
+                {
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(1, 1, projectHeightInput / this.initialProjectHeight, 0, 0, 0);
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a number larger than zero.");
+                    this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeZ.ToString();
+                    return;
+                }
+            }
         }
     }
 }
