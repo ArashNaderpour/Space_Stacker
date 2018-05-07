@@ -31,11 +31,11 @@ namespace Massing_Programming
         float initialFloorHeight = 15;
 
         int initialNumberOfDepartments = 4;
-        int initialNumberOfPrograms = 4;
+        int initialNumberOfPrograms = 6;
         List<String> namesOfDepartments = new List<string>();
 
         // Random Object
-        Random random = new Random(23);
+        Random random = new Random(22);
 
         public MainWindow()
         {
@@ -67,17 +67,20 @@ namespace Massing_Programming
                 // Generating a random color in the format of an array that contains three bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
 
-                Material departmentBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(color[0], color[1], color[2]));
-
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
+                    // Generate gradient colors for programs of each department
+                    float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                    byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                    Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
                     float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
                     Point3D departmentBoxCenter = new Point3D(0,
                         ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (projectBoxDims[1] * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
                     GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
-                        departmentBoxMaterial, departmentBoxMaterial);
+                        programBoxMaterial, programBoxMaterial);
                     departmentBox.SetName(department.Name + "Box");
 
                     stackingVisualization.Children.Add(departmentBox);
