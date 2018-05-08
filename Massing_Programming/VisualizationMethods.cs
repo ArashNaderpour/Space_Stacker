@@ -27,23 +27,13 @@ namespace Massing_Programming
 
         public static byte[] GenerateGradientColor(byte[] color, float stop)
         {
-            float R = ExtraMethods.MapValue(0, 255, 0, 1, color[0]);
-            float G = ExtraMethods.MapValue(0, 255, 0, 1, color[1]);
-            float B = ExtraMethods.MapValue(0, 255, 0, 1, color[2]);
+            float stepR = (255 - color[0]) * stop;
+            float stepG = (255 - color[1]) * stop;
+            float stepB = (255 - color[2]) * stop;
 
-            float t = ExtraMethods.MapValue(0, 1, 0.5f, 5, stop);
-
-            R = R * t;
-            G = G * t;
-            B = B * t;
-
-            R = ExtraMethods.MapValue(0, 3, 0, 255, R);
-            G = ExtraMethods.MapValue(0, 3, 0, 255, G);
-            B = ExtraMethods.MapValue(0, 3, 0, 255, B);
-
-            R = Math.Min(Math.Abs(255 - R), 255);
-            G = Math.Min(Math.Abs(255 - G), 255);
-            B = Math.Min(Math.Abs(255 - B), 255);
+            double R = color[0] + stepR;
+            double G = color[1] + stepG;
+            double B = color[2] + stepB;
 
             byte[] result = { Convert.ToByte(R), Convert.ToByte(G), Convert.ToByte(B) };
 

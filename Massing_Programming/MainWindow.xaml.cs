@@ -31,11 +31,11 @@ namespace Massing_Programming
         float initialFloorHeight = 15;
 
         int initialNumberOfDepartments = 4;
-        int initialNumberOfPrograms = 6;
+        int initialNumberOfPrograms = 4;
         List<String> namesOfDepartments = new List<string>();
 
         // Random Object
-        Random random = new Random(22);
+        Random random = new Random(10);
 
         public MainWindow()
         {
