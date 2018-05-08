@@ -59,9 +59,12 @@ namespace Massing_Programming
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 namesOfDepartments.Add(department.Name);
 
-                ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
+                ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
+                    new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
 
                 this.DepartmentsWrapper.Children.Add(department);
+
+                /*---------------------------------------------------------------------------------*/
 
                 /*--- Setting up initial Departments and Programs visualization ---*/
                 // Generating a random color in the format of an array that contains three bytes
@@ -89,6 +92,7 @@ namespace Massing_Programming
 
             this.Visualization.Content = stackingVisualization;
         }
+        /*-----------------------------------------------------------------End of Windows Load-------------------------------------------------------------------*/
 
         /* -----Handeling Button Event-----*/
         private void NumberOfDepartments_Click(object sender, RoutedEventArgs e)
