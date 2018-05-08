@@ -25,10 +25,9 @@ namespace Massing_Programming
         /*----- Initial Parameters -----*/
         Model3DGroup stackingVisualization = new Model3DGroup();
 
-        float initialProjectWidth = 200;
-        float initialProjectLength = 200;
-        float initialProjectHeight = 100;
         float initialFloorHeight = 15;
+
+        float[] projectBoxDims = { 200, 200, 100 };
 
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
@@ -43,13 +42,12 @@ namespace Massing_Programming
 
             // ProjectBox Visualization
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
-            float[] projectBoxDims = { initialProjectWidth, initialProjectLength, initialProjectHeight };
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
             Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
             GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter, projectBoxDims,
                 projectBoxMaterial, projectBoxInsideMaterial);
             projectBox.SetName("ProjectBox");
-            stackingVisualization.Children.Add(projectBox);
+            this.stackingVisualization.Children.Add(projectBox);
 
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
 
@@ -86,7 +84,7 @@ namespace Massing_Programming
                         programBoxMaterial, programBoxMaterial);
                     departmentBox.SetName(department.Name + "Box");
 
-                    stackingVisualization.Children.Add(departmentBox);
+                    this.stackingVisualization.Children.Add(departmentBox);
                 }
             }
 
@@ -124,8 +122,27 @@ namespace Massing_Programming
                     if (existingDepartments > input)
                     {
                         int difference = existingDepartments - input;
-                        this.DepartmentsWrapper.Children.RemoveRange(input, difference);
-                        namesOfDepartments.RemoveRange(input, difference);
+                        //this.DepartmentsWrapper.Children.RemoveRange(input, difference);
+                        //namesOfDepartments.RemoveRange(input, difference);
+
+                        for (int i = 0; i < difference; i++)
+                        {
+                            int lastIndex = this.DepartmentsWrapper.Children.Count - 1;
+
+                            Expander expander = this.DepartmentsWrapper.Children[lastIndex] as Expander;
+                            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "NumberInputTextBox") as TextBox;
+
+                            int numberOfPrograms = int.Parse(programNumberTextBox.Text);
+
+                            this.DepartmentsWrapper.Children.RemoveAt(lastIndex);
+                            namesOfDepartments.RemoveAt(lastIndex);
+
+                            for (int j = 0; j < numberOfPrograms; j++)
+                            {
+                                int lastProgramIndex = this.stackingVisualization.Children.Count - 1;
+                                this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
+                            }
+                        }
                     }
 
                     /* Increase Number of Departments */
@@ -141,12 +158,34 @@ namespace Massing_Programming
                             ExtraMethods.departmentExpanderGenerator(department, 4, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
 
                             this.DepartmentsWrapper.Children.Add(department);
-                        }
 
-                        if (existingDepartments == input)
-                        {
-                            return;
+                            // Generating a random color in the format of an array that contains three bytes
+                            byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+
+                            for (int j = 0; j < initialNumberOfPrograms; j++)
+                            {
+                                // Generate gradient colors for programs of each department
+                                float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                                byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                                Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                                float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
+                                Point3D departmentBoxCenter = new Point3D(0,
+                                    ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (projectBoxDims[1] * 0.5),
+                                    float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
+
+                                GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                                    programBoxMaterial, programBoxMaterial);
+                                departmentBox.SetName(department.Name + "Box");
+
+                                this.stackingVisualization.Children.Add(departmentBox);
+                            }
                         }
+                    }
+                    /* Input is equal to existing number of programs */
+                    if (existingDepartments == input)
+                    {
+                        return;
                     }
                 }
 
@@ -291,13 +330,13 @@ namespace Massing_Programming
                     {
                         if (i == 0)
                         {
-                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectWidth,
-                                this.stackingVisualization.Children[0].Bounds.SizeY / this.initialProjectLength,
-                                this.stackingVisualization.Children[0].Bounds.SizeZ / this.initialProjectHeight, 0, 0, 0);
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.projectBoxDims[0],
+                                this.stackingVisualization.Children[0].Bounds.SizeY / this.projectBoxDims[1],
+                                this.stackingVisualization.Children[0].Bounds.SizeZ / this.projectBoxDims[2], 0, 0, 0);
                         }
                         else
                         {
-                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectWidth, 1, 1);
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.projectBoxDims[0], 1, 1);
                         }
                     }
                 }
@@ -326,10 +365,10 @@ namespace Massing_Programming
                 }
                 if (projectLengthInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectWidth,
-                        projectLengthInput / this.initialProjectLength,
-                        this.stackingVisualization.Children[0].Bounds.SizeZ / this.initialProjectHeight,
-                        0, this.initialProjectLength * -0.5, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.projectBoxDims[0],
+                        projectLengthInput / this.projectBoxDims[1],
+                        this.stackingVisualization.Children[0].Bounds.SizeZ / this.projectBoxDims[2],
+                        0, this.projectBoxDims[1] * -0.5, 0);
                 }
                 else
                 {
@@ -356,9 +395,9 @@ namespace Massing_Programming
                 }
                 if (projectHeightInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectWidth,
-                        this.stackingVisualization.Children[0].Bounds.SizeY / this.initialProjectLength,
-                        projectHeightInput / this.initialProjectHeight, 0, this.initialProjectLength * -0.5, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.projectBoxDims[0],
+                        this.stackingVisualization.Children[0].Bounds.SizeY / this.projectBoxDims[1],
+                        projectHeightInput / this.projectBoxDims[2], 0, this.projectBoxDims[1] * -0.5, 0);
                 }
                 else
                 {
