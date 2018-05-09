@@ -317,7 +317,7 @@ namespace Massing_Programming
                     {
 
                         int difference = input - existingPrograms;
-                        ExtraMethods.AddProgram(programs, difference, existingPrograms);
+                        ExtraMethods.AddProgram(programs, difference, existingPrograms, expander);
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
 
                         // Generating a random color in the format of an array that contains three bytes
