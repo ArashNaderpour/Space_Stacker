@@ -28,9 +28,9 @@ namespace Massing_Programming
             float stepG = (255 - color[1]) * stop;
             float stepB = (255 - color[2]) * stop;
 
-            double R = color[0] + stepR;
-            double G = color[1] + stepG;
-            double B = color[2] + stepB;
+            double R = Math.Min(color[0] + stepR, 255);
+            double G = Math.Min(color[1] + stepG, 255);
+            double B = Math.Min(color[2] + stepB, 255);
 
             byte[] result = { Convert.ToByte(R), Convert.ToByte(G), Convert.ToByte(B) };
 

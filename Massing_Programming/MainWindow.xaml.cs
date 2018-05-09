@@ -205,7 +205,7 @@ namespace Massing_Programming
             }
         }
 
-        /* Reset Departments */
+        /* ---------- Handeling Reset Departments button ---------- */
         private void ResetDepartments_Click(object sender, RoutedEventArgs e)
         {
             // Clear all the lists

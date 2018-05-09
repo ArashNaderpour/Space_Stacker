@@ -263,6 +263,7 @@ namespace Massing_Programming
                 Slider keyRooms = new Slider();
                 keyRooms.Minimum = 1;
                 keyRooms.Maximum = 10;
+                keyRooms.Value = 5;
                 keyRooms.TickFrequency = 1;
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -279,9 +280,10 @@ namespace Massing_Programming
                 Label DGSFLabel = new Label();
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
-                DGSF.Minimum = 1;
-                DGSF.Maximum = 10;
-                DGSF.TickFrequency = 1;
+                DGSF.Minimum = 100;
+                DGSF.Maximum = 1500;
+                DGSF.Value = 750;
+                DGSF.TickFrequency = 10;
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
@@ -293,8 +295,6 @@ namespace Massing_Programming
                 Grid.SetRow(r, i);
             }
         }
-
     }
-
 }
 
