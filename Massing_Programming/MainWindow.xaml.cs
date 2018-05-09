@@ -40,7 +40,7 @@ namespace Massing_Programming
         {
             InitializeComponent();
 
-            /* Setting up values of the initial dimensions of the project */
+            // Setting up values of the initial dimensions of the Project Box
             this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
             this.ProjectLength.Text = initialProjectBoxDims[1].ToString();
             this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
@@ -100,7 +100,7 @@ namespace Massing_Programming
         }
         /*-----------------------------------------------------------------End of Windows Load-------------------------------------------------------------------*/
 
-        /* -----Handeling Button Event-----*/
+        /* -----Handeling Number of Departments Button Event-----*/
         private void NumberOfDepartments_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -108,7 +108,6 @@ namespace Massing_Programming
             /* Set Number of Departments Event*/
             if (btn.Name == "NumberOfDepartmentsButton")
             {
-
                 int input = new int();
                 int existingDepartments = this.DepartmentsWrapper.Children.Count;
 
@@ -172,14 +171,14 @@ namespace Massing_Programming
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
-                                // Generate gradient colors for programs of each department
+                                // Add Program's Boxes for the added Departments
                                 float stop = ((float)j) / ((float)initialNumberOfPrograms);
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                                 float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
                                 Point3D departmentBoxCenter = new Point3D(0,
-                                    ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                                    ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
 
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
@@ -209,27 +208,66 @@ namespace Massing_Programming
         /* Reset Departments */
         private void ResetDepartments_Click(object sender, RoutedEventArgs e)
         {
+            // Clear all the lists
             this.DepartmentsWrapper.Children.Clear();
+            this.stackingVisualization.Children.Clear();
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
+            namesOfDepartments.Clear();
 
+            // Setting up values of the initial dimensions of the Project Box
+            this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
+            this.ProjectLength.Text = initialProjectBoxDims[1].ToString();
+            this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
+            this.FloorHeight.Text = initialFloorHeight.ToString();
+
+            // ProjectBox Visualization
+            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
+            Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
+            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
+            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter,
+                new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
+                projectBoxMaterial, projectBoxInsideMaterial);
+            projectBox.SetName("ProjectBox");
+            this.stackingVisualization.Children.Add(projectBox);
+
+            // Generating initial Expanders and programs visualization
             for (int i = 0; i < initialNumberOfDepartments; i++)
             {
-                Expander department = new Expander();
-                department.Margin = new Thickness(0, 5, 0, 0);
-                department.HorizontalAlignment = HorizontalAlignment.Stretch;
-                department.Header = "DEPARTMENT" + " " + (i + 1).ToString();
-                department.BorderBrush = Brushes.Black;
-                department.Background = new SolidColorBrush(Color.FromRgb(128, 169, 237));
-                department.Name = "D" + (i + 1).ToString();
+                Expander department = ExtraMethods.DepartmentGernerator(i);
+                ExtraMethods.departmentExpanderGenerator(department, 4, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
                 namesOfDepartments.Add(department.Name);
 
-                ExtraMethods.departmentExpanderGenerator(department, 4, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
-
                 this.DepartmentsWrapper.Children.Add(department);
+
+                /*---------------------------------------------------------------------------------*/
+
+                /*--- Setting up initial Departments and Programs visualization ---*/
+                // Generating a random color in the format of an array that contains three bytes
+                byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+
+                for (int j = 0; j < initialNumberOfPrograms; j++)
+                {
+                    //Slider DGSF = LogicalTreeHelper.FindLogicalNode(decimal, expander.Name + "NumberInputTextBox") as TextBox;
+                    // Generate gradient colors for programs of each department
+                    float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                    byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                    Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                    float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
+                    Point3D departmentBoxCenter = new Point3D(0,
+                        ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                        float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
+
+                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                        programBoxMaterial, programBoxMaterial);
+                    programBox.SetName(department.Name + "Box" + i.ToString());
+
+                    this.stackingVisualization.Children.Add(programBox);
+                }
             }
         }
 
-        /* ----------------The event for Setting Number of the Departments and Their Names ---------------- */
+        /* ----------------The event for Setting Name of the Departments and the Number of Programs it contains ---------------- */
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -274,7 +312,7 @@ namespace Massing_Programming
 
                 if (input > 0)
                 {
-                    /* Increase number of Programs */
+                    /* Increase Number of Programs */
                     if (input > existingPrograms)
                     {
 
@@ -292,12 +330,12 @@ namespace Massing_Programming
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                            float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
-                            Point3D departmentBoxCenter = new Point3D(0,
-                                (((departmentBoxDims[1] * 0.5) + (i * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5)),
+                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
+                            Point3D programBoxCenter = new Point3D(0,
+                                (((programBoxDims[1] * 0.5) + (i * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5)),
                                 float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
 
-                            GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                            GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                 programBoxMaterial, programBoxMaterial);
                             programBox.SetName(expander.Name + "Box" + (i + existingPrograms).ToString());
                             //MessageBox.Show(programBox.Bounds.SizeY.ToString());
