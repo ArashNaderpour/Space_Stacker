@@ -27,7 +27,7 @@ namespace Massing_Programming
 
         float initialFloorHeight = 15;
 
-        float[] projectBoxDims = { 200, 200, 100 };
+        float[] initialProjectBoxDims = { 300, 300, 100 };
 
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
@@ -40,11 +40,18 @@ namespace Massing_Programming
         {
             InitializeComponent();
 
+            /* Setting up values of the initial dimensions of the project */
+            this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
+            this.ProjectLength.Text = initialProjectBoxDims[1].ToString();
+            this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
+            this.FloorHeight.Text = initialFloorHeight.ToString();
+
             // ProjectBox Visualization
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
             Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
-            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter, projectBoxDims,
+            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter,
+                new float[] {float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                 projectBoxMaterial, projectBoxInsideMaterial);
             projectBox.SetName("ProjectBox");
             this.stackingVisualization.Children.Add(projectBox);
@@ -70,6 +77,7 @@ namespace Massing_Programming
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
+                    //Slider DGSF = LogicalTreeHelper.FindLogicalNode(decimal, expander.Name + "NumberInputTextBox") as TextBox;
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -77,14 +85,14 @@ namespace Massing_Programming
 
                     float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
                     Point3D departmentBoxCenter = new Point3D(0,
-                        ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (projectBoxDims[1] * 0.5),
+                        ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
-                    GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
                         programBoxMaterial, programBoxMaterial);
-                    departmentBox.SetName(department.Name + "Box");
+                    programBox.SetName(department.Name + "Box" + i.ToString());
 
-                    this.stackingVisualization.Children.Add(departmentBox);
+                    this.stackingVisualization.Children.Add(programBox);
                 }
             }
 
@@ -171,18 +179,18 @@ namespace Massing_Programming
 
                                 float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
                                 Point3D departmentBoxCenter = new Point3D(0,
-                                    ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (projectBoxDims[1] * 0.5),
+                                    ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
 
-                                GeometryModel3D departmentBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
                                     programBoxMaterial, programBoxMaterial);
-                                departmentBox.SetName(department.Name + "Box");
-
-                                this.stackingVisualization.Children.Add(departmentBox);
+                                programBox.SetName(department.Name + "Box" + j.ToString());
+                                
+                                this.stackingVisualization.Children.Add(programBox);
                             }
                         }
                     }
-                    /* Input is equal to existing number of programs */
+                    /* Input is equal to existing number of Departments */
                     if (existingDepartments == input)
                     {
                         return;
@@ -221,20 +229,20 @@ namespace Massing_Programming
             }
         }
 
-        /* The event for Setting Number of the Departments and Their Names */
+        /* ----------------The event for Setting Number of the Departments and Their Names ---------------- */
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
 
-            /* Setting the Name of the Department */
+            /* Setting the Name of the Department (recognizing which button was pressed) */
             if (namesOfDepartments.Contains(btn.Name.Replace("SetNameButton", "")))
             {
-                Expander expan = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
+                Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
                 TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
 
                 if (nameTextBox.Text != "")
                 {
-                    expan.Header = nameTextBox.Text; ;
+                    expander.Header = nameTextBox.Text; ;
                 }
                 else
                 {
@@ -243,9 +251,10 @@ namespace Massing_Programming
                 }
             }
 
-            /* Setting the Number of Programs in the Department */
+            /* Setting the Number of Programs in the Department (Number of Programs button was pressed) */
             else
             {
+                Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
                 TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "NumberInputTextBox")) as TextBox;
                 Grid programs = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "") + "Programs") as Grid;
 
@@ -265,10 +274,35 @@ namespace Massing_Programming
 
                 if (input > 0)
                 {
+                    /* Increase number of Programs */
                     if (input > existingPrograms)
                     {
+
                         int difference = input - existingPrograms;
                         ExtraMethods.AddProgram(programs, difference, existingPrograms);
+                        int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
+
+                        // Generating a random color in the format of an array that contains three bytes
+                        byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+
+                        for (int i = 0; i < difference; i++)
+                        {
+                            // Generate gradient colors for programs of each department
+                            float stop = ((float)i) / ((float)initialNumberOfPrograms);
+                            byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                            Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                            float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
+                            Point3D departmentBoxCenter = new Point3D(0,
+                                (((departmentBoxDims[1] * 0.5) + (i * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5)),
+                                float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
+
+                            GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                                programBoxMaterial, programBoxMaterial);
+                            programBox.SetName(expander.Name + "Box" + (i + existingPrograms).ToString());
+                            //MessageBox.Show(programBox.Bounds.SizeY.ToString());
+                            this.stackingVisualization.Children.Add(programBox);
+                        }
                     }
                     if (input < existingPrograms)
                     {
@@ -305,6 +339,7 @@ namespace Massing_Programming
             }
         }
 
+        /*------------------ Project Size Events ------------------*/
         private void ProjectSize_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -312,7 +347,7 @@ namespace Massing_Programming
             // Handeling Project Width changes events
             if (btn.Name == "ProjectWidthButton")
             {
-                float projectWidthInput = 0;
+                float projectWidthInput = new float();
 
                 try
                 {
@@ -330,13 +365,14 @@ namespace Massing_Programming
                     {
                         if (i == 0)
                         {
-                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.projectBoxDims[0],
-                                this.stackingVisualization.Children[0].Bounds.SizeY / this.projectBoxDims[1],
-                                this.stackingVisualization.Children[0].Bounds.SizeZ / this.projectBoxDims[2], 0, 0, 0);
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0],
+                                this.stackingVisualization.Children[0].Bounds.SizeY / this.initialProjectBoxDims[1],
+                                this.stackingVisualization.Children[0].Bounds.SizeZ / this.initialProjectBoxDims[2],
+                                0, this.initialProjectBoxDims[1] * -0.5, 0);
                         }
                         else
                         {
-                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.projectBoxDims[0], 1, 1);
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0], 1, 1);
                         }
                     }
                 }
@@ -351,7 +387,7 @@ namespace Massing_Programming
             // Handeling Project Length changes events
             if (btn.Name == "ProjectLengthButton")
             {
-                float projectLengthInput = 0;
+                float projectLengthInput = new float();
 
                 try
                 {
@@ -365,10 +401,10 @@ namespace Massing_Programming
                 }
                 if (projectLengthInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.projectBoxDims[0],
-                        projectLengthInput / this.projectBoxDims[1],
-                        this.stackingVisualization.Children[0].Bounds.SizeZ / this.projectBoxDims[2],
-                        0, this.projectBoxDims[1] * -0.5, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectBoxDims[0],
+                        projectLengthInput / this.initialProjectBoxDims[1],
+                        this.stackingVisualization.Children[0].Bounds.SizeZ / this.initialProjectBoxDims[2],
+                        0, this.initialProjectBoxDims[1] * -0.5, 0);
                 }
                 else
                 {
@@ -395,9 +431,9 @@ namespace Massing_Programming
                 }
                 if (projectHeightInput > 0)
                 {
-                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.projectBoxDims[0],
-                        this.stackingVisualization.Children[0].Bounds.SizeY / this.projectBoxDims[1],
-                        projectHeightInput / this.projectBoxDims[2], 0, this.projectBoxDims[1] * -0.5, 0);
+                    this.stackingVisualization.Children[0].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectBoxDims[0],
+                        this.stackingVisualization.Children[0].Bounds.SizeY / this.initialProjectBoxDims[1],
+                        projectHeightInput / this.initialProjectBoxDims[2], 0, this.initialProjectBoxDims[1] * -0.5, 0);
                 }
                 else
                 {

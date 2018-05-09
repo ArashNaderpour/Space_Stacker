@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 
@@ -11,6 +6,7 @@ namespace Massing_Programming
 {
     class VisualizationMethods
     {
+        /*------------ Generate a box that represents boundaries of the project and programs in each department ------------*/
         public static GeometryModel3D GenerateBox(Point3D center, float[] dimenstions, Material material, Material insideMaterial)
         {
             // Create a mesh builder and add a box to it
@@ -25,6 +21,7 @@ namespace Massing_Programming
             return box;
         }
 
+        /*------------ Generate gradients of a color ------------*/
         public static byte[] GenerateGradientColor(byte[] color, float stop)
         {
             float stepR = (255 - color[0]) * stop;

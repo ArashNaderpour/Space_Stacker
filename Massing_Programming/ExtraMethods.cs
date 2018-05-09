@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace Massing_Programming
 {
@@ -182,8 +172,10 @@ namespace Massing_Programming
                 Label keyLabel = new Label();
                 keyLabel.Content = "Rooms";
                 Slider keyRooms = new Slider();
+                keyRooms.Name = "b";
                 keyRooms.Minimum = 1;
                 keyRooms.Maximum = 10;
+                keyRooms.Value = 5;
                 keyRooms.TickFrequency = 1;
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -200,9 +192,10 @@ namespace Massing_Programming
                 Label DGSFLabel = new Label();
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
-                DGSF.Minimum = 1;
-                DGSF.Maximum = 10;
-                DGSF.TickFrequency = 1;
+                DGSF.Minimum = 100;
+                DGSF.Maximum = 1500;
+                DGSF.Value = 750;
+                DGSF.TickFrequency = 10;
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
