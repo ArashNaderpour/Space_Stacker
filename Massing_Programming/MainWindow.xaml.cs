@@ -51,7 +51,7 @@ namespace Massing_Programming
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
             Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
             GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter,
-                new float[] {float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
+                new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                 projectBoxMaterial, projectBoxInsideMaterial);
             projectBox.SetName("ProjectBox");
             this.stackingVisualization.Children.Add(projectBox);
@@ -80,8 +80,8 @@ namespace Massing_Programming
                     // Calculating length of each program based on total area of the program and width of the Project Box
                     Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                     Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                    float programLength = ((float) (keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
-                    
+                    float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
+
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -193,8 +193,8 @@ namespace Massing_Programming
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
                                 programBox.SetName(department.Name + "Box" + j.ToString());
-                                
-                                this.stackingVisualization.Children.Add(programBox);
+
+                                this.stackingVisualization.Children.Insert(this.stackingVisualization.Children.Count, programBox);
                             }
                         }
                     }
@@ -309,6 +309,7 @@ namespace Massing_Programming
                 Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
                 TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "NumberInputTextBox")) as TextBox;
                 Grid programs = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "") + "Programs") as Grid;
+                int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(expander);
 
                 int input = new int();
                 int existingPrograms = programs.RowDefinitions.Count;
@@ -329,10 +330,27 @@ namespace Massing_Programming
                     // Increase Number of Programs
                     if (input > existingPrograms)
                     {
+                        int programBoxIndex = 0;
+                        for (int i = 0; i < departmentIndex + 1; i++)
+                        {
+                            Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
+                            StackPanel expanderContent = tempExpander.Content as StackPanel;
+                            Grid programsGrid = expanderContent.Children[2] as Grid;
+                            programBoxIndex += programsGrid.RowDefinitions.Count;
+                        }
 
                         int difference = input - existingPrograms;
                         ExtraMethods.AddProgram(programs, difference, existingPrograms, expander);
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
+
+                        // Calculating total length of the exsiting programs
+
+                        double totalExistingProgramsLength = new float();
+                        for (int i = 0; i < existingPrograms; i++)
+                        {
+                            totalExistingProgramsLength += this.stackingVisualization.Children[i + 1].Bounds.SizeY;
+                        }
+                        totalExistingProgramsLength = (float)totalExistingProgramsLength;
 
                         // Generating a random color in the format of an array that contains three bytes
                         byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
@@ -351,14 +369,14 @@ namespace Massing_Programming
 
                             float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
                             Point3D programBoxCenter = new Point3D(0,
-                                (((programBoxDims[1] * 0.5) + (i * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5)),
+                                ((totalExistingProgramsLength + (i * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
                                 float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
 
                             GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                 programBoxMaterial, programBoxMaterial);
                             programBox.SetName(expander.Name + "Box" + (i + existingPrograms).ToString());
-                            //MessageBox.Show(programBox.Bounds.SizeY.ToString());
-                            this.stackingVisualization.Children.Add(programBox);
+                            
+                            this.stackingVisualization.Children.Insert(programBoxIndex, programBox);
                         }
                     }
                     if (input < existingPrograms)
