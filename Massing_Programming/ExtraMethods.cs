@@ -156,7 +156,7 @@ namespace Massing_Programming
                 programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
                 programLabel.Width = 25;
                 ComboBox program = new ComboBox();
-                program.Name = department.Name + "ComboBox" + alphabet[i];
+                program.Name = department.Name + "ComboBox" + i.ToString();
                 program.Items.Add("Arash");
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -173,7 +173,7 @@ namespace Massing_Programming
                 Label keyLabel = new Label();
                 keyLabel.Content = "Rooms";
                 Slider keyRooms = new Slider();
-                keyRooms.Name = department.Name + "Rooms" + alphabet[i];
+                keyRooms.Name = department.Name + "Rooms" + i.ToString();
                 keyRooms.Minimum = 1;
                 keyRooms.Maximum = 10;
                 keyRooms.Value = 5;
@@ -193,7 +193,7 @@ namespace Massing_Programming
                 Label DGSFLabel = new Label();
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
-                DGSF.Name = department.Name + "DGSF" + alphabet[i];
+                DGSF.Name = department.Name + "DGSF" + i.ToString();
                 DGSF.Minimum = 100;
                 DGSF.Maximum = 1500;
                 DGSF.Value = 750;
@@ -248,7 +248,7 @@ namespace Massing_Programming
                     programLabel.Content = (i - alphabet.Length).ToString();
                 }
                 ComboBox program = new ComboBox();
-                program.Name = department.Name + "ComboBox" + programLabel.Content;
+                program.Name = department.Name + "ComboBox" + (i).ToString();
                 program.Items.Add("Arash");
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -264,8 +264,8 @@ namespace Massing_Programming
                 // Keys
                 Label keyLabel = new Label();
                 keyLabel.Content = "Rooms";
-                Slider keyRooms = new Slider();
-                keyRooms.Name = department.Name + "Rooms" + programLabel.Content;
+                Slider keyRooms = new Slider();            
+                keyRooms.Name = department.Name + "Rooms" + (i).ToString();
                 keyRooms.Minimum = 1;
                 keyRooms.Maximum = 10;
                 keyRooms.Value = 5;
@@ -285,7 +285,7 @@ namespace Massing_Programming
                 Label DGSFLabel = new Label();
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
-                DGSF.Name = department.Name + "DGSF" + programLabel.Content;
+                DGSF.Name = department.Name + "DGSF" + (i).ToString();
                 DGSF.Minimum = 100;
                 DGSF.Maximum = 1500;
                 DGSF.Value = 750;

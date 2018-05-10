@@ -27,7 +27,7 @@ namespace Massing_Programming
 
         float initialFloorHeight = 15;
 
-        float[] initialProjectBoxDims = { 300, 300, 100 };
+        float[] initialProjectBoxDims = { 150, 200, 100 };
 
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
@@ -77,18 +77,22 @@ namespace Massing_Programming
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
-                    //Slider DGSF = LogicalTreeHelper.FindLogicalNode(decimal, expander.Name + "NumberInputTextBox") as TextBox;
+                    // Calculating length of each program based on total area of the program and width of the Project Box
+                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    float programLength = ((float) (keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
+                    
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                     Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                    float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
-                    Point3D departmentBoxCenter = new Point3D(0,
-                        ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                    float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
+                    Point3D programBoxCenter = new Point3D(0,
+                        ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                         programBoxMaterial, programBoxMaterial);
                     programBox.SetName(department.Name + "Box" + i.ToString());
 
@@ -117,7 +121,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting number.");
+                    MessageBox.Show("Number of Departments has to be a Counting Number.");
                     this.NumberOfDepartments.Text = existingDepartments.ToString();
                     return;
                 }
@@ -152,7 +156,7 @@ namespace Massing_Programming
                         }
                     }
 
-                    /* Increase Number of Departments */
+                    // Increase Number of Departments
                     if (existingDepartments < input)
                     {
                         int difference = input - existingDepartments;
@@ -171,17 +175,22 @@ namespace Massing_Programming
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
+                                // Calculating length of each program based on total area of the program and width of the Project Box
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                                float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
+
                                 // Add Program's Boxes for the added Departments
                                 float stop = ((float)j) / ((float)initialNumberOfPrograms);
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                                float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
-                                Point3D departmentBoxCenter = new Point3D(0,
-                                    ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
+                                float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
+                                Point3D programBoxCenter = new Point3D(0,
+                                    ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
 
-                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
                                 programBox.SetName(department.Name + "Box" + j.ToString());
                                 
@@ -189,17 +198,17 @@ namespace Massing_Programming
                             }
                         }
                     }
-                    /* Input is equal to existing number of Departments */
+                    // Input is equal to existing number of Departments
                     if (existingDepartments == input)
                     {
                         return;
                     }
                 }
 
-                /* If user input for Number of Departments is equal to zero */
+                // If user input for Number of Departments is equal to zero
                 else
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting number.");
+                    MessageBox.Show("Number of Departments has to be a Counting Number.");
                     this.NumberOfDepartments.Text = existingDepartments.ToString();
                 }
             }
@@ -247,18 +256,23 @@ namespace Massing_Programming
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
+                    // Calculating length of each program based on total area of the program and width of the Project Box
+                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
+
                     //Slider DGSF = LogicalTreeHelper.FindLogicalNode(decimal, expander.Name + "NumberInputTextBox") as TextBox;
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                     Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                    float[] departmentBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
-                    Point3D departmentBoxCenter = new Point3D(0,
-                        ((departmentBoxDims[1] * 0.5) + (j * departmentBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                    float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
+                    Point3D programBoxCenter = new Point3D(0,
+                        ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(departmentBoxCenter, departmentBoxDims,
+                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                         programBoxMaterial, programBoxMaterial);
                     programBox.SetName(department.Name + "Box" + i.ToString());
 
@@ -272,7 +286,7 @@ namespace Massing_Programming
         {
             Button btn = sender as Button;
 
-            /* Setting the Name of the Department (recognizing which button was pressed) */
+            // Setting the Name of the Department (recognizing which button was pressed)
             if (namesOfDepartments.Contains(btn.Name.Replace("SetNameButton", "")))
             {
                 Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
@@ -284,12 +298,12 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a Name inside the \"Name of Department\" box.");
+                    MessageBox.Show("Please Enter a Name Inside the \"Name of Department\" Box.");
                     return;
                 }
             }
 
-            /* Setting the Number of Programs in the Department (Number of Programs button was pressed) */
+            // Setting the Number of Programs in the Department (Number of Programs button was pressed) 
             else
             {
                 Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
@@ -305,14 +319,14 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting number.");
+                    MessageBox.Show("Number of Departments has to be a Counting Number.");
                     numberTextBox.Text = existingPrograms.ToString();
                     return;
                 }
 
                 if (input > 0)
                 {
-                    /* Increase Number of Programs */
+                    // Increase Number of Programs
                     if (input > existingPrograms)
                     {
 
@@ -325,12 +339,17 @@ namespace Massing_Programming
 
                         for (int i = 0; i < difference; i++)
                         {
+                            // Calculating length of each program based on total area of the program and width of the Project Box
+                            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "Rooms" + (i + existingPrograms).ToString()) as Slider;
+                            Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "DGSF" + (i + existingPrograms).ToString()) as Slider;
+                            float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
+
                             // Generate gradient colors for programs of each department
                             float stop = ((float)i) / ((float)initialNumberOfPrograms);
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), 35, float.Parse(this.FloorHeight.Text) };
+                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
                             Point3D programBoxCenter = new Point3D(0,
                                 (((programBoxDims[1] * 0.5) + (i * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5)),
                                 float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
@@ -371,13 +390,13 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting number.");
+                    MessageBox.Show("Number of Departments has to be a Counting Number.");
                     numberTextBox.Text = existingPrograms.ToString();
                 }
             }
         }
 
-        /*------------------ Project Size Events ------------------*/
+        /*------------------ Project Size Change Events ------------------*/
         private void ProjectSize_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -393,7 +412,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please enter a number.");
+                    MessageBox.Show("Please Enter a Number.");
                     this.ProjectWidth.Text = this.stackingVisualization.Children[0].Bounds.SizeX.ToString();
                     return;
                 }
@@ -410,13 +429,15 @@ namespace Massing_Programming
                         }
                         else
                         {
-                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0], 1, 1);
+                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0],
+                                this.initialProjectBoxDims[0] / projectWidthInput, 1,
+                                0, this.initialProjectBoxDims[1] * -0.5, 0);
                         }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a number larger than zero.");
+                    MessageBox.Show("Please Enter a Number Larger than Zero.");
                     this.ProjectWidth.Text = this.stackingVisualization.Children[0].Bounds.SizeX.ToString();
                     return;
                 }
@@ -433,7 +454,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please enter a number.");
+                    MessageBox.Show("Please Enter a Number.");
                     this.ProjectLength.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
                     return;
                 }
@@ -446,7 +467,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a number larger than zero.");
+                    MessageBox.Show("Please Enter a Number Larger than Zero.");
                     this.ProjectLength.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
                     return;
                 }
@@ -463,7 +484,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please enter a number.");
+                    MessageBox.Show("Please Enter a Number.");
                     this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeZ.ToString();
                     return;
                 }
@@ -475,7 +496,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a number larger than zero.");
+                    MessageBox.Show("Please Enter a Number Larger than Zero.");
                     this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeZ.ToString();
                     return;
                 }
