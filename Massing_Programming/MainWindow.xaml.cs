@@ -375,12 +375,24 @@ namespace Massing_Programming
                             GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                 programBoxMaterial, programBoxMaterial);
                             programBox.SetName(expander.Name + "Box" + (i + existingPrograms).ToString());
-                            
-                            this.stackingVisualization.Children.Insert(programBoxIndex, programBox);
+
+                            this.stackingVisualization.Children.Insert(programBoxIndex + 1, programBox);
+                            programBoxIndex += 1;
                         }
                     }
+
+                    // Decrease Number of Programs
                     if (input < existingPrograms)
                     {
+                        int programBoxIndex = 0;
+                        for (int i = 0; i < departmentIndex + 1; i++)
+                        {
+                            Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
+                            StackPanel expanderContent = tempExpander.Content as StackPanel;
+                            Grid programsGrid = expanderContent.Children[2] as Grid;
+                            programBoxIndex += programsGrid.RowDefinitions.Count;
+                        }
+
                         int difference = programs.RowDefinitions.Count - input;
                         List<UIElement> elementsToRemove = new List<UIElement>();
 
@@ -399,6 +411,9 @@ namespace Massing_Programming
                             }
                             programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
                             elementsToRemove.Clear();
+
+                            this.stackingVisualization.Children.RemoveAt(programBoxIndex);
+                            programBoxIndex += -1;
                         }
                     }
                     if (input == existingPrograms)
