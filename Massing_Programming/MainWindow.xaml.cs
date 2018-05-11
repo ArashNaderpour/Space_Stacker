@@ -31,7 +31,10 @@ namespace Massing_Programming
 
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
+
+        // Department Properties (Names Colors)
         List<String> namesOfDepartments = new List<string>();
+        List<byte[]> colorsOfDepartments = new List<byte[]>();
 
         // Random Object
         Random random = new Random(10);
@@ -62,7 +65,7 @@ namespace Massing_Programming
             {
                 // Setting up initial Departments' expanders
                 Expander department = ExtraMethods.DepartmentGernerator(i);
-                namesOfDepartments.Add(department.Name);
+                this.namesOfDepartments.Add(department.Name);
 
                 ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
                     new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
@@ -71,9 +74,10 @@ namespace Massing_Programming
 
                 /*---------------------------------------------------------------------------------*/
 
-                /*--- Setting up initial Departments and Programs visualization ---*/
+                /*--- Setting up Initial Departments and Programs Visualization ---*/
                 // Generating a random color in the format of an array that contains three bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                this.colorsOfDepartments.Add(color);
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
@@ -133,8 +137,6 @@ namespace Massing_Programming
                     if (existingDepartments > input)
                     {
                         int difference = existingDepartments - input;
-                        //this.DepartmentsWrapper.Children.RemoveRange(input, difference);
-                        //namesOfDepartments.RemoveRange(input, difference);
 
                         for (int i = 0; i < difference; i++)
                         {
@@ -145,8 +147,10 @@ namespace Massing_Programming
 
                             int numberOfPrograms = int.Parse(programNumberTextBox.Text);
 
+                            // Removing Departments' Properties
                             this.DepartmentsWrapper.Children.RemoveAt(lastIndex);
-                            namesOfDepartments.RemoveAt(lastIndex);
+                            this.namesOfDepartments.RemoveAt(lastIndex);
+                            this.colorsOfDepartments.RemoveAt(lastIndex);
 
                             for (int j = 0; j < numberOfPrograms; j++)
                             {
@@ -164,7 +168,7 @@ namespace Massing_Programming
                         for (int i = 0; i < difference; i++)
                         {
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
-                            namesOfDepartments.Add(department.Name);
+                            this.namesOfDepartments.Add(department.Name);
 
                             ExtraMethods.departmentExpanderGenerator(department, 4, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
 
@@ -172,6 +176,7 @@ namespace Massing_Programming
 
                             // Generating a random color in the format of an array that contains three bytes
                             byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                            this.colorsOfDepartments.Add(color);
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
@@ -344,7 +349,6 @@ namespace Massing_Programming
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
 
                         // Calculating total length of the exsiting programs
-
                         double totalExistingProgramsLength = new float();
                         for (int i = 0; i < existingPrograms; i++)
                         {
@@ -352,8 +356,8 @@ namespace Massing_Programming
                         }
                         totalExistingProgramsLength = (float)totalExistingProgramsLength;
 
-                        // Generating a random color in the format of an array that contains three bytes
-                        byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                        // Extracting Color of Department
+                        byte[] color = this.colorsOfDepartments[departmentIndex];
 
                         for (int i = 0; i < difference; i++)
                         {
