@@ -120,33 +120,34 @@
                                         <ColumnDefinition Width="2*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="NumberOfDepartments" Grid.Column="0" Padding="2"/>
+                                    <TextBox x:Name="NumberOfDepartments" Grid.Column="0" IsReadOnly="True" 
+                                             Background="#e2e2e2" Padding="2"/>
                                     <Button x:Name="NumberOfDepartmentsButton" Grid.Column ="1" 
-                                            Content="Set" Click="NumberOfDepartments_Click"/>
+                                            IsEnabled="False" Content="Set" Click="NumberOfDepartments_Click"/>
                                 </Grid>
                                 <!--=======================================-->
                                 <!--DockPanel that Wraps Staking and Program CheckBoxes -->
                                 <DockPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"
                                            Margin="2.5 0 0 0">
                                 <!--Stacking CheckBox-->
-                                <CheckBox x:Name="Stacking" Content="Stacking"
+                                <CheckBox x:Name="Stacking" Content="Stacking" IsEnabled="False"
                                               HorizontalAlignment="Left"
                                               VerticalAlignment="Center"/>
                                 <!--=================-->
                                 <!--Programming CheckBox-->
-                                <CheckBox x:Name="Program" Content="Program" 
+                                <CheckBox x:Name="Program" Content="Program" IsEnabled="False" 
                                               HorizontalAlignment="Right"
                                               VerticalAlignment="Center"/>
                                 <!--=================-->
                                 </DockPanel>
                                 <!--====================================================-->
                                 <!--Reset Departments Button-->
-                                <Button x:Name="ResetDepartmentsButton" Grid.Column="0" Grid.Row="2" 
+                                <Button x:Name="ResetDepartmentsButton" Grid.Column="0" Grid.Row="2" IsEnabled="False" 
                                         Content="Reset Departments" Margin="0 5 2.5 5" Click="ResetDepartments_Click"/>
                                 <!--=================-->
                                 <!--Open Excel File Button-->
-                                <Button x:Name="OpenExcelFile" Grid.Column="1" Grid.Row="2" 
-                                        Content="Spread Sheet" Margin="2.5 5 0 5" Click="ResetDepartments_Click"/>
+                                <Button x:Name="OpenExcelFile" Grid.Column="1" Grid.Row="2" Background="#98AD80"
+                                        Content="Spread Sheet" Margin="2.5 5 0 5" Click="OpenSpreadSheet_Click"/>
                                 <!--=================-->
                             </Grid>
                             <!--=====================-->

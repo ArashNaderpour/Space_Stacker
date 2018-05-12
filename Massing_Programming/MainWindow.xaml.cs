@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HelixToolkit.Wpf;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Massing_Programming
 {
@@ -35,6 +36,9 @@ namespace Massing_Programming
         // Department Properties (Names Colors)
         List<String> namesOfDepartments = new List<string>();
         List<byte[]> colorsOfDepartments = new List<byte[]>();
+
+        // Spread-Sheet Data
+        Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
 
         // Random Object
         Random random = new Random(20);
@@ -107,6 +111,75 @@ namespace Massing_Programming
             this.Visualization.Content = stackingVisualization;
         }
         /*-----------------------------------------------------------------End of Windows Load-------------------------------------------------------------------*/
+
+        /* Handeling Open Spread-Sheet File Event*/
+        private void OpenSpreadSheet_Click(object sender, RoutedEventArgs e)
+        {
+            // Clear The Main Dictionary
+            this.functions.Clear();
+
+            // Open the Spread Sheet File
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+
+            // Excel File Properties
+            Excel.Application xlApp;
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            Excel.Range range;
+
+            String filePath = "";
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                filePath = openFileDialog.FileName;
+
+                if (filePath.Substring(filePath.Length - 3).ToLower() != "xls" &&
+                    filePath.Substring(filePath.Length - 4).ToLower() != "xlsx")
+                {
+                    MessageBox.Show("Please Select an Execl File.");
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Something Went Wrong. Pleas Try Again.");
+                return;
+            }
+
+            xlApp = new Excel.Application();
+            xlWorkBook = xlApp.Workbooks.Open(filePath, 0, true, 5, "", "", true,
+                Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false,
+                false, 0, true, 1, 0);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            range = xlWorkSheet.UsedRange;
+            int rowCount = range.Rows.Count;
+
+            for (int r = 1; r <= rowCount; r++)
+            {
+                Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
+                if (r > 1)
+                {
+                    tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
+                    tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
+                    tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
+                    tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
+                    tempDictionary.Add("dgsfMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
+                    tempDictionary.Add("dgsfVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
+                    tempDictionary.Add("dgsfMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+                }
+
+                //Adding Data to Main Data Dictionary
+                this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
+            }
+
+            xlWorkBook.Close(true, null, null);
+            xlApp.Quit();
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+        }
 
         /* -----Handeling Number of Departments Button Event-----*/
         private void NumberOfDepartments_Click(object sender, RoutedEventArgs e)
@@ -345,7 +418,7 @@ namespace Massing_Programming
                             StackPanel expanderContent = tempExpander.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
                             programBoxIndex += programsGrid.RowDefinitions.Count;
-                            
+
                             if (i < departmentIndex)
                             {
                                 firstProgramBoxIndex += programsGrid.RowDefinitions.Count;
@@ -370,7 +443,7 @@ namespace Massing_Programming
                         for (int i = 0; i < input; i++)
                         {
                             // Generate gradient colors for programs of each department
-                            float stop = ((float)i) / ((float) (input));
+                            float stop = ((float)i) / ((float)(input));
 
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
@@ -390,7 +463,7 @@ namespace Massing_Programming
                                 Point3D programBoxCenter = new Point3D(0,
                                     ((totalExistingProgramsLength + ((i - existingPrograms) * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
-  
+
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
                                 programBox.SetName(expander.Name + "Box" + (i).ToString());
