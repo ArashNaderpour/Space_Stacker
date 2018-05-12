@@ -37,7 +37,7 @@ namespace Massing_Programming
         List<byte[]> colorsOfDepartments = new List<byte[]>();
 
         // Random Object
-        Random random = new Random(10);
+        Random random = new Random(20);
 
         public MainWindow()
         {
@@ -226,7 +226,8 @@ namespace Massing_Programming
             this.DepartmentsWrapper.Children.Clear();
             this.stackingVisualization.Children.Clear();
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
-            namesOfDepartments.Clear();
+            this.namesOfDepartments.Clear();
+            this.colorsOfDepartments.Clear();
 
             // Setting up values of the initial dimensions of the Project Box
             this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
@@ -249,7 +250,7 @@ namespace Massing_Programming
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 ExtraMethods.departmentExpanderGenerator(department, 4, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
-                namesOfDepartments.Add(department.Name);
+                this.namesOfDepartments.Add(department.Name);
 
                 this.DepartmentsWrapper.Children.Add(department);
 
@@ -258,6 +259,7 @@ namespace Massing_Programming
                 /*--- Setting up initial Departments and Programs visualization ---*/
                 // Generating a random color in the format of an array that contains three bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                this.colorsOfDepartments.Add(color);
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
@@ -336,12 +338,18 @@ namespace Massing_Programming
                     if (input > existingPrograms)
                     {
                         int programBoxIndex = 0;
+                        int firstProgramBoxIndex = 1;
                         for (int i = 0; i < departmentIndex + 1; i++)
                         {
                             Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
                             StackPanel expanderContent = tempExpander.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
                             programBoxIndex += programsGrid.RowDefinitions.Count;
+                            
+                            if (i < departmentIndex)
+                            {
+                                firstProgramBoxIndex += programsGrid.RowDefinitions.Count;
+                            }
                         }
 
                         int difference = input - existingPrograms;
@@ -359,42 +367,50 @@ namespace Massing_Programming
                         // Extracting Color of Department
                         byte[] color = this.colorsOfDepartments[departmentIndex];
 
-                        for (int i = 0; i < difference; i++)
+                        for (int i = 0; i < input; i++)
                         {
-                            // Calculating length of each program based on total area of the program and width of the Project Box
-                            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "Rooms" + (i + existingPrograms).ToString()) as Slider;
-                            Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "DGSF" + (i + existingPrograms).ToString()) as Slider;
-                            float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
-
                             // Generate gradient colors for programs of each department
-                            float stop = ((float)i) / ((float)initialNumberOfPrograms);
+                            float stop = ((float)i) / ((float) (input));
+
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
-                            Point3D programBoxCenter = new Point3D(0,
-                                ((totalExistingProgramsLength + (i * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
-                                float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
+                            if (i < existingPrograms)
+                            {
+                                ((GeometryModel3D)(this.stackingVisualization.Children[firstProgramBoxIndex + i])).Material = programBoxMaterial;
+                            }
+                            else
+                            {
+                                // Calculating length of each program based on total area of the program and width of the Project Box
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "Rooms" + (i).ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "DGSF" + (i).ToString()) as Slider;
+                                float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
 
-                            GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
-                                programBoxMaterial, programBoxMaterial);
-                            programBox.SetName(expander.Name + "Box" + (i + existingPrograms).ToString());
+                                float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
+                                Point3D programBoxCenter = new Point3D(0,
+                                    ((totalExistingProgramsLength + ((i - existingPrograms) * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
+                                    float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
+  
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                                    programBoxMaterial, programBoxMaterial);
+                                programBox.SetName(expander.Name + "Box" + (i).ToString());
 
-                            this.stackingVisualization.Children.Insert(programBoxIndex + 1, programBox);
-                            programBoxIndex += 1;
+                                this.stackingVisualization.Children.Insert(programBoxIndex + 1, programBox);
+                                programBoxIndex += 1;
+                            }
                         }
                     }
 
                     // Decrease Number of Programs
                     if (input < existingPrograms)
                     {
-                        int programBoxIndex = 0;
+                        int lastProgramBoxIndex = 0;
                         for (int i = 0; i < departmentIndex + 1; i++)
                         {
                             Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
                             StackPanel expanderContent = tempExpander.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
-                            programBoxIndex += programsGrid.RowDefinitions.Count;
+                            lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
                         }
 
                         int difference = programs.RowDefinitions.Count - input;
@@ -416,8 +432,8 @@ namespace Massing_Programming
                             programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
                             elementsToRemove.Clear();
 
-                            this.stackingVisualization.Children.RemoveAt(programBoxIndex);
-                            programBoxIndex += -1;
+                            this.stackingVisualization.Children.RemoveAt(lastProgramBoxIndex);
+                            lastProgramBoxIndex += -1;
                         }
                     }
                     if (input == existingPrograms)
