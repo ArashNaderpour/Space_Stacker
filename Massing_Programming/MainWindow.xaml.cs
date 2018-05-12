@@ -63,51 +63,6 @@ namespace Massing_Programming
             projectBox.SetName("ProjectBox");
             this.stackingVisualization.Children.Add(projectBox);
 
-            this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
-
-            for (int i = 0; i < initialNumberOfDepartments; i++)
-            {
-                // Setting up initial Departments' expanders
-                Expander department = ExtraMethods.DepartmentGernerator(i);
-                this.namesOfDepartments.Add(department.Name);
-
-                ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
-                    new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
-
-                this.DepartmentsWrapper.Children.Add(department);
-
-                /*---------------------------------------------------------------------------------*/
-
-                /*--- Setting up Initial Departments and Programs Visualization ---*/
-                // Generating a random color in the format of an array that contains three bytes
-                byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                this.colorsOfDepartments.Add(color);
-
-                for (int j = 0; j < initialNumberOfPrograms; j++)
-                {
-                    // Calculating length of each program based on total area of the program and width of the Project Box
-                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                    float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
-
-                    // Generate gradient colors for programs of each department
-                    float stop = ((float)j) / ((float)initialNumberOfPrograms);
-                    byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
-                    Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
-
-                    float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
-                    Point3D programBoxCenter = new Point3D(0,
-                        ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
-                        float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
-
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
-                        programBoxMaterial, programBoxMaterial);
-                    programBox.SetName(department.Name + "Box" + i.ToString());
-
-                    this.stackingVisualization.Children.Add(programBox);
-                }
-            }
-
             this.Visualization.Content = stackingVisualization;
         }
         /*-----------------------------------------------------------------End of Windows Load-------------------------------------------------------------------*/
@@ -154,8 +109,11 @@ namespace Massing_Programming
 
             range = xlWorkSheet.UsedRange;
             int rowCount = range.Rows.Count;
+            int columnCount = range.Columns.Count;
 
-            for (int r = 1; r <= rowCount; r++)
+            if (rowCount > 1 && columnCount == 8)
+            {
+                for (int r = 1; r <= rowCount; r++)
             {
                 Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
                 if (r > 1)
@@ -173,12 +131,74 @@ namespace Massing_Programming
                 this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
             }
 
-            xlWorkBook.Close(true, null, null);
-            xlApp.Quit();
+            // Adding Department Expanders and Programs to the Controller Window
+                this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+                for (int i = 0; i < this.initialNumberOfDepartments; i++)
+                {
+                    // Setting up initial Departments' expanders
+                    Expander department = ExtraMethods.DepartmentGernerator(i);
+                    this.namesOfDepartments.Add(department.Name);
+
+                    ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
+                        new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
+
+                    this.DepartmentsWrapper.Children.Add(department);
+
+                    /*---------------------------------------------------------------------------------*/
+
+                    /*--- Setting up Initial Departments and Programs Visualization ---*/
+                    // Generating a random color in the format of an array that contains three bytes
+                    byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                    this.colorsOfDepartments.Add(color);
+
+                    for (int j = 0; j < initialNumberOfPrograms; j++)
+                    {
+                        // Calculating length of each program based on total area of the program and width of the Project Box
+                        Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                        Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                        float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
+
+                        // Generate gradient colors for programs of each department
+                        float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                        byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                        Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                        float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, float.Parse(this.FloorHeight.Text) };
+                        Point3D programBoxCenter = new Point3D(0,
+                            ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                            float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
+
+                        GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                            programBoxMaterial, programBoxMaterial);
+                        programBox.SetName(department.Name + "Box" + i.ToString());
+
+                        this.stackingVisualization.Children.Add(programBox);
+                    }
+                }
+
+                xlWorkBook.Close(true, null, null);
+                xlApp.Quit();
+
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+
+                // Enabling the Disabled Controllers
+                this.BGSFBox.IsEnabled = true;
+                this.ProgramLabel.IsEnabled = true;
+
+                this.NumberOfDepartments.IsEnabled = true;
+                this.NumberOfDepartments.Background = Brushes.White;
+
+                this.NumberOfDepartmentsButton.IsEnabled = true;
+                this.ResetDepartmentsButton.IsEnabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Format of the Data in the Excel File is Inappropriate.");
+                return;
+            }
         }
 
         /* -----Handeling Number of Departments Button Event-----*/
