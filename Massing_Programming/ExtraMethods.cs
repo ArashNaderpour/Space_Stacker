@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Collections.Generic;
 
 
 namespace Massing_Programming
@@ -26,7 +27,7 @@ namespace Massing_Programming
             return department;
         }
 
-        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, RoutedEventHandler ButtonClicked)
+        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, Dictionary<string, Dictionary<string, float>> functions,RoutedEventHandler ButtonClicked)
         {
             // The Main Container of the Expander
             StackPanel expanderWrapper = new StackPanel();
@@ -214,7 +215,7 @@ namespace Massing_Programming
         }
 
         /* ------------- Method for adding programs to an existing Department ------------- */
-        public static void AddProgram(Grid ppt, int count, int start, Expander department)
+        public static void AddProgram(Grid ppt, int count, int start, Expander department, Dictionary<string, Dictionary<string, float>> functions)
         {
             char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
