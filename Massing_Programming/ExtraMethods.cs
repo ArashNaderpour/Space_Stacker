@@ -27,7 +27,7 @@ namespace Massing_Programming
             return department;
         }
 
-        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, Dictionary<string, Dictionary<string, float>> functions,RoutedEventHandler ButtonClicked)
+        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, Dictionary<string, Dictionary<string, float>> functions, RoutedEventHandler ButtonClicked)
         {
             // The Main Container of the Expander
             StackPanel expanderWrapper = new StackPanel();
@@ -158,7 +158,10 @@ namespace Massing_Programming
                 programLabel.Width = 25;
                 ComboBox program = new ComboBox();
                 program.Name = department.Name + "ComboBox" + i.ToString();
-                program.Items.Add("Arash");
+                foreach (string functionName in functions.Keys)
+                {
+                    program.Items.Add(functionName);
+                }
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
                 program.Margin = new Thickness(0, 5, 2, 0);
@@ -250,7 +253,10 @@ namespace Massing_Programming
                 }
                 ComboBox program = new ComboBox();
                 program.Name = department.Name + "ComboBox" + (i).ToString();
-                program.Items.Add("Arash");
+                foreach (string functionName in functions.Keys)
+                {
+                    program.Items.Add(functionName);
+                }
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
                 program.Margin = new Thickness(0, 5, 2, 0);
@@ -265,7 +271,7 @@ namespace Massing_Programming
                 // Keys
                 Label keyLabel = new Label();
                 keyLabel.Content = "Rooms";
-                Slider keyRooms = new Slider();            
+                Slider keyRooms = new Slider();
                 keyRooms.Name = department.Name + "Rooms" + (i).ToString();
                 keyRooms.Minimum = 1;
                 keyRooms.Maximum = 10;

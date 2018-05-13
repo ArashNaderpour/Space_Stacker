@@ -114,24 +114,24 @@ namespace Massing_Programming
             if (rowCount > 1 && columnCount == 8)
             {
                 for (int r = 1; r <= rowCount; r++)
-            {
-                Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
-                if (r > 1)
                 {
-                    tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
-                    tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
-                    tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
-                    tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
-                    tempDictionary.Add("dgsfMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
-                    tempDictionary.Add("dgsfVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
-                    tempDictionary.Add("dgsfMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+                    Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
+                    if (r > 1)
+                    {
+                        tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
+                        tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
+                        tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
+                        tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
+                        tempDictionary.Add("dgsfMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
+                        tempDictionary.Add("dgsfVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
+                        tempDictionary.Add("dgsfMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+
+                        //Adding Data to Main Data Dictionary
+                        this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
+                    }
                 }
 
-                //Adding Data to Main Data Dictionary
-                this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
-            }
-
-            // Adding Department Expanders and Programs to the Controller Window
+                // Adding Department Expanders and Programs to the Controller Window
                 this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
                 for (int i = 0; i < this.initialNumberOfDepartments; i++)
@@ -144,8 +144,6 @@ namespace Massing_Programming
                         this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
 
                     this.DepartmentsWrapper.Children.Add(department);
-
-                    /*---------------------------------------------------------------------------------*/
 
                     /*--- Setting up Initial Departments and Programs Visualization ---*/
                     // Generating a random color in the format of an array that contains three bytes
@@ -346,8 +344,6 @@ namespace Massing_Programming
                 this.namesOfDepartments.Add(department.Name);
 
                 this.DepartmentsWrapper.Children.Add(department);
-
-                /*---------------------------------------------------------------------------------*/
 
                 /*--- Setting up initial Departments and Programs visualization ---*/
                 // Generating a random color in the format of an array that contains three bytes
