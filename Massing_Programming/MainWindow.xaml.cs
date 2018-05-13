@@ -494,35 +494,60 @@ namespace Massing_Programming
                     if (input < existingPrograms)
                     {
                         int lastProgramBoxIndex = 0;
+                        int firstProgramBoxIndex = 1;
                         for (int i = 0; i < departmentIndex + 1; i++)
                         {
                             Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
                             StackPanel expanderContent = tempExpander.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
                             lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
+                            if (i < departmentIndex)
+                            {
+                                firstProgramBoxIndex += programsGrid.RowDefinitions.Count;
+                            }
                         }
 
-                        int difference = programs.RowDefinitions.Count - input;
+                        // Extracting Color of Department
+                        byte[] color = this.colorsOfDepartments[departmentIndex];
+
+                        int difference = existingPrograms - input;
                         List<UIElement> elementsToRemove = new List<UIElement>();
-
-                        for (int i = 0; i < difference; i++)
+                        
+                        for (int i = 0; i < existingPrograms; i++)
                         {
-                            foreach (UIElement element in programs.Children)
+                            // Change colors of the remaining programs
+                            if (i < existingPrograms - difference)
                             {
-                                if (Grid.GetRow(element) == programs.RowDefinitions.Count - 1)
-                                {
-                                    elementsToRemove.Add(element);
-                                }
-                            }
-                            foreach (UIElement element in elementsToRemove)
-                            {
-                                programs.Children.Remove(element);
-                            }
-                            programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
-                            elementsToRemove.Clear();
+                                // Generate gradient colors for programs of each department
+                                float stop = ((float)i) / ((float)(existingPrograms - difference));
 
-                            this.stackingVisualization.Children.RemoveAt(lastProgramBoxIndex);
-                            lastProgramBoxIndex += -1;
+                                byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                                Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                                ((GeometryModel3D)(this.stackingVisualization.Children[firstProgramBoxIndex + i])).Material = programBoxMaterial;
+
+                            }
+                            // Omit programs' properties and visualizations
+                            else
+                            {
+                                foreach (UIElement element in programs.Children)
+                                {
+                                    if (Grid.GetRow(element) == programs.RowDefinitions.Count - 1)
+                                    {
+                                        elementsToRemove.Add(element);
+                                    }
+                                }
+                                foreach (UIElement element in elementsToRemove)
+                                {
+                                    programs.Children.Remove(element);
+                                }
+                                
+                                programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
+                                elementsToRemove.Clear();
+
+                                this.stackingVisualization.Children.RemoveAt(lastProgramBoxIndex);
+                                lastProgramBoxIndex += -1;
+                            }
                         }
                     }
                     if (input == existingPrograms)
