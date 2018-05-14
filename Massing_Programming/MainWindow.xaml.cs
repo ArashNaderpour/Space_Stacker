@@ -715,7 +715,7 @@ namespace Massing_Programming
             }
         }
 
-        /*-----------------asdasdjjsakhds----------------*/
+        /*---------------- Program ComboBox Change Event Handler ----------------*/
         void SelectedProgram_Chenged(object sender, EventArgs e)
         {
             MessageBox.Show("IT CHANGED!!!!!!");
