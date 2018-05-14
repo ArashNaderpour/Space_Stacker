@@ -27,7 +27,9 @@ namespace Massing_Programming
             return department;
         }
 
-        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, Dictionary<string, Dictionary<string, float>> functions, RoutedEventHandler ButtonClicked)
+        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, 
+            Dictionary<string, Dictionary<string, float>> functions, 
+            RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged)
         {
             // The Main Container of the Expander
             StackPanel expanderWrapper = new StackPanel();
@@ -65,7 +67,7 @@ namespace Massing_Programming
             Button setName = new Button();
             setName.Content = "SET";
             setName.Name = department.Name + "SetNameButton";
-            setName.Click += ButtonClicked;
+            setName.Click += Button_Clicked;
 
             departmentName.Children.Add(name);
             Grid.SetColumn(name, 0);
@@ -106,7 +108,7 @@ namespace Massing_Programming
             Button setNumber = new Button();
             setNumber.Content = "SET";
             setNumber.Name = department.Name + "SetNumberButton";
-            setNumber.Click += ButtonClicked;
+            setNumber.Click += Button_Clicked;
 
             numOfPrograms.Children.Add(number);
             Grid.SetColumn(number, 0);
@@ -165,6 +167,7 @@ namespace Massing_Programming
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
                 program.Margin = new Thickness(0, 5, 2, 0);
+                program.SelectionChanged += ComboBox_SelectionChanged;
 
                 p.Children.Add(programLabel);
                 p.Children.Add(program);
@@ -218,7 +221,8 @@ namespace Massing_Programming
         }
 
         /* ------------- Method for adding programs to an existing Department ------------- */
-        public static void AddProgram(Grid ppt, int count, int start, Expander department, Dictionary<string, Dictionary<string, float>> functions)
+        public static void AddProgram(Grid ppt, int count, int start, Expander department, 
+            Dictionary<string, Dictionary<string, float>> functions, SelectionChangedEventHandler ComboBox_SelectionChanged)
         {
             char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
@@ -260,6 +264,7 @@ namespace Massing_Programming
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
                 program.Margin = new Thickness(0, 5, 2, 0);
+                program.SelectionChanged += ComboBox_SelectionChanged;
 
                 p.Children.Add(programLabel);
                 p.Children.Add(program);

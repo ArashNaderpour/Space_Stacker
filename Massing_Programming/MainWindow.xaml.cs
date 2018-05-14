@@ -141,7 +141,8 @@ namespace Massing_Programming
                     this.namesOfDepartments.Add(department.Name);
 
                     ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
-                        this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
+                        this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
+                        new SelectionChangedEventHandler(SelectedProgram_Chenged));
 
                     this.DepartmentsWrapper.Children.Add(department);
 
@@ -266,7 +267,9 @@ namespace Massing_Programming
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
                             this.namesOfDepartments.Add(department.Name);
 
-                            ExtraMethods.departmentExpanderGenerator(department, 4, this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
+                            ExtraMethods.departmentExpanderGenerator(department, 4, this.functions, 
+                                new RoutedEventHandler(DepartmentNameAndNumberButton_Click), 
+                                new SelectionChangedEventHandler(SelectedProgram_Chenged));
 
                             this.DepartmentsWrapper.Children.Add(department);
 
@@ -345,7 +348,10 @@ namespace Massing_Programming
             for (int i = 0; i < initialNumberOfDepartments; i++)
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
-                ExtraMethods.departmentExpanderGenerator(department, 4, this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click));
+                ExtraMethods.departmentExpanderGenerator(department, 4, this.functions, 
+                    new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
+                    new SelectionChangedEventHandler(SelectedProgram_Chenged));
+
                 this.namesOfDepartments.Add(department.Name);
 
                 this.DepartmentsWrapper.Children.Add(department);
@@ -446,7 +452,9 @@ namespace Massing_Programming
                         }
 
                         int difference = input - existingPrograms;
-                        ExtraMethods.AddProgram(programs, difference, existingPrograms, expander, this.functions);
+                        ExtraMethods.AddProgram(programs, difference, existingPrograms, expander, this.functions, 
+                            new SelectionChangedEventHandler(SelectedProgram_Chenged));
+
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
 
                         // Calculating total length of the exsiting programs
@@ -705,6 +713,12 @@ namespace Massing_Programming
                     return;
                 }
             }
+        }
+
+        /*-----------------asdasdjjsakhds----------------*/
+        void SelectedProgram_Chenged(object sender, EventArgs e)
+        {
+            MessageBox.Show("IT CHANGED!!!!!!");
         }
     }
 }
