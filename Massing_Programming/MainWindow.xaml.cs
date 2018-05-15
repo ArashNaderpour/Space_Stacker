@@ -122,9 +122,9 @@ namespace Massing_Programming
                         tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
                         tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
                         tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
-                        tempDictionary.Add("dgsfMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
-                        tempDictionary.Add("dgsfVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
-                        tempDictionary.Add("dgsfMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+                        tempDictionary.Add("DGSFMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
+                        tempDictionary.Add("DGSFVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
+                        tempDictionary.Add("DGSFMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
 
                         //Adding Data to Main Data Dictionary
                         this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
@@ -267,8 +267,8 @@ namespace Massing_Programming
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
                             this.namesOfDepartments.Add(department.Name);
 
-                            ExtraMethods.departmentExpanderGenerator(department, 4, this.functions, 
-                                new RoutedEventHandler(DepartmentNameAndNumberButton_Click), 
+                            ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
+                                new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
                                 new SelectionChangedEventHandler(SelectedProgram_Chenged));
 
                             this.DepartmentsWrapper.Children.Add(department);
@@ -280,8 +280,8 @@ namespace Massing_Programming
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
                                 // Calculating length of each program based on total area of the program and width of the Project Box
-                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                                //Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                                //Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                                 //float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
 
                                 // Add Program's Boxes for the added Departments
@@ -348,7 +348,7 @@ namespace Massing_Programming
             for (int i = 0; i < initialNumberOfDepartments; i++)
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
-                ExtraMethods.departmentExpanderGenerator(department, 4, this.functions, 
+                ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
                     new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
                     new SelectionChangedEventHandler(SelectedProgram_Chenged));
 
@@ -364,8 +364,8 @@ namespace Massing_Programming
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
                     // Calculating length of each program based on total area of the program and width of the Project Box
-                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    //Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    //Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
 
                     //Slider DGSF = LogicalTreeHelper.FindLogicalNode(decimal, expander.Name + "NumberInputTextBox") as TextBox;
                     // Generate gradient colors for programs of each department
@@ -452,7 +452,7 @@ namespace Massing_Programming
                         }
 
                         int difference = input - existingPrograms;
-                        ExtraMethods.AddProgram(programs, difference, existingPrograms, expander, this.functions, 
+                        ExtraMethods.AddProgram(programs, difference, existingPrograms, expander, this.functions,
                             new SelectionChangedEventHandler(SelectedProgram_Chenged));
 
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
@@ -483,8 +483,8 @@ namespace Massing_Programming
                             else
                             {
                                 // Calculating length of each program based on total area of the program and width of the Project Box
-                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "Rooms" + (i).ToString()) as Slider;
-                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "DGSF" + (i).ToString()) as Slider;
+                                //Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "Rooms" + (i).ToString()) as Slider;
+                                //Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "DGSF" + (i).ToString()) as Slider;
 
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
@@ -718,7 +718,27 @@ namespace Massing_Programming
         /*---------------- Program ComboBox Change Event Handler ----------------*/
         void SelectedProgram_Chenged(object sender, EventArgs e)
         {
-            MessageBox.Show("IT CHANGED!!!!!!");
+            ComboBox cbx = sender as ComboBox;
+
+            // Extracting the Department That Changed
+            int departmentIndex = int.Parse(cbx.Name[1].ToString()) - 1;
+            Expander expander = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
+
+            // Extracting the Sliders that Need Changes
+            String keyRoomsSliderName = cbx.Name.Substring(0, 2) + "Rooms" + cbx.Name[cbx.Name.Length - 1];
+            String DGSFSliderName = cbx.Name.Substring(0, 2) + "DGSF" + cbx.Name[cbx.Name.Length - 1];
+
+            // Calculating length of each program based on total area of the program and width of the Project Box
+            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, keyRoomsSliderName) as Slider;
+            keyRooms.Minimum = this.functions[cbx.SelectedItem.ToString()]["keyMin"];
+            keyRooms.Value = this.functions[cbx.SelectedItem.ToString()]["keyVal"]; ;
+            keyRooms.Maximum = this.functions[cbx.SelectedItem.ToString()]["keyMax"]; ;
+
+            Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, DGSFSliderName) as Slider;
+            DGSF.Minimum = this.functions[cbx.SelectedItem.ToString()]["DGSFMin"];
+            DGSF.Value = this.functions[cbx.SelectedItem.ToString()]["DGSFVal"];
+            DGSF.Maximum = this.functions[cbx.SelectedItem.ToString()]["DGSFMax"];
+
         }
     }
 }

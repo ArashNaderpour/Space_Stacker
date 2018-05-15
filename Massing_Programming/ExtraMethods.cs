@@ -27,8 +27,8 @@ namespace Massing_Programming
             return department;
         }
 
-        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput, 
-            Dictionary<string, Dictionary<string, float>> functions, 
+        public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput,
+            Dictionary<string, Dictionary<string, float>> functions,
             RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged)
         {
             // The Main Container of the Expander
@@ -182,8 +182,8 @@ namespace Massing_Programming
                 Slider keyRooms = new Slider();
                 keyRooms.Name = department.Name + "Rooms" + i.ToString();
                 keyRooms.Minimum = functions[program.Items[0].ToString()]["keyMin"];
-                keyRooms.Maximum = functions[program.Items[0].ToString()]["keyMax"];
                 keyRooms.Value = functions[program.Items[0].ToString()]["keyVal"];
+                keyRooms.Maximum = functions[program.Items[0].ToString()]["keyMax"];
                 keyRooms.TickFrequency = 1;
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -201,9 +201,9 @@ namespace Massing_Programming
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
                 DGSF.Name = department.Name + "DGSF" + i.ToString();
-                DGSF.Minimum = functions[program.Items[0].ToString()]["dgsfMin"];
-                DGSF.Maximum = functions[program.Items[0].ToString()]["dgsfMax"];
-                DGSF.Value = functions[program.Items[0].ToString()]["dgsfVal"];
+                DGSF.Minimum = functions[program.Items[0].ToString()]["DGSFMin"];
+                DGSF.Value = functions[program.Items[0].ToString()]["DGSFVal"];
+                DGSF.Maximum = functions[program.Items[0].ToString()]["DGSFMax"];
                 DGSF.TickFrequency = 10;
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -221,7 +221,7 @@ namespace Massing_Programming
         }
 
         /* ------------- Method for adding programs to an existing Department ------------- */
-        public static void AddProgram(Grid ppt, int count, int start, Expander department, 
+        public static void AddProgram(Grid ppt, int count, int start, Expander department,
             Dictionary<string, Dictionary<string, float>> functions, SelectionChangedEventHandler ComboBox_SelectionChanged)
         {
             char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
