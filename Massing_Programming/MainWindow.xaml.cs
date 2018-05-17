@@ -622,8 +622,7 @@ namespace Massing_Programming
                             if (ProgramIndex == 0)
                             {
                                 this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0],
-                                    this.initialProjectBoxDims[0] / projectWidthInput,
-                                    this.stackingVisualization.Children[i].Bounds.SizeZ / this.initialProgramHeight,
+                                    this.initialProjectBoxDims[0] / projectWidthInput, 1,
                                     0, this.initialProjectBoxDims[1] * -0.5, 0);
 
                                 TotalDepartmentLength = (this.initialProjectBoxDims[1] * -0.5) + this.stackingVisualization.Children[i].Bounds.SizeY;
@@ -737,13 +736,57 @@ namespace Massing_Programming
                 }
                 if (floorHeightInput > 0)
                 {
+
+                    double scaleCenterY = this.initialProjectBoxDims[1] * -0.5;
+
                     for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
                     {
-                        ScaleTransform3D scale = new ScaleTransform3D();
-                        scale.ScaleZ = 2;
-                        this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(this.stackingVisualization.Children[0].Bounds.SizeX / this.initialProjectBoxDims[0],
-                            this.stackingVisualization.Children[i].Bounds.SizeY / this.initialProgramLength,
-                            floorHeightInput / this.initialProgramHeight, 0, 0, 0);
+                        int departmentIndex = int.Parse(this.stackingVisualization.Children[i].GetName()[1].ToString()) - 1;
+                        int programIndex = int.Parse(this.stackingVisualization.Children[i].GetName()[this.stackingVisualization.Children[i].GetName().Length - 1].ToString());
+
+                            if (programIndex == 0)
+                            {
+                                scaleCenterY = (this.initialProjectBoxDims[1] * -0.5) + (this.stackingVisualization.Children[i].Bounds.SizeY / 2);
+
+                                float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) this.stackingVisualization.Children[i].Bounds.SizeY,
+                                    floorHeightInput };
+
+                                Point3D programBoxCenter = new Point3D(0, scaleCenterY,
+                                    floorHeightInput * 0.5 + (departmentIndex * floorHeightInput));
+
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+
+                                programBox.SetName(this.stackingVisualization.Children[i].GetName());
+
+                                this.stackingVisualization.Children.RemoveAt(i);
+                                this.stackingVisualization.Children.Insert(i, programBox);
+
+                                scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
+                            }
+                            else
+                            {
+                                scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
+
+                                float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) this.stackingVisualization.Children[i].Bounds.SizeY,
+                                    floorHeightInput };
+
+                                Point3D programBoxCenter = new Point3D(0, scaleCenterY,
+                                    floorHeightInput * 0.5 + (departmentIndex * floorHeightInput));
+
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+
+                                programBox.SetName(this.stackingVisualization.Children[i].GetName());
+
+                                this.stackingVisualization.Children.RemoveAt(i);
+                                this.stackingVisualization.Children.Insert(i, programBox);
+
+                                scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
+                            }
+                        
                     }
                 }
                 else
