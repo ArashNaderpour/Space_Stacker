@@ -163,14 +163,14 @@ namespace Massing_Programming
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                        float[] programBoxDims = { this.initialProjectBoxDims[0], this.initialProgramLength, this.initialProgramHeight };
+                        float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
                         Point3D programBoxCenter = new Point3D(0,
                             ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                             this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
 
                         GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                             programBoxMaterial, programBoxMaterial);
-                        programBox.SetName(department.Name + "Box" + i.ToString());
+                        programBox.SetName(department.Name + "Box" + j.ToString());
 
                         this.stackingVisualization.Children.Add(programBox);
                     }
@@ -184,6 +184,18 @@ namespace Massing_Programming
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
 
                 // Enabling the Disabled Controllers
+                this.ProjectWidth.IsReadOnly = false;
+                this.ProjectWidth.Background = Brushes.White;
+                this.ProjectWidthButton.IsEnabled = true;
+
+                this.ProjectLength.IsReadOnly = false;
+                this.ProjectLength.Background = Brushes.White;
+                this.ProjectLengthButton.IsEnabled = true;
+
+                this.ProjectHeight.IsReadOnly = false;
+                this.ProjectHeight.Background = Brushes.White;
+                this.ProjectHeightButton.IsEnabled = true;
+
                 this.BGSFBox.IsEnabled = true;
                 this.ProgramLabel.IsEnabled = true;
 
@@ -279,10 +291,6 @@ namespace Massing_Programming
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
-                                // Calculating length of each program based on total area of the program and width of the Project Box
-                                //Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                                //Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                                //float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
 
                                 // Add Program's Boxes for the added Departments
                                 float stop = ((float)j) / ((float)initialNumberOfPrograms);
@@ -380,7 +388,7 @@ namespace Massing_Programming
 
                     GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                         programBoxMaterial, programBoxMaterial);
-                    programBox.SetName(department.Name + "Box" + i.ToString());
+                    programBox.SetName(department.Name + "Box" + j.ToString());
 
                     this.stackingVisualization.Children.Add(programBox);
                 }
@@ -436,14 +444,14 @@ namespace Massing_Programming
                     // Increase Number of Programs
                     if (input > existingPrograms)
                     {
-                        int programBoxIndex = 0;
+                        int lastProgramBoxIndex = 1;
                         int firstProgramBoxIndex = 1;
                         for (int i = 0; i < departmentIndex + 1; i++)
                         {
                             Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
                             StackPanel expanderContent = tempExpander.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
-                            programBoxIndex += programsGrid.RowDefinitions.Count;
+                            lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
 
                             if (i < departmentIndex)
                             {
@@ -458,10 +466,10 @@ namespace Massing_Programming
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
 
                         // Calculating total length of the exsiting programs
-                        double totalExistingProgramsLength = new float();
-                        for (int i = 0; i < existingPrograms; i++)
+                        double totalExistingProgramsLength = new double();
+                        for (int i = firstProgramBoxIndex; i < lastProgramBoxIndex; i++)
                         {
-                            totalExistingProgramsLength += this.stackingVisualization.Children[i + 1].Bounds.SizeY;
+                            totalExistingProgramsLength += this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
                         totalExistingProgramsLength = (float)totalExistingProgramsLength;
 
@@ -483,8 +491,6 @@ namespace Massing_Programming
                             else
                             {
                                 // Calculating length of each program based on total area of the program and width of the Project Box
-                                //Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "Rooms" + (i).ToString()) as Slider;
-                                //Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "DGSF" + (i).ToString()) as Slider;
 
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
@@ -495,8 +501,8 @@ namespace Massing_Programming
                                     programBoxMaterial, programBoxMaterial);
                                 programBox.SetName(expander.Name + "Box" + (i).ToString());
 
-                                this.stackingVisualization.Children.Insert(programBoxIndex + 1, programBox);
-                                programBoxIndex += 1;
+                                this.stackingVisualization.Children.Insert(lastProgramBoxIndex, programBox);
+                                lastProgramBoxIndex += 1;
                             }
                         }
                     }
@@ -596,6 +602,9 @@ namespace Massing_Programming
                 }
                 if (projectWidthInput > 0)
                 {
+
+                    double TotalDepartmentLength = this.initialProjectBoxDims[1] * -0.5;
+
                     for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
                     {
                         if (i == 0)
@@ -607,10 +616,41 @@ namespace Massing_Programming
                         }
                         else
                         {
-                            this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0],
-                                this.initialProjectBoxDims[0] / projectWidthInput,
-                                this.stackingVisualization.Children[i].Bounds.SizeZ / this.initialProgramHeight,
-                                0, this.initialProjectBoxDims[1] * -0.5, 0);
+                            int departmentIndex = int.Parse(this.stackingVisualization.Children[i].GetName()[1].ToString()) - 1;
+                            int ProgramIndex = int.Parse(this.stackingVisualization.Children[i].GetName()[this.stackingVisualization.Children[i].GetName().Length - 1].ToString());
+
+                            if (ProgramIndex == 0)
+                            {
+                                this.stackingVisualization.Children[i].Transform = new ScaleTransform3D(projectWidthInput / this.initialProjectBoxDims[0],
+                                    this.initialProjectBoxDims[0] / projectWidthInput,
+                                    this.stackingVisualization.Children[i].Bounds.SizeZ / this.initialProgramHeight,
+                                    0, this.initialProjectBoxDims[1] * -0.5, 0);
+
+                                TotalDepartmentLength = (this.initialProjectBoxDims[1] * -0.5) + this.stackingVisualization.Children[i].Bounds.SizeY;
+                            }
+                            else
+                            {
+                                double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
+
+                                float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
+                                    (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
+
+                                double newProgramCenterY = TotalDepartmentLength + (programBoxDims[1] / 2);
+
+                                Point3D programBoxCenter = new Point3D(0, newProgramCenterY,
+                                    float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
+
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+
+                                programBox.SetName(this.stackingVisualization.Children[i].GetName());
+
+                                this.stackingVisualization.Children.RemoveAt(i);
+                                this.stackingVisualization.Children.Insert(i, programBox);
+
+                                TotalDepartmentLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                            }
                         }
                     }
                 }
@@ -720,13 +760,16 @@ namespace Massing_Programming
         {
             ComboBox cbx = sender as ComboBox;
 
-            // Extracting the Department That Changed
+            // Extracting Department and Program Indices of The Changed ComboBox
             int departmentIndex = int.Parse(cbx.Name[1].ToString()) - 1;
+            int programIndex = int.Parse(cbx.Name[cbx.Name.Length - 1].ToString());
+
+            // Extracting the Department That Changed
             Expander expander = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
             // Extracting the Sliders that Need Changes
-            String keyRoomsSliderName = cbx.Name.Substring(0, 2) + "Rooms" + cbx.Name[cbx.Name.Length - 1];
-            String DGSFSliderName = cbx.Name.Substring(0, 2) + "DGSF" + cbx.Name[cbx.Name.Length - 1];
+            String keyRoomsSliderName = cbx.Name.Substring(0, 2) + "Rooms" + programIndex.ToString();
+            String DGSFSliderName = cbx.Name.Substring(0, 2) + "DGSF" + programIndex.ToString();
 
             // Calculating length of each program based on total area of the program and width of the Project Box
             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, keyRoomsSliderName) as Slider;
@@ -739,6 +782,99 @@ namespace Massing_Programming
             DGSF.Value = this.functions[cbx.SelectedItem.ToString()]["DGSFVal"];
             DGSF.Maximum = this.functions[cbx.SelectedItem.ToString()]["DGSFMax"];
 
+            // Calculating indices of First and Last ProgramBox in Each department
+            int firstProgramBoxIndex = 1;
+            int lastProgramBoxIndex = 0;
+            for (int i = 0; i < departmentIndex + 1; i++)
+            {
+                Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
+                StackPanel expanderContent = tempExpander.Content as StackPanel;
+                Grid programsGrid = expanderContent.Children[2] as Grid;
+                lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
+                if (i < departmentIndex)
+                {
+                    firstProgramBoxIndex += programsGrid.RowDefinitions.Count;
+                }
+            }
+
+            // Calculating Index of The ProgramBox
+            int programBoxIndex = firstProgramBoxIndex + programIndex;
+
+            // Calculating the Scale Factor of Each ProgramBox
+            float lenghtScaleFactor = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text)) /
+               (this.initialProgramLength);
+
+            // Length of the Program Before Scale
+            double TotalProgramLength = 0;
+
+            // Calculating Y Cordinate of the Scale Center for Each ProgramBox
+            double scaleCenterY = (this.initialProjectBoxDims[1] * -0.5f);
+            int indexToRemove = programBoxIndex + 1;
+
+            for (int i = firstProgramBoxIndex; i <= lastProgramBoxIndex; i++)
+            {
+                if (i == firstProgramBoxIndex)
+                {
+                    if (programBoxIndex == firstProgramBoxIndex)
+                    {
+                        // Scaling The Changed Program Visualization If First Program of The Department was Changed
+                        this.stackingVisualization.Children[programBoxIndex].Transform = new ScaleTransform3D(this.stackingVisualization.Children[programBoxIndex].Bounds.SizeX / this.initialProjectBoxDims[0],
+                            lenghtScaleFactor, this.stackingVisualization.Children[programBoxIndex].Bounds.SizeZ / this.initialProgramHeight,
+                            0, this.initialProjectBoxDims[1] * -0.5f, 0);
+                        scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    }
+
+                    TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+
+                }
+                else
+                {
+                    if (i < programBoxIndex)
+                    {
+                        scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY;
+                        TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    }
+
+                    if (i == programBoxIndex)
+                    {
+                        // Scaling The Changed Program Visualization If Any Program Other Than The First One Changed
+                        scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY;
+
+                        this.stackingVisualization.Children[programBoxIndex].Transform = new ScaleTransform3D(this.stackingVisualization.Children[programBoxIndex].Bounds.SizeX / this.initialProjectBoxDims[0],
+                            lenghtScaleFactor, this.stackingVisualization.Children[programBoxIndex].Bounds.SizeZ / this.initialProgramHeight,
+                            0, scaleCenterY, 0);
+
+                        TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    }
+
+                    if (i > programBoxIndex)
+                    {
+
+
+                        double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5f) + TotalProgramLength + (this.stackingVisualization.Children[i].Bounds.SizeY / 2);
+
+                        float[] programBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                            (float)this.stackingVisualization.Children[indexToRemove].Bounds.SizeY,
+                            (float)this.stackingVisualization.Children[indexToRemove].Bounds.SizeZ };
+                        // MessageBox.Show(scaleCenterY.ToString());
+                        Point3D programBoxCenter = new Point3D(0,
+                            newProgramCenterY, float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
+
+                        GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                            ((GeometryModel3D)this.stackingVisualization.Children[indexToRemove]).Material,
+                            ((GeometryModel3D)this.stackingVisualization.Children[indexToRemove]).Material);
+
+                        programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
+
+                        TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+
+                        this.stackingVisualization.Children.RemoveAt(indexToRemove);
+                        this.stackingVisualization.Children.Insert(indexToRemove, programBox);
+
+                        indexToRemove += 1;
+                    }
+                }
+            }
         }
     }
 }

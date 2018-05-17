@@ -66,25 +66,31 @@
                                 <TextBlock Text="Width" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="0" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectWidth" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="0" Margin="0 0 0 5"/>
+                                             Grid.Column="1" Grid.Row="0" Margin="0 0 0 5" IsReadOnly="True" 
+                                         Background="#e2e2e2"/>
                                 <Button x:Name="ProjectWidthButton" Content="Set" Grid.Column="2" 
-                                        Grid.Row="0" Margin="0 0 0 5" Click="ProjectSize_Click"/>
+                                        Grid.Row="0" Margin="0 0 0 5" Click="ProjectSize_Click"
+                                        IsEnabled="False"/>
                                 <!--======================-->
                                 <!-- Set Length of BGSF Box-->
                                 <TextBlock Text="Length" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="1" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectLength" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="1" Margin="0 0 0 5"/>
+                                             Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" IsReadOnly="True"
+                                         Background="#e2e2e2"/>
                                 <Button x:Name="ProjectLengthButton" Content="Set" Grid.Column="2" 
-                                        Grid.Row="1" Margin="0 0 0 5" Click="ProjectSize_Click"/>
+                                        Grid.Row="1" Margin="0 0 0 5" Click="ProjectSize_Click"
+                                        IsEnabled="False"/>
                                 <!--======================-->
                                 <!-- Set Height of BGSF Box-->
                                 <TextBlock Text="Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectHeight" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="2" Margin="0 0 0 5"/>
+                                             Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsReadOnly="False"
+                                         Background="#e2e2e2"/>
                                 <Button x:Name="ProjectHeightButton" Content="Set" Grid.Column="2" 
-                                        Grid.Row="2" Margin="0 0 0 5" Click="ProjectSize_Click"/>
+                                        Grid.Row="2" Margin="0 0 0 5" Click="ProjectSize_Click"
+                                        IsEnabled="False"/>
                                 <!--======================-->
                                 <!-- Set Floor Height of BGSF Box-->
                                 <TextBlock Text="Floor Height" VerticalAlignment="Center" Grid.Column="0"
