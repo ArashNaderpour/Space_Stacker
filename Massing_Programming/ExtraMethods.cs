@@ -29,7 +29,8 @@ namespace Massing_Programming
 
         public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput,
             Dictionary<string, Dictionary<string, float>> functions,
-            RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged)
+            RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged,
+            RoutedPropertyChangedEventHandler<double> Slider_ValueChanged)
         {
             // The Main Container of the Expander
             StackPanel expanderWrapper = new StackPanel();
@@ -188,6 +189,7 @@ namespace Massing_Programming
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                keyRooms.ValueChanged += Slider_ValueChanged;
 
                 k.Children.Add(keyLabel);
                 k.Children.Add(keyRooms);
@@ -208,6 +210,7 @@ namespace Massing_Programming
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                DGSF.ValueChanged += Slider_ValueChanged;
 
                 r.Children.Add(DGSFLabel);
                 r.Children.Add(DGSF);
@@ -222,7 +225,8 @@ namespace Massing_Programming
 
         /* ------------- Method for adding programs to an existing Department ------------- */
         public static void AddProgram(Grid ppt, int count, int start, Expander department,
-            Dictionary<string, Dictionary<string, float>> functions, SelectionChangedEventHandler ComboBox_SelectionChanged)
+            Dictionary<string, Dictionary<string, float>> functions, SelectionChangedEventHandler ComboBox_SelectionChanged,
+            RoutedPropertyChangedEventHandler<double> Slider_ValueChanged)
         {
             char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
@@ -285,6 +289,7 @@ namespace Massing_Programming
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                keyRooms.ValueChanged += Slider_ValueChanged;
 
                 k.Children.Add(keyLabel);
                 k.Children.Add(keyRooms);
@@ -305,6 +310,7 @@ namespace Massing_Programming
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                DGSF.ValueChanged += Slider_ValueChanged;
 
                 r.Children.Add(DGSFLabel);
                 r.Children.Add(DGSF);
