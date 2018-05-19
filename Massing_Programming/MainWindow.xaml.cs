@@ -121,7 +121,6 @@ namespace Massing_Programming
             }
             else
             {
-                MessageBox.Show("Something Went Wrong. Pleas Try Again.");
                 return;
             }
 
