@@ -164,7 +164,8 @@
                                 <StackPanel x:Name="DepartmentsWrapper"/>
                             </ScrollViewer>
                             <!--=====================-->
-                            <Separator Margin="0 5 0 0"/>
+                            <Separator x:Name="Seperator" Margin="0 5 0 0" 
+                                       Visibility="Hidden"/>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -328,29 +329,162 @@
                 <!--===================-->
                 <!--Visualization Settings Tab-->
                 <TabItem Header="Visualization" Padding="5">
-                    <ScrollViewer>
-
-                    </ScrollViewer>
+                    <ScrollViewer/>
                 </TabItem>
                 <!--=========================-->
             </TabControl>
             <!--=====================-->
-            <!--Visualization Frame-->
-            <HelixToolkit:HelixViewport3D x:Name="Viewport" ZoomExtentsWhenLoaded="True" 
-                                          Grid.Column="1"
+            <!-- Output Tab -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Visualization Frame-->
+                <HelixToolkit:HelixViewport3D x:Name="Viewport" Grid.Row="0"
+                                          ZoomExtentsWhenLoaded="True" 
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Stretch">
 
-                <!-- Remember to add light to the scene -->
-                <HelixToolkit:SunLight/>
+                    <!-- Remember to add light to the scene -->
+                    <HelixToolkit:SunLight/>
 
-                <!-- The content of this visual is defined in MainViewModel.cs -->
-                <ModelVisual3D x:Name="Visualization" Content="{Binding Model}"/>
+                    <!-- The content of this visual is defined in MainViewModel.cs -->
+                    <ModelVisual3D x:Name="Visualization" Content="{Binding Model}"/>
 
-                <!-- You can also add elements here in the xaml -->
-                <HelixToolkit:GridLinesVisual3D Width="300" Length="300" MinorDistance="10" MajorDistance="100" Thickness="0.5"/>
-            </HelixToolkit:HelixViewport3D>
-            <!--===================-->
+                    <!-- You can also add elements here in the xaml -->
+                    <HelixToolkit:GridLinesVisual3D Width="300" Length="300" MinorDistance="10" MajorDistance="100" Thickness="0.5"/>
+                </HelixToolkit:HelixViewport3D>
+                <!--===================-->
+                <!--Output Data Window-->
+                <Border BorderBrush="Black" BorderThickness="0.5"  Grid.Row="1"
+                        Padding="5 0 0 0">
+                    <Grid x:Name="OutputData">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Detail Column-->
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Construction Cost TextBlock-->
+                            <Grid Grid.Row ="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="ConstructionCostLable" Grid.Row ="0"
+                                   Text="Construction Cost: " FontSize="16"
+                                       VerticalAlignment="Center"/>
+                                <TextBlock x:Name="ConstructionCost" Grid.Row ="1"
+                                       FontSize="16"
+                                       VerticalAlignment="Bottom"/>
+                            </Grid>
+
+                            <!--Project Cost TextBlock-->
+                            <Grid Grid.Row ="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="ProjectCostLabel" Grid.Row ="0"
+                                   Text="Project Cost: " FontSize="16"
+                                       VerticalAlignment="Center"/>
+                                <TextBlock x:Name="ProjectCost" Grid.Row ="1"
+                                       FontSize="16"
+                                       VerticalAlignment="Bottom"/>
+                            </Grid>
+
+                            <!--Budget Difference TextBlock-->
+                            <Grid Grid.Row ="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="BudgetDifferenceLabel" Grid.Row ="0"
+                                   Text="Budget Difference: " FontSize="16"
+                                   VerticalAlignment="Center"/>
+                                <TextBlock x:Name="BudgetDifference" Grid.Row ="1"
+                                       FontSize="16"
+                                       VerticalAlignment="Bottom"/>
+                            </Grid>
+                        </Grid>
+                        <!--=============-->
+                        <!--General Information-->
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <!--Cost Per GSF -->
+                            <Grid Grid.Row="0" Background="#8eead4">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="CostPerGSFLable" Grid.Row="0" 
+                                       Text="Cost/GSF (Mid, Inluding Land Cost):"
+                                       FontSize="16"
+                                       VerticalAlignment="Top" Padding="5 0 0 0"/>
+                                <TextBlock x:Name="CostPerGSF" Grid.Row="1" 
+                                           VerticalAlignment="Stretch"
+                                           FontSize="16" Padding="0 0 5 0"/>
+                                <Grid/>
+                            </Grid>
+                            <!--===================-->
+
+                            <!-- BGSF Total and Limit-->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--Total BGSF-->
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="TotalBGSFLabel" Grid.Row="0"
+                                           Text="Total BGSF"
+                                           HorizontalAlignment="Center"
+                                           FontSize="28" FontWeight="Bold"
+                                           TextBlock.Foreground="#53c4e8"/>
+                                    <TextBlock x:Name="TotalBGSF" Grid.Row="1"
+                                           HorizontalAlignment="Center"
+                                           FontSize="28" FontWeight="Bold"
+                                           TextBlock.Foreground="#53c4e8"/>
+                                </Grid>
+
+                                <!--BGSF Limit-->
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="BGSFLimitLabel" Grid.Row="0"
+                                           Text="BGSF Limit"
+                                           HorizontalAlignment="Center"
+                                           FontSize="28" FontWeight="Bold"/>
+                                    <TextBlock x:Name="BGSFLimit" Grid.Row="1"
+                                           HorizontalAlignment="Center"
+                                           FontSize="28" FontWeight="Bold"/>
+                                </Grid>
+                            </Grid>
+                            <!--=====================-->
+                        </Grid>
+                        <!--====================-->
+                    </Grid>
+                </Border>
+                <!--===========-->
+            </Grid>
+            <!--============-->
         </Grid>
         <!--===================================-->
     </Border>

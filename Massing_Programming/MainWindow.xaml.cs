@@ -121,6 +121,7 @@ namespace Massing_Programming
             }
             else
             {
+                // Nothing Was Selected
                 return;
             }
 
@@ -211,6 +212,7 @@ namespace Massing_Programming
                 this.ProjectWidth.IsReadOnly = false;
                 this.ProjectWidth.Background = Brushes.White;
                 this.ProjectWidthButton.IsEnabled = true;
+                this.Seperator.Visibility = Visibility.Visible;
 
                 this.ProjectLength.IsReadOnly = false;
                 this.ProjectLength.Background = Brushes.White;
