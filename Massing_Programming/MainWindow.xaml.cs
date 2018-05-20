@@ -34,6 +34,14 @@ namespace Massing_Programming
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
 
+        // Output Variables
+        float constructionCost = new float();
+        float projectCost = new float();
+        float budgetDifference = new float();
+        float costPerGSF = new float();
+        float totalBGSF = new float();
+        float limitOfBGSF = new float();
+
         // Department Properties (Names Colors)
         List<String> namesOfDepartments = new List<string>();
         List<byte[]> colorsOfDepartments = new List<byte[]>();
@@ -228,6 +236,9 @@ namespace Massing_Programming
                 // Adding Department Expanders and Programs to the Controller Window
                 this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
+                float totalGSF = 0;
+                float totalRawDepartmentCost = 0;
+
                 for (int i = 0; i < this.initialNumberOfDepartments; i++)
                 {
                     // Setting up Initial Departments' Expanders
@@ -249,10 +260,14 @@ namespace Massing_Programming
                     for (int j = 0; j < initialNumberOfPrograms; j++)
                     {
                         // Calculating length of each program based on total area of the program and width of the Project Box
+                        ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                         Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                         Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
+                        totalGSF += ((float)(keyRooms.Value * DGSF.Value));
+                        totalRawDepartmentCost += totalGSF * this.functions[program.SelectedItem.ToString()]["cost"];
+                        
                         // Generate gradient colors for programs of each department
                         float stop = ((float)j) / ((float)initialNumberOfPrograms);
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -277,6 +292,9 @@ namespace Massing_Programming
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+
+                // Calculating Total Construction Cost
+                //float circulationCost = 
 
                 // Enabling the Disabled Controllers
                 this.ProjectWidth.IsReadOnly = false;
