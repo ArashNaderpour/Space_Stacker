@@ -142,13 +142,83 @@ namespace Massing_Programming
                     Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
                     if (r > 1)
                     {
-                        tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
-                        tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
-                        tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
-                        tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
-                        tempDictionary.Add("DGSFMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
-                        tempDictionary.Add("DGSFVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
-                        tempDictionary.Add("DGSFMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+                        String name = (String)(range.Cells[r, 1] as Excel.Range).Value2;
+                        try
+                        {
+                            tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("\"Cost\" Value is not accessable for " + "\"" + name + "\"" + ", \"500\" will be considered as the cost value automatically.");
+                            tempDictionary.Add("cost", 500);
+                        }
+                        if (name == "MEP" || name == "Circulation" || name == "BES" || name == "Building Exterior Stacking")
+                        {
+                            tempDictionary.Add("keyMin", 0);
+                            tempDictionary.Add("keyVal", 0);
+                            tempDictionary.Add("keyMax", 0);
+                            tempDictionary.Add("DGSFMin", 0);
+                            tempDictionary.Add("DGSFVal", 0);
+                            tempDictionary.Add("DGSFMax", 0);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"Key Rooms Slider Minimum\" Value is not accessable for " + "\"" + name + "\"" + ", \"1\" will be considered as the cost value automatically.");
+                                tempDictionary.Add("keyMin", 1);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"Key Rooms Slider Value\" Value is not accessable for " + "\"" + name + "\"" + ", \"5\" will be considered as the cost value automatically.");
+                                tempDictionary.Add("keyVal", 5);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"Key Rooms Slider Maximum\" Value is not accessable for " + "\"" + name + "\"" + ", \"10\" will be considered as the cost value automatically.");
+                                tempDictionary.Add("keyMax", 10);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("DGSFMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"DGSF Slider Minimum\" Value is not accessable for " + "\"" + name + "\"" + ", \"100\" will be considered as the cost value automatically.");
+                                tempDictionary.Add("DGSFMin", 100);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("DGSFVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"DGSF Slider Value\" Value is not accessable for " + "\"" + name + "\"" + ", \"500\" will be considered as the cost value automatically.");
+                                tempDictionary.Add("DGSFVal", 500);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("DGSFMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"DGSF Slider Maximum\" Value is not accessable for " + "\"" + name + "\"" + ", \"1000\" will be considered as the cost value automatically.");
+                                tempDictionary.Add("DGSFMax", 1000);
+                            }
+                        }
+
 
                         //Adding Data to Main Data Dictionary
                         this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
