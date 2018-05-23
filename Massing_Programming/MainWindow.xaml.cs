@@ -56,10 +56,12 @@ namespace Massing_Programming
         {
             InitializeComponent();
 
-            // Setting up values of the initial dimensions of the Project Box
-            this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
-            this.ProjectLength.Text = initialProjectBoxDims[1].ToString();
-            this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
+            // Setting up values of the initial dimensions of the Project Box and Floor Height
+            this.ProjectWidth.Text = this.initialProjectBoxDims[0].ToString();
+            this.ProjectLength.Text = this.initialProjectBoxDims[1].ToString();
+            this.ProjectHeight.Text = this.initialProjectBoxDims[2].ToString();
+
+            this.FloorHeight.Text = this.initialProgramHeight.ToString();
 
             // ProjectBox Visualization
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -73,7 +75,8 @@ namespace Massing_Programming
 
             this.Visualization.Content = stackingVisualization;
         }
-        /*-----------------------------------------------------------------End of Windows Load-------------------------------------------------------------------*/
+
+        /* ########################################################### End of Windows Load and Start of Handeling Events ########################################################### */
 
         /*---------------- Handeling Open Spread-Sheet File Event ----------------*/
         private void OpenSpreadSheet_Click(object sender, RoutedEventArgs e)
@@ -293,26 +296,8 @@ namespace Massing_Programming
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
 
-                // Calculating Total Construction Cost
-                float landCost = float.Parse(this.LandCost.Text);
-
-                float generalCosts = float.Parse(this.GeneralCosts.Text);
-                float designContingency = float.Parse(this.DesignContingency.Text);
-                float buildContingency = float.Parse(this.BuildContingency.Text);
-                float CCIP = float.Parse(this.CCIP.Text);
-                float CMFee = float.Parse(this.CMFee.Text);
-
-                float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
-
-                float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
-
-                float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
-
-                this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost + 
-                    landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
-
-                this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
-
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(totalGSF, totalRawDepartmentCost);
 
                 // Enabling the Disabled Controllers
                 this.ProjectWidth.IsReadOnly = false;
@@ -331,9 +316,8 @@ namespace Massing_Programming
                 this.BGSFBox.IsEnabled = true;
                 this.ProgramLabel.IsEnabled = true;
 
-                this.FloorHeight.IsEnabled = true;
+                this.FloorHeight.IsReadOnly = false;
                 this.FloorHeight.Background = Brushes.White;
-                this.FloorHeight.Text = initialProgramHeight.ToString();
                 this.FloorHeightButton.IsEnabled = true;
 
                 this.NumberOfDepartments.IsEnabled = true;
@@ -371,10 +355,10 @@ namespace Massing_Programming
                     return;
                 }
 
-                /*---------------- If user input for Number of Departments is larger than zero ----------------*/
+                // If user Input for Number of Departments is Larger Than Zero
                 if (input > 0)
                 {
-                    /* Decrease Number of Departments */
+                    // Decrease Number of Departments
                     if (existingDepartments > input)
                     {
                         int difference = existingDepartments - input;
@@ -505,11 +489,6 @@ namespace Massing_Programming
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
-                    // Calculating length of each program based on total area of the program and width of the Project Box
-                    //Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                    //Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-
-                    //Slider DGSF = LogicalTreeHelper.FindLogicalNode(decimal, expander.Name + "NumberInputTextBox") as TextBox;
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -529,7 +508,7 @@ namespace Massing_Programming
             }
         }
 
-        /* ----------------The event for Setting Name of the Departments and the Number of Programs it contains ---------------- */
+        /* ----------------The Event for Setting Name of the Departments and the Number of Programs it contains ---------------- */
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -1169,6 +1148,52 @@ namespace Massing_Programming
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                 }
             }
+        }
+
+        /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
+
+        // The Method For All The Calculations and Visualizations of The Data
+        private void CalculationsAndOutputs(float totalGSF, float totalRawDepartmentCost)
+        {
+            // Other Project Costs
+            float landCost = float.Parse(this.LandCost.Text);
+
+            float generalCosts = float.Parse(this.GeneralCosts.Text);
+            float designContingency = float.Parse(this.DesignContingency.Text);
+            float buildContingency = float.Parse(this.BuildContingency.Text);
+            float CCIP = float.Parse(this.CCIP.Text);
+            float CMFee = float.Parse(this.CMFee.Text);
+
+            // Calculating Total Construction Cost and Project Cost
+            float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
+
+            float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
+
+            float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
+
+            this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
+                landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
+            
+            this.projectCost = this.constructionCost * float.Parse(this.IndirectMultiplier.Text);
+
+            // Information Outputs
+            this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
+            this.ProjectCost.Text = ExtraMethods.CastDollar(this.projectCost);
+
+            this.budgetDifference = float.Parse(this.TotalBudget.Text) - this.projectCost;
+
+            if (budgetDifference > 0)
+            {
+                this.BudgetDifference.Foreground = Brushes.Green;
+                this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+            }
+            else
+            {
+                this.BudgetDifference.Foreground = Brushes.Red;
+                this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+            }
+
+            this.BGSFLimit.Text = ExtraMethods.CalculateBGSFLimite(this.initialProjectBoxDims, this.initialProgramHeight);
 
         }
     }

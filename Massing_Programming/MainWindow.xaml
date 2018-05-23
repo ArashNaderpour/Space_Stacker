@@ -96,7 +96,7 @@
                                 <TextBlock Text="Floor Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="3" Margin="0 0 0 5"/>
                                 <TextBox x:Name="FloorHeight" Padding="2" HorizontalAlignment="Stretch" 
-                                         IsEnabled="False" Grid.Column="1" Grid.Row="3" Margin="0 0 0 5" 
+                                         IsReadOnly="True" Grid.Column="1" Grid.Row="3" Margin="0 0 0 5" 
                                          Background="#e2e2e2"/>
                                 <Button x:Name="FloorHeightButton" Content="Set" Grid.Column="2" Grid.Row="3" 
                                         Margin="0 0 0 5" Click="ProjectSize_Click" IsEnabled="False"/>
@@ -190,11 +190,13 @@
                                     <ColumnDefinition Width="0.75*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="Total Budget" VerticalAlignment="Center" Grid.Column="0"
-                                               Margin="0 0 0 5"/>
-                                <TextBox Text="150000000" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Margin="0 0 0 5"/>
+                                <TextBlock Text="Total Budget" VerticalAlignment="Center" 
+                                           Grid.Column="0" Margin="0 0 0 5"/>
+                                <TextBox x:Name="TotalBudget" Text="150000000" Padding="2" 
+                                         HorizontalAlignment="Stretch" Grid.Column="1" 
+                                         Margin="0 0 0 5"/>
+                                <Button x:Name="TotalBudgetButton" Content="Set" Grid.Column="2" 
+                                        Margin="0 0 0 5"/>
                             </Grid>
                             <!--======================-->
                             <!--Gross Miltiplier setting-->
@@ -385,8 +387,8 @@
                         Padding="5 0 0 0">
                     <Grid x:Name="OutputData">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
                         <!--Detail Column-->
                         <Grid Grid.Column="0">
@@ -403,10 +405,10 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock x:Name="ConstructionCostLable" Grid.Row ="0"
-                                   Text="Construction Cost: " FontSize="16" FontWeight="Bold"
+                                   Text="Construction Cost: " FontSize="18" FontWeight="Bold"
                                        VerticalAlignment="Center"/>
                                 <TextBlock x:Name="ConstructionCost" Grid.Row ="1"
-                                       FontSize="16"
+                                       FontSize="18" FontWeight="SemiBold"
                                        VerticalAlignment="Top"/>
                             </Grid>
 
@@ -417,10 +419,10 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock x:Name="ProjectCostLabel" Grid.Row ="0"
-                                   Text="Project Cost: " FontSize="16" FontWeight="Bold"
+                                   Text="Project Cost: " FontSize="18" FontWeight="Bold"
                                        VerticalAlignment="Center"/>
                                 <TextBlock x:Name="ProjectCost" Grid.Row ="1"
-                                       FontSize="16"
+                                       FontSize="18" FontWeight="SemiBold"
                                        VerticalAlignment="Top"/>
                             </Grid>
 
@@ -431,10 +433,10 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock x:Name="BudgetDifferenceLabel" Grid.Row ="0"
-                                   Text="Budget Difference: " FontSize="16" FontWeight="Bold"
+                                   Text="Budget Difference: " FontSize="18" FontWeight="Bold"
                                    VerticalAlignment="Center"/>
                                 <TextBlock x:Name="BudgetDifference" Grid.Row ="1"
-                                       FontSize="16"
+                                       FontSize="18" FontWeight="SemiBold"
                                        VerticalAlignment="top"/>
                             </Grid>
                         </Grid>
@@ -478,11 +480,11 @@
                                     <TextBlock x:Name="TotalBGSFLabel" Grid.Row="0"
                                            Text="Total BGSF"
                                            HorizontalAlignment="Center"
-                                           FontSize="28" FontWeight="Bold"
+                                           FontSize="30" FontWeight="Bold"
                                            TextBlock.Foreground="#53c4e8"/>
                                     <TextBlock x:Name="TotalBGSF" Grid.Row="1"
                                            HorizontalAlignment="Center"
-                                           FontSize="28" FontWeight="Bold"
+                                           FontSize="30" FontWeight="SemiBold"
                                            TextBlock.Foreground="#53c4e8"/>
                                 </Grid>
 
@@ -495,10 +497,10 @@
                                     <TextBlock x:Name="BGSFLimitLabel" Grid.Row="0"
                                            Text="BGSF Limit"
                                            HorizontalAlignment="Center"
-                                           FontSize="28" FontWeight="Bold"/>
+                                           FontSize="30" FontWeight="Bold"/>
                                     <TextBlock x:Name="BGSFLimit" Grid.Row="1"
-                                           HorizontalAlignment="Center"
-                                           FontSize="28" FontWeight="Bold"/>
+                                           HorizontalAlignment="Center" 
+                                           FontSize="30" FontWeight="SemiBold"/>
                                 </Grid>
                             </Grid>
                             <!--=====================-->

@@ -9,6 +9,13 @@ namespace Massing_Programming
     class ExtraMethods
     {
 
+        public static string CalculateBGSFLimite(float[] projectDims, float floorHeight)
+        {
+            float result = (projectDims[0] * projectDims[1]) * (projectDims[2] / floorHeight);
+
+            return result.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+        }
+
         public static string CastDollar(float dollar)
         {
             return dollar.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
