@@ -9,6 +9,11 @@ namespace Massing_Programming
     class ExtraMethods
     {
 
+        public static string CastDollar(float dollar)
+        {
+            return dollar.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
+        }
+
         public static float MapValue(float min1, float max1, float min2, float max2, float val)
         {
             return min2 + (max2 - min2) * ((val - min1) / (max1 - min1));

@@ -266,7 +266,7 @@ namespace Massing_Programming
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
                         totalGSF += ((float)(keyRooms.Value * DGSF.Value));
-                        totalRawDepartmentCost += totalGSF * this.functions[program.SelectedItem.ToString()]["cost"];
+                        totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
                         
                         // Generate gradient colors for programs of each department
                         float stop = ((float)j) / ((float)initialNumberOfPrograms);
@@ -294,7 +294,25 @@ namespace Massing_Programming
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
 
                 // Calculating Total Construction Cost
-                //float circulationCost = 
+                float landCost = float.Parse(this.LandCost.Text);
+
+                float generalCosts = float.Parse(this.GeneralCosts.Text);
+                float designContingency = float.Parse(this.DesignContingency.Text);
+                float buildContingency = float.Parse(this.BuildContingency.Text);
+                float CCIP = float.Parse(this.CCIP.Text);
+                float CMFee = float.Parse(this.CMFee.Text);
+
+                float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
+
+                float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
+
+                float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
+
+                this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost + 
+                    landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
+
+                this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
+
 
                 // Enabling the Disabled Controllers
                 this.ProjectWidth.IsReadOnly = false;

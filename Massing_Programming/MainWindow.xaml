@@ -86,7 +86,7 @@
                                 <TextBlock Text="Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectHeight" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsReadOnly="False"
+                                             Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsReadOnly="True"
                                          Background="#e2e2e2"/>
                                 <Button x:Name="ProjectHeightButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="2" Margin="0 0 0 5" Click="ProjectSize_Click"
@@ -267,9 +267,11 @@
 
                                 <TextBlock Text="Land's Cost" VerticalAlignment="Center" Grid.Column="0"
                                                Margin="0 0 0 5"/>
-                                <TextBox Text="10000000" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Margin="0 0 0 5"/>
+                                <TextBox x:Name="LandCost" Text="10000000" Padding="2" 
+                                         HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Margin="0 0 0 5"/>
+                                <Button x:Name="LandCostButton" Content="Set" 
+                                        Grid.Column="2" Margin="0 0 0 5"/>
                             </Grid>
                             <!--================================-->
                             <!--====================-->
@@ -293,45 +295,55 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <!-- Set General Requirements/GC's Multiplier-->
+                                <!-- Set General Requirements/GC's -->
                                 <TextBlock Text="General Costs" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="0" Margin="0 0 0 5"/>
-                                <TextBox Text="10" Padding="2" HorizontalAlignment="Stretch" 
+                                <TextBox x:Name="GeneralCosts" Text="0" Padding="2" 
+                                         HorizontalAlignment="Stretch" 
                                              Grid.Column="1" Grid.Row="0" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Grid.Row="0" Margin="0 0 0 5"/>
+                                <Button x:Name="GeneralCostsButton" Content="Set" 
+                                        Grid.Column="2" Grid.Row="0" Margin="0 0 0 5"/>
                                 <!--======================-->
-                                <!-- Set Design Contingency Multiplier-->
+                                <!-- Set Design Contingency -->
                                 <TextBlock Text="Design Contingency" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="1" Margin="0 0 0 5"/>
-                                <TextBox Text="1" Padding="2" HorizontalAlignment="Stretch" 
+                                <TextBox x:Name="DesignContingency" Text="0" Padding="2" HorizontalAlignment="Stretch" 
                                              Grid.Column="1" Grid.Row="1" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Grid.Row="1" Margin="0 0 0 5"/>
+                                <Button x:Name="DesignContingencyButton" Content="Set" Grid.Column="2" Grid.Row="1" 
+                                        Margin="0 0 0 5"/>
                                 <!--======================-->
-                                <!-- Set Build Contingency Multiplier-->
+                                <!-- Set Build Contingency -->
                                 <TextBlock Text="Build Contingency" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
-                                <TextBox Text="1" Padding="2" HorizontalAlignment="Stretch" 
+                                <TextBox x:Name="BuildContingency" Text="0" Padding="2" HorizontalAlignment="Stretch" 
                                              Grid.Column="1" Grid.Row="2" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Grid.Row="2" Margin="0 0 0 5"/>
+                                <Button x:Name="BuildContingencyButton" Content="Set" Grid.Column="2" Grid.Row="2" 
+                                        Margin="0 0 0 5"/>
                                 <!--======================-->
-                                <!-- Set CCIP Multiplier-->
+                                <!-- Set CCIP -->
                                 <TextBlock Text="CCIP" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="3" Margin="0 0 0 5"/>
-                                <TextBox Text="2.5" Padding="2" HorizontalAlignment="Stretch" 
+                                <TextBox x:Name="CCIP" Text="0" Padding="2" HorizontalAlignment="Stretch" 
                                              Grid.Column="1" Grid.Row="3" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Grid.Row="3" Margin="0 0 0 5"/>
-                                <!-- Set CM FEE Multiplier-->
+                                <Button x:Name="CCIPButton" Content="Set" Grid.Column="2" Grid.Row="3" 
+                                        Margin="0 0 0 5"/>
+                                <!-- Set CM FEE -->
                                 <TextBlock Text="CM Fee" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="4" Margin="0 0 0 5"/>
-                                <TextBox Text="3" Padding="2" HorizontalAlignment="Stretch" 
+                                <TextBox x:Name="CMFee" Text="0" Padding="2" HorizontalAlignment="Stretch" 
                                              Grid.Column="1" Grid.Row="4" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Grid.Row="4" Margin="0 0 0 5"/>
-                                <!-- Set Percentage Multiplier-->
-                                <TextBlock Text="Percentage" VerticalAlignment="Center" Grid.Column="0"
-                                               Grid.Row="5" Margin="0 0 0 5"/>
-                                <TextBox Text="60" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="5" Margin="0 0 0 5"/>
-                                <Button Content="Set" Grid.Column="2" Grid.Row="5" Margin="0 0 0 5"/>
+                                <Button x:Name="CMFeeButton" Content="Set" Grid.Column="2" Grid.Row="4" 
+                                        Margin="0 0 0 5"/>
+                                <!-- Set Percentage -->
+                                <TextBlock Text="Percentage" VerticalAlignment="Center" 
+                                           Grid.Column="0" Grid.Row="5" Margin="0 0 0 5"/>
+                                <TextBox x:Name="OtherCostsPercentage" Padding="2" IsEnabled="False" 
+                                         HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="5" 
+                                         Margin="0 0 0 5" Background="#e2e2e2"/>
+                                <Button x:Name="OtherCostsPercentageButton" IsEnabled="False" 
+                                        Content="Set" Grid.Column="2" Grid.Row="5" 
+                                        Margin="0 0 0 5"/>
                             </Grid>
                             <!--========================-->
                             <!--====================-->
@@ -391,11 +403,11 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock x:Name="ConstructionCostLable" Grid.Row ="0"
-                                   Text="Construction Cost: " FontSize="16"
+                                   Text="Construction Cost: " FontSize="16" FontWeight="Bold"
                                        VerticalAlignment="Center"/>
                                 <TextBlock x:Name="ConstructionCost" Grid.Row ="1"
                                        FontSize="16"
-                                       VerticalAlignment="Bottom"/>
+                                       VerticalAlignment="Top"/>
                             </Grid>
 
                             <!--Project Cost TextBlock-->
@@ -405,11 +417,11 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock x:Name="ProjectCostLabel" Grid.Row ="0"
-                                   Text="Project Cost: " FontSize="16"
+                                   Text="Project Cost: " FontSize="16" FontWeight="Bold"
                                        VerticalAlignment="Center"/>
                                 <TextBlock x:Name="ProjectCost" Grid.Row ="1"
                                        FontSize="16"
-                                       VerticalAlignment="Bottom"/>
+                                       VerticalAlignment="Top"/>
                             </Grid>
 
                             <!--Budget Difference TextBlock-->
@@ -419,11 +431,11 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock x:Name="BudgetDifferenceLabel" Grid.Row ="0"
-                                   Text="Budget Difference: " FontSize="16"
+                                   Text="Budget Difference: " FontSize="16" FontWeight="Bold"
                                    VerticalAlignment="Center"/>
                                 <TextBlock x:Name="BudgetDifference" Grid.Row ="1"
                                        FontSize="16"
-                                       VerticalAlignment="Bottom"/>
+                                       VerticalAlignment="top"/>
                             </Grid>
                         </Grid>
                         <!--=============-->
