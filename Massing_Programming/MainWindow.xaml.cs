@@ -264,6 +264,7 @@ namespace Massing_Programming
                     {
                         // Calculating length of each program based on total area of the program and width of the Project Box
                         ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                        Label programLabel = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                         Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                         Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
@@ -274,6 +275,10 @@ namespace Massing_Programming
                         // Generate gradient colors for programs of each department
                         float stop = ((float)j) / ((float)initialNumberOfPrograms);
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                        // Setting Program Label Background Color
+                        programLabel.Background = new SolidColorBrush(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                         float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };

@@ -161,9 +161,13 @@ namespace Massing_Programming
 
                 // Programs
                 Label programLabel = new Label();
+                programLabel.Name = department.Name + "Label" + i.ToString();
                 programLabel.Content = alphabet[i];
                 programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
+                programLabel.Margin = new Thickness(2, 5, 2, 0);
                 programLabel.Width = 25;
+
                 ComboBox program = new ComboBox();
                 program.Name = department.Name + "ComboBox" + i.ToString();
                 foreach (string functionName in functions.Keys)
@@ -254,8 +258,12 @@ namespace Massing_Programming
 
                 // Programs
                 Label programLabel = new Label();
+                programLabel.Name = department.Name + "Label" + (i).ToString();
                 programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
+                programLabel.Margin = new Thickness(2, 5, 2, 0);
                 programLabel.Width = 25;
+
                 if (i < alphabet.Length)
                 {
                     programLabel.Content = alphabet[i];
