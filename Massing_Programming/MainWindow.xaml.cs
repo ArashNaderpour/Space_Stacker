@@ -924,6 +924,22 @@ namespace Massing_Programming
                     return;
                 }
             }
+
+            // BGSF Limit on Output Window Changes
+            this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) *
+                (float.Parse(this.ProjectHeight.Text) / float.Parse(this.FloorHeight.Text));
+            this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+
+            if (this.totalBGSF < this.limitOfBGSF)
+            {
+                this.TotalBGSF.Foreground = this.TotalBGSFLabel.Foreground;
+                this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+            }
+            else
+            {
+                this.TotalBGSF.Foreground = Brushes.Red;
+                this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+            }
         }
 
         /*---------------- Program ComboBox Change Event Handler ----------------*/
@@ -1194,7 +1210,8 @@ namespace Massing_Programming
             }
 
             // BGSF Limit
-            this.limitOfBGSF = (this.initialProjectBoxDims[0] * this.initialProjectBoxDims[1]) * (this.initialProjectBoxDims[2] / this.initialProgramHeight);
+            this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) * 
+                (float.Parse(this.ProjectHeight.Text) / float.Parse(this.FloorHeight.Text));
             this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
 
             // Calculating Total BGSF Used
