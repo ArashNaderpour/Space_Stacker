@@ -264,7 +264,6 @@ namespace Massing_Programming
                     {
                         // Calculating length of each program based on total area of the program and width of the Project Box
                         ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
-                        Label programLabel = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                         Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                         Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
@@ -277,7 +276,7 @@ namespace Massing_Programming
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
                         // Setting Program Label Background Color
-                        programLabel.Background = new SolidColorBrush(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+                        ExtraMethods.ChangeLabelColor(department, j, gradient);
 
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
@@ -417,6 +416,10 @@ namespace Massing_Programming
                                 // Add Program's Boxes for the added Departments
                                 float stop = ((float)j) / ((float)initialNumberOfPrograms);
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                                // Setting Program Label Background Color
+                                ExtraMethods.ChangeLabelColor(department, j, gradient);
+
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
@@ -497,6 +500,10 @@ namespace Massing_Programming
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                    // Setting Program Label Background Color
+                    ExtraMethods.ChangeLabelColor(department, j, gradient);
+
                     Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                     float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
@@ -521,12 +528,12 @@ namespace Massing_Programming
             // Setting the Name of the Department (recognizing which button was pressed)
             if (namesOfDepartments.Contains(btn.Name.Replace("SetNameButton", "")))
             {
-                Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
+                Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
                 TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
 
                 if (nameTextBox.Text != "")
                 {
-                    expander.Header = nameTextBox.Text; ;
+                    department.Header = nameTextBox.Text; ;
                 }
                 else
                 {
@@ -538,10 +545,10 @@ namespace Massing_Programming
             // Setting the Number of Programs in the Department (Number of Programs button was pressed) 
             else
             {
-                Expander expander = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
+                Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
                 TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "NumberInputTextBox")) as TextBox;
                 Grid programs = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "") + "Programs") as Grid;
-                int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(expander);
+                int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(department);
 
                 int input = new int();
                 int existingPrograms = programs.RowDefinitions.Count;
@@ -566,8 +573,8 @@ namespace Massing_Programming
                         int firstProgramBoxIndex = 1;
                         for (int i = 0; i < departmentIndex + 1; i++)
                         {
-                            Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
-                            StackPanel expanderContent = tempExpander.Content as StackPanel;
+                            Expander tempDepartment = this.DepartmentsWrapper.Children[i] as Expander;
+                            StackPanel expanderContent = tempDepartment.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
                             lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
 
@@ -578,18 +585,18 @@ namespace Massing_Programming
                         }
 
                         int difference = input - existingPrograms;
-                        ExtraMethods.AddProgram(programs, difference, existingPrograms, expander, this.functions,
+                        ExtraMethods.AddProgram(programs, difference, existingPrograms, department, this.functions,
                             new SelectionChangedEventHandler(SelectedProgram_Chenged), Slider_ValueChanged);
 
-                        int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(expander);
+                        int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(department);
 
                         // Calculating total length of the exsiting programs
-                        double totalExistingProgramsLength = new double();
+                        float totalExistingProgramsLength = new float();
+
                         for (int i = firstProgramBoxIndex; i < lastProgramBoxIndex; i++)
                         {
-                            totalExistingProgramsLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                            totalExistingProgramsLength += (float) this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
-                        totalExistingProgramsLength = (float)totalExistingProgramsLength;
 
                         // Extracting Color of Department
                         byte[] color = this.colorsOfDepartments[departmentIndex];
@@ -600,6 +607,10 @@ namespace Massing_Programming
                             float stop = ((float)i) / ((float)(input));
 
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                            // Setting Program Label Background Color
+                            ExtraMethods.ChangeLabelColor(department, i, gradient);
+
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                             if (i < existingPrograms)
@@ -617,7 +628,7 @@ namespace Massing_Programming
 
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
-                                programBox.SetName(expander.Name + "Box" + (i).ToString());
+                                programBox.SetName(department.Name + "Box" + (i).ToString());
 
                                 this.stackingVisualization.Children.Insert(lastProgramBoxIndex, programBox);
                                 lastProgramBoxIndex += 1;
@@ -632,8 +643,8 @@ namespace Massing_Programming
                         int firstProgramBoxIndex = 1;
                         for (int i = 0; i < departmentIndex + 1; i++)
                         {
-                            Expander tempExpander = this.DepartmentsWrapper.Children[i] as Expander;
-                            StackPanel expanderContent = tempExpander.Content as StackPanel;
+                            Expander tempDepartment = this.DepartmentsWrapper.Children[i] as Expander;
+                            StackPanel expanderContent = tempDepartment.Content as StackPanel;
                             Grid programsGrid = expanderContent.Children[2] as Grid;
                             lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
                             if (i < departmentIndex)
@@ -657,6 +668,10 @@ namespace Massing_Programming
                                 float stop = ((float)i) / ((float)(existingPrograms - difference));
 
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                                // Setting Program Label Background Color
+                                ExtraMethods.ChangeLabelColor(department, i, gradient);
+
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                                 ((GeometryModel3D)(this.stackingVisualization.Children[firstProgramBoxIndex + i])).Material = programBoxMaterial;

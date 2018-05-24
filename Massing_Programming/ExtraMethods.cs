@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections.Generic;
@@ -30,6 +31,21 @@ namespace Massing_Programming
             department.Name = "D" + (index + 1).ToString();
 
             return department;
+        }
+
+        public static void ChangeLabelColor(Expander department, int index, byte[] color)
+        {
+            Label programLabel = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + index.ToString()) as Label;
+
+            int mid = (Convert.ToInt32(color[0]) + Convert.ToInt32(color[1]) + Convert.ToInt32(color[2])) / 3;
+        
+            if(mid < 60)
+            {
+                programLabel.Foreground = Brushes.White;
+            }
+
+            programLabel.Background = new SolidColorBrush(Color.FromRgb(color[0], color[1], color[2]));
+
         }
 
         public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput,
