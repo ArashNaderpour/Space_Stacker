@@ -1166,7 +1166,7 @@ namespace Massing_Programming
 
             // Calculating Total Construction Cost and Project Cost
             float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
-
+            
             float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
 
             float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
@@ -1193,8 +1193,33 @@ namespace Massing_Programming
                 this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
             }
 
-            this.BGSFLimit.Text = ExtraMethods.CalculateBGSFLimite(this.initialProjectBoxDims, this.initialProgramHeight);
+            // BGSF Limit
+            this.limitOfBGSF = (this.initialProjectBoxDims[0] * this.initialProjectBoxDims[1]) * (this.initialProjectBoxDims[2] / this.initialProgramHeight);
+            this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
 
+            // Calculating Total BGSF Used
+            float circulationGSF = (((float)this.CirculationSlider.Value) / 100) * totalGSF;
+
+            float MEPGSF = (((float)this.MEPSlider.Value) / 100) * (totalGSF + circulationGSF);
+
+            float exteriorStackGSF = (((float)this.ExteriorStackSlider.Value) / 100) * (totalGSF + circulationGSF + MEPGSF);
+
+            this.totalBGSF = totalGSF + circulationGSF + MEPGSF + exteriorStackGSF;
+
+            if (this.totalBGSF < this.limitOfBGSF)
+            {
+                this.TotalBGSF.Foreground = this.TotalBGSFLabel.Foreground;
+                this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+            }
+            else
+            {
+                this.TotalBGSF.Foreground = Brushes.Red;
+                this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+            }
+
+            // Calculating and Visualizing Cost/GSF
+            this.costPerGSF = this.constructionCost / this.totalBGSF;
+            this.CostPerGSF.Text = this.costPerGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
         }
     }
 }
