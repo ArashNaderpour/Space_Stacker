@@ -272,7 +272,7 @@ namespace Massing_Programming
                         // Adding to Total GSF and Total Raw Cost
                         this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
                         this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
-                        
+
                         // Generate gradient colors for programs of each department
                         float stop = ((float)j) / ((float)initialNumberOfPrograms);
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -301,7 +301,7 @@ namespace Massing_Programming
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
-                
+
                 // All The Calculation, Prepration, and Visualization of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
@@ -389,7 +389,6 @@ namespace Massing_Programming
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                                this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
                                 // Subtracting From Total GSF and Total Raw Cost
                                 this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
@@ -399,7 +398,7 @@ namespace Massing_Programming
                                 this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
                             }
                         }
-                        
+
                         // All The Calculation, Prepration, and Visualization of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
                     }
@@ -458,7 +457,7 @@ namespace Massing_Programming
                                 this.stackingVisualization.Children.Insert(this.stackingVisualization.Children.Count, programBox);
                             }
                         }
-                        
+
                         // All The Calculation, Prepration, and Visualization of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
                     }
@@ -647,7 +646,7 @@ namespace Massing_Programming
 
                         for (int i = firstProgramBoxIndex; i < lastProgramBoxIndex; i++)
                         {
-                            totalExistingProgramsLength += (float) this.stackingVisualization.Children[i].Bounds.SizeY;
+                            totalExistingProgramsLength += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
 
                         // Extracting Color of Department
@@ -671,8 +670,16 @@ namespace Massing_Programming
                             }
                             else
                             {
-                                // Calculating length of each program based on total area of the program and width of the Project Box
+                                // Calculating Raw Cost and GSF of Each Program
+                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + i.ToString()) as ComboBox;
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + i.ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + i.ToString()) as Slider;
 
+                                // Adding to Total GSF and Total Raw Cost
+                                this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
+                                this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
+                                // Calculating Length of Each Program Based on Width of The Project Box
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
                                     ((totalExistingProgramsLength + ((i - existingPrograms) * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
@@ -686,6 +693,9 @@ namespace Massing_Programming
                                 lastProgramBoxIndex += 1;
                             }
                         }
+
+                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
                     }
 
                     // Decrease Number of Programs
@@ -714,7 +724,7 @@ namespace Massing_Programming
                         for (int i = 0; i < existingPrograms; i++)
                         {
                             // Change colors of the remaining programs
-                            if (i < existingPrograms - difference)
+                            if (i < input)
                             {
                                 // Generate gradient colors for programs of each department
                                 float stop = ((float)i) / ((float)(existingPrograms - difference));
@@ -732,6 +742,16 @@ namespace Massing_Programming
                             // Omit programs' properties and visualizations
                             else
                             {
+                                // Calculating Raw Cost and GSF of Each Program
+                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programs.RowDefinitions.Count - 1).ToString()) as ComboBox;
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
+                                MessageBox.Show(((float)(keyRooms.Value * DGSF.Value)).ToString());
+                                // Adding to Total GSF and Total Raw Cost
+                                this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
+                                this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
+                                // Removing UI Elemets From The Controller Window
                                 foreach (UIElement element in programs.Children)
                                 {
                                     if (Grid.GetRow(element) == programs.RowDefinitions.Count - 1)
@@ -751,6 +771,9 @@ namespace Massing_Programming
                                 lastProgramBoxIndex += -1;
                             }
                         }
+
+                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
                     }
                     if (input == existingPrograms)
                     {
@@ -1254,14 +1277,14 @@ namespace Massing_Programming
 
             // Calculating Total Construction Cost and Project Cost
             float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
-            
+
             float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
 
             float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
 
             this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
                 landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
-            
+
             this.projectCost = this.constructionCost * float.Parse(this.IndirectMultiplier.Text);
 
             // Information Outputs
@@ -1282,7 +1305,7 @@ namespace Massing_Programming
             }
 
             // BGSF Limit
-            this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) * 
+            this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) *
                 (float.Parse(this.ProjectHeight.Text) / float.Parse(this.FloorHeight.Text));
             this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
 
