@@ -42,6 +42,10 @@ namespace Massing_Programming
         float totalBGSF = new float();
         float limitOfBGSF = new float();
 
+        // Temp Output Variables
+        float totalGSF = new float();
+        float totalRawDepartmentCost = new float();
+
         // Department Properties (Names Colors)
         List<String> namesOfDepartments = new List<string>();
         List<byte[]> colorsOfDepartments = new List<byte[]>();
@@ -239,9 +243,6 @@ namespace Massing_Programming
                 // Adding Department Expanders and Programs to the Controller Window
                 this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
-                float totalGSF = 0;
-                float totalRawDepartmentCost = 0;
-
                 for (int i = 0; i < this.initialNumberOfDepartments; i++)
                 {
                     // Setting up Initial Departments' Expanders
@@ -262,14 +263,15 @@ namespace Massing_Programming
 
                     for (int j = 0; j < initialNumberOfPrograms; j++)
                     {
-                        // Calculating length of each program based on total area of the program and width of the Project Box
+                        // Calculating Length of Each Program Based on Total Area of The Program and Width of The Project Box
                         ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                         Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                         Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
-                        totalGSF += ((float)(keyRooms.Value * DGSF.Value));
-                        totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+                        // Adding to Total GSF and Total Raw Cost
+                        this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
+                        this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
                         
                         // Generate gradient colors for programs of each department
                         float stop = ((float)j) / ((float)initialNumberOfPrograms);
@@ -299,9 +301,9 @@ namespace Massing_Programming
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
-
+                
                 // All The Calculation, Prepration, and Visualization of The Output Data
-                CalculationsAndOutputs(totalGSF, totalRawDepartmentCost);
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Enabling the Disabled Controllers
                 this.ProjectWidth.IsReadOnly = false;
@@ -371,8 +373,8 @@ namespace Massing_Programming
                         {
                             int lastIndex = this.DepartmentsWrapper.Children.Count - 1;
 
-                            Expander expander = this.DepartmentsWrapper.Children[lastIndex] as Expander;
-                            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(expander, expander.Name + "NumberInputTextBox") as TextBox;
+                            Expander department = this.DepartmentsWrapper.Children[lastIndex] as Expander;
+                            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(department, department.Name + "NumberInputTextBox") as TextBox;
 
                             int numberOfPrograms = int.Parse(programNumberTextBox.Text);
 
@@ -383,10 +385,23 @@ namespace Massing_Programming
 
                             for (int j = 0; j < numberOfPrograms; j++)
                             {
+                                // Calculating Raw Cost and GSF of Each Program
+                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                                this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+
+                                // Subtracting From Total GSF and Total Raw Cost
+                                this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
+                                this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
                                 int lastProgramIndex = this.stackingVisualization.Children.Count - 1;
                                 this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
                             }
                         }
+                        
+                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
                     }
 
                     // Increase Number of Departments
@@ -412,6 +427,15 @@ namespace Massing_Programming
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
+                                // Calculating Raw Cost and GSF of Each Program
+                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                                this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+
+                                // Adding To Total GSF and Total Raw Cost
+                                this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
+                                this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
                                 // Add Program's Boxes for the added Departments
                                 float stop = ((float)j) / ((float)initialNumberOfPrograms);
@@ -434,6 +458,9 @@ namespace Massing_Programming
                                 this.stackingVisualization.Children.Insert(this.stackingVisualization.Children.Count, programBox);
                             }
                         }
+                        
+                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
                     }
                     // Input is equal to existing number of Departments
                     if (existingDepartments == input)
@@ -460,6 +487,18 @@ namespace Massing_Programming
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
             this.namesOfDepartments.Clear();
             this.colorsOfDepartments.Clear();
+
+            // Output Variables
+            this.constructionCost = 0;
+            this.projectCost = 0;
+            this.budgetDifference = 0;
+            this.costPerGSF = 0;
+            this.totalBGSF = 0;
+            this.limitOfBGSF = 0;
+
+            // Temp Output Variables
+            this.totalGSF = 0;
+            this.totalRawDepartmentCost = 0;
 
             // Setting up values of the initial dimensions of the Project Box
             this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
@@ -497,6 +536,16 @@ namespace Massing_Programming
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
+                    // Calculating Raw Cost and GSF of Each Program
+                    ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+
+                    // Adding To Total GSF and Total Raw Cost
+                    this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
+                    this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
                     // Generate gradient colors for programs of each department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -518,6 +567,9 @@ namespace Massing_Programming
                     this.stackingVisualization.Children.Add(programBox);
                 }
             }
+            MessageBox.Show(this.totalGSF.ToString() + "," +  this.totalRawDepartmentCost.ToString());
+            // All The Calculation, Prepration, and Visualization of The Output Data
+            CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /* ----------------The Event for Setting Name of the Departments and the Number of Programs it contains ---------------- */
