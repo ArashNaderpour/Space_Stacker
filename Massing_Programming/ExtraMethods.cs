@@ -38,8 +38,8 @@ namespace Massing_Programming
             Label programLabel = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + index.ToString()) as Label;
 
             int mid = (Convert.ToInt32(color[0]) + Convert.ToInt32(color[1]) + Convert.ToInt32(color[2])) / 3;
-        
-            if(mid < 120)
+
+            if (mid < 120)
             {
                 programLabel.Foreground = Brushes.White;
             }
@@ -188,7 +188,10 @@ namespace Massing_Programming
                 program.Name = department.Name + "ComboBox" + i.ToString();
                 foreach (string functionName in functions.Keys)
                 {
-                    program.Items.Add(functionName);
+                    if (functions[functionName]["DGSFMax"] != 0)
+                    {
+                        program.Items.Add(functionName);
+                    }
                 }
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;

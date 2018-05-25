@@ -234,7 +234,6 @@ namespace Massing_Programming
                             }
                         }
 
-
                         //Adding Data to Main Data Dictionary
                         this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
                     }
