@@ -39,7 +39,7 @@ namespace Massing_Programming
 
             int mid = (Convert.ToInt32(color[0]) + Convert.ToInt32(color[1]) + Convert.ToInt32(color[2])) / 3;
         
-            if(mid < 60)
+            if(mid < 120)
             {
                 programLabel.Foreground = Brushes.White;
             }
