@@ -567,7 +567,7 @@ namespace Massing_Programming
                     this.stackingVisualization.Children.Add(programBox);
                 }
             }
-            MessageBox.Show(this.totalGSF.ToString() + "," +  this.totalRawDepartmentCost.ToString());
+
             // All The Calculation, Prepration, and Visualization of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
