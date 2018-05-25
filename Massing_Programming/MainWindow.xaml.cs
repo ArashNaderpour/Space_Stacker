@@ -746,10 +746,10 @@ namespace Massing_Programming
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programs.RowDefinitions.Count - 1).ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
-                                MessageBox.Show(((float)(keyRooms.Value * DGSF.Value)).ToString());
-                                // Adding to Total GSF and Total Raw Cost
-                                this.totalGSF += ((float)(keyRooms.Value * DGSF.Value));
-                                this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
+                                // Subtracting From Total GSF and Total Raw Cost
+                                this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
+                                this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
                                 // Removing UI Elemets From The Controller Window
                                 foreach (UIElement element in programs.Children)
