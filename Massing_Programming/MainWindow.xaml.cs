@@ -391,6 +391,8 @@ namespace Massing_Programming
                                 this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
                                 int lastProgramIndex = this.stackingVisualization.Children.Count - 1;
+
+                                this.boxes.Remove(this.stackingVisualization.Children[lastProgramIndex].GetName());  
                                 this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
                             }
                         }

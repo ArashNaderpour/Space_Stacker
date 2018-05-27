@@ -25,7 +25,7 @@ namespace Massing_Programming
             this.boxCenter = boxCenter;
             this.dims = dims;
             this.visualizationBox = VisualizationMethods.GenerateBox(this.boxCenter, this.dims, boxMaterial, boxInsideMaterial);
-            visualizationBox.SetName("ProjectBox");
+            visualizationBox.SetName(name);
         }
     }
 }
