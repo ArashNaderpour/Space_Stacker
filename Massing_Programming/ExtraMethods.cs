@@ -217,6 +217,7 @@ namespace Massing_Programming
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                keyRooms.Margin = new Thickness(0, 5, 0, 0);
                 keyRooms.ValueChanged += Slider_ValueChanged;
 
                 k.Children.Add(keyLabel);
@@ -238,6 +239,7 @@ namespace Massing_Programming
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                DGSF.Margin = new Thickness(0, 5, 0, 0);
                 DGSF.ValueChanged += Slider_ValueChanged;
 
                 r.Children.Add(DGSFLabel);
@@ -295,7 +297,10 @@ namespace Massing_Programming
                 program.Name = department.Name + "ComboBox" + (i).ToString();
                 foreach (string functionName in functions.Keys)
                 {
-                    program.Items.Add(functionName);
+                    if (functions[functionName]["DGSFMax"] != 0 && functions[functionName]["keyMax"] != 0)
+                    {
+                        program.Items.Add(functionName);
+                    }
                 }
                 program.SelectedIndex = 0;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -321,6 +326,7 @@ namespace Massing_Programming
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                keyRooms.Margin = new Thickness(0, 5, 0, 0);
                 keyRooms.ValueChanged += Slider_ValueChanged;
 
                 k.Children.Add(keyLabel);
@@ -342,6 +348,7 @@ namespace Massing_Programming
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                DGSF.Margin = new Thickness(0, 5, 0, 0);
                 DGSF.ValueChanged += Slider_ValueChanged;
 
                 r.Children.Add(DGSFLabel);
