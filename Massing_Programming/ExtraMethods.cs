@@ -188,7 +188,7 @@ namespace Massing_Programming
                 program.Name = department.Name + "ComboBox" + i.ToString();
                 foreach (string functionName in functions.Keys)
                 {
-                    if (functions[functionName]["DGSFMax"] != 0)
+                    if (functions[functionName]["DGSFMax"] != 0 && functions[functionName]["keyMax"] != 0)
                     {
                         program.Items.Add(functionName);
                     }
