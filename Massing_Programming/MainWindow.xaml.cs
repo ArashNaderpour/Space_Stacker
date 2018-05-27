@@ -47,7 +47,7 @@ namespace Massing_Programming
 
         // Essential Data
         List<byte[]> colorsOfDepartments = new List<byte[]>();
-        Dictionary<String, ProgramBox> boxesOfTheProject = new Dictionary<string, ProgramBox>();
+        Dictionary<String, Box> boxesOfTheProject = new Dictionary<string, Box>();
 
         // Spread-Sheet Data
         Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
@@ -109,7 +109,7 @@ namespace Massing_Programming
                     this.colorsOfDepartments.Clear();
 
                     // ProjectBox Visualization
-                    ProgramBox projectBox = new ProgramBox("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
+                    Box projectBox = new Box("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
                         new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
@@ -280,7 +280,7 @@ namespace Massing_Programming
                             this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                        ProgramBox programBox = new ProgramBox(programBoxName, programBoxCenter, programBoxDims , programBoxMaterial, programBoxMaterial);
+                        Box programBox = new Box(programBoxName, programBoxCenter, programBoxDims , programBoxMaterial, programBoxMaterial);
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRoomsValue = (float)keyRooms.Value;
                         programBox.DGSF = (float)DGSF.Value;
@@ -446,7 +446,7 @@ namespace Massing_Programming
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                                ProgramBox programBox = new ProgramBox(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                                Box programBox = new Box(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRoomsValue = (float)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
@@ -505,7 +505,7 @@ namespace Massing_Programming
             this.FloorHeight.Text = initialProgramHeight.ToString();
 
             // ProjectBox Visualization
-            ProgramBox projectBox = new ProgramBox("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
+            Box projectBox = new Box("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
                 new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                 new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
@@ -554,7 +554,7 @@ namespace Massing_Programming
                         ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
-                    ProgramBox programBox = new ProgramBox(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                    Box programBox = new Box(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
                     programBox.function = program.SelectedItem.ToString();
                     programBox.keyRoomsValue = (float)keyRooms.Value;
                     programBox.DGSF = (float)DGSF.Value;
