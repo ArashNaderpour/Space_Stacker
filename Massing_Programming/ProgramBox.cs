@@ -8,7 +8,7 @@ using HelixToolkit.Wpf;
 
 namespace Massing_Programming
 {
-    class Box
+    class ProgramBox
     {
         public string name { get; set; }
         public Point3D boxCenter { get; set; }
@@ -19,13 +19,13 @@ namespace Massing_Programming
         public float DGSF { get; set; }
         public int floor { get; set; }
 
-        public Box(string name, Point3D boxCenter, float[] dims, Material boxMaterial, Material boxInsideMaterial)
+        public ProgramBox(string name, Point3D boxCenter, float[] dims, Material boxMaterial, Material boxInsideMaterial)
         {
             this.name = name;
             this.boxCenter = boxCenter;
             this.dims = dims;
             this.visualizationBox = VisualizationMethods.GenerateBox(this.boxCenter, this.dims, boxMaterial, boxInsideMaterial);
-            visualizationBox.SetName(name);
+            visualizationBox.SetName(this.name);
         }
     }
 }

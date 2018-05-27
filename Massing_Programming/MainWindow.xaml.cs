@@ -47,7 +47,7 @@ namespace Massing_Programming
 
         // Essential Data
         List<byte[]> colorsOfDepartments = new List<byte[]>();
-        Dictionary<String, Box> boxes = new Dictionary<string, Box>();
+        Dictionary<String, ProgramBox> boxesOfTheProject = new Dictionary<string, ProgramBox>();
 
         // Spread-Sheet Data
         Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
@@ -109,11 +109,11 @@ namespace Massing_Programming
                     this.colorsOfDepartments.Clear();
 
                     // ProjectBox Visualization
-                    Box projectBox = new Box("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
+                    ProgramBox projectBox = new ProgramBox("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
                         new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
-                    this.boxes.Add(projectBox.name, projectBox);
+                    this.boxesOfTheProject.Add(projectBox.name, projectBox);
                     this.stackingVisualization.Children.Add(projectBox.visualizationBox);
 
                     filePath = openFileDialog.FileName;
@@ -275,19 +275,18 @@ namespace Massing_Programming
                         ExtraMethods.ChangeLabelColor(department, j, gradient);
 
                         float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
+                        string programBoxName = department.Name + "ProgramBox" + j.ToString();
+                        Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                            this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
+                        Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                        Box programBox = new Box(department.Name + "Box" + j.ToString(), 
-                            new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5), 
-                            this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight)),
-                            programBoxDims , MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2])), 
-                            MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2])));
-
+                        ProgramBox programBox = new ProgramBox(programBoxName, programBoxCenter, programBoxDims , programBoxMaterial, programBoxMaterial);
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRoomsValue = (float)keyRooms.Value;
                         programBox.DGSF = (float)DGSF.Value;
                         programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
                         
-                        this.boxes.Add(programBox.name, programBox);
+                        this.boxesOfTheProject.Add(programBox.name, programBox);
                         this.stackingVisualization.Children.Add(programBox. visualizationBox);
                     }
                 }
@@ -392,7 +391,7 @@ namespace Massing_Programming
 
                                 int lastProgramIndex = this.stackingVisualization.Children.Count - 1;
 
-                                this.boxes.Remove(this.stackingVisualization.Children[lastProgramIndex].GetName());  
+                                this.boxesOfTheProject.Remove(this.stackingVisualization.Children[lastProgramIndex].GetName());  
                                 this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
                             }
                         }
@@ -440,18 +439,21 @@ namespace Massing_Programming
                                 // Setting Program Label Background Color
                                 ExtraMethods.ChangeLabelColor(department, j, gradient);
 
-                                Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
-
+                                string programBoxName = department.Name + "ProgramBox" + j.ToString();
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
                                     ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
+                                Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
-                                    programBoxMaterial, programBoxMaterial);
-                                programBox.SetName(department.Name + "Box" + j.ToString());
+                                ProgramBox programBox = new ProgramBox(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                                programBox.function = program.SelectedItem.ToString();
+                                programBox.keyRoomsValue = (float)keyRooms.Value;
+                                programBox.DGSF = (float)DGSF.Value;
+                                programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
 
-                                this.stackingVisualization.Children.Insert(this.stackingVisualization.Children.Count, programBox);
+                                this.boxesOfTheProject.Add(programBox.name, programBox);
+                                this.stackingVisualization.Children.Insert(this.stackingVisualization.Children.Count, programBox.visualizationBox);
                             }
                         }
 
@@ -482,6 +484,7 @@ namespace Massing_Programming
             this.stackingVisualization.Children.Clear();
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
             this.colorsOfDepartments.Clear();
+            this.boxesOfTheProject.Clear();
 
             // Output Variables
             this.constructionCost = 0;
@@ -502,14 +505,12 @@ namespace Massing_Programming
             this.FloorHeight.Text = initialProgramHeight.ToString();
 
             // ProjectBox Visualization
-            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
-            Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
-            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
-            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter,
+            ProgramBox projectBox = new ProgramBox("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
                 new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
-                projectBoxMaterial, projectBoxInsideMaterial);
-            projectBox.SetName("ProjectBox");
-            this.stackingVisualization.Children.Add(projectBox);
+                new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
+
+            this.boxesOfTheProject.Add(projectBox.name, projectBox);
+            this.stackingVisualization.Children.Add(projectBox.visualizationBox);
 
             // Generating initial Expanders and programs visualization
             for (int i = 0; i < initialNumberOfDepartments; i++)
@@ -546,18 +547,21 @@ namespace Massing_Programming
                     // Setting Program Label Background Color
                     ExtraMethods.ChangeLabelColor(department, j, gradient);
 
+                    string programBoxName = department.Name + "ProgramBox" + j.ToString();
                     Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
-
                     float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                     Point3D programBoxCenter = new Point3D(0,
                         ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
-                        programBoxMaterial, programBoxMaterial);
-                    programBox.SetName(department.Name + "Box" + j.ToString());
+                    ProgramBox programBox = new ProgramBox(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                    programBox.function = program.SelectedItem.ToString();
+                    programBox.keyRoomsValue = (float)keyRooms.Value;
+                    programBox.DGSF = (float)DGSF.Value;
+                    programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
 
-                    this.stackingVisualization.Children.Add(programBox);
+                    this.boxesOfTheProject.Add(programBox.name, programBox);
+                    this.stackingVisualization.Children.Add(programBox.visualizationBox);
                 }
             }
 
@@ -565,7 +569,7 @@ namespace Massing_Programming
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
-        /* ----------------The Event for Setting Name of the Departments and the Number of Programs it contains ---------------- */
+        /* ----------------The Event for Setting Name of The Departments and The Number of Programs It Contains ---------------- */
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
