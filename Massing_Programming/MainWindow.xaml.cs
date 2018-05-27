@@ -282,6 +282,11 @@ namespace Massing_Programming
                             programBoxDims , MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2])), 
                             MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2])));
 
+                        programBox.function = program.SelectedItem.ToString();
+                        programBox.keyRoomsValue = (float)keyRooms.Value;
+                        programBox.DGSF = (float)DGSF.Value;
+                        programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
+                        
                         this.boxes.Add(programBox.name, programBox);
                         this.stackingVisualization.Children.Add(programBox. visualizationBox);
                     }
