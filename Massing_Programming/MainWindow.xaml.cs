@@ -1085,7 +1085,7 @@ namespace Massing_Programming
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
 
             // Length of the Program Before Scale
-            double TotalProgramLength = 0;
+            double totalProgramLength = 0;
 
             // Calculating Y Cordinate of the Scale Center for Each ProgramBox
             double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5f);
@@ -1112,7 +1112,7 @@ namespace Massing_Programming
 
                     programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
 
-                    TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
                     this.stackingVisualization.Children.Insert(i, programBox);
@@ -1137,7 +1137,7 @@ namespace Massing_Programming
 
                     programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
 
-                    TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
                     this.stackingVisualization.Children.Insert(i, programBox);
@@ -1198,7 +1198,7 @@ namespace Massing_Programming
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
 
             // Length of the Program Before Scale
-            double TotalProgramLength = 0;
+            double totalProgramLength = 0;
 
             // Calculating Y Cordinate of the Scale Center for Each ProgramBox
             double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5f);
@@ -1225,7 +1225,7 @@ namespace Massing_Programming
 
                     programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
 
-                    TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
                     this.stackingVisualization.Children.Insert(i, programBox);
@@ -1250,7 +1250,7 @@ namespace Massing_Programming
 
                     programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
 
-                    TotalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                    totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
                     this.stackingVisualization.Children.Insert(i, programBox);
