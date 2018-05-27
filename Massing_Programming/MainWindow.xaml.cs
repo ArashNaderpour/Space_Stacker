@@ -47,7 +47,6 @@ namespace Massing_Programming
         float totalRawDepartmentCost = new float();
 
         // Department Properties (Names Colors)
-        List<String> namesOfDepartments = new List<string>();
         List<byte[]> colorsOfDepartments = new List<byte[]>();
 
         // Spread-Sheet Data
@@ -107,7 +106,6 @@ namespace Massing_Programming
                     this.DepartmentsWrapper.Children.Clear();
                     this.stackingVisualization.Children.Clear();
                     this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
-                    this.namesOfDepartments.Clear();
                     this.colorsOfDepartments.Clear();
 
                     // ProjectBox Visualization
@@ -246,7 +244,6 @@ namespace Massing_Programming
                 {
                     // Setting up Initial Departments' Expanders
                     Expander department = ExtraMethods.DepartmentGernerator(i);
-                    this.namesOfDepartments.Add(department.Name);
 
                     ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
                         this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
@@ -379,7 +376,6 @@ namespace Massing_Programming
 
                             // Removing Departments' Properties
                             this.DepartmentsWrapper.Children.RemoveAt(lastIndex);
-                            this.namesOfDepartments.RemoveAt(lastIndex);
                             this.colorsOfDepartments.RemoveAt(lastIndex);
 
                             for (int j = 0; j < numberOfPrograms; j++)
@@ -410,7 +406,6 @@ namespace Massing_Programming
                         for (int i = 0; i < difference; i++)
                         {
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
-                            this.namesOfDepartments.Add(department.Name);
 
                             ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
                                 new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
@@ -483,7 +478,6 @@ namespace Massing_Programming
             this.DepartmentsWrapper.Children.Clear();
             this.stackingVisualization.Children.Clear();
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
-            this.namesOfDepartments.Clear();
             this.colorsOfDepartments.Clear();
 
             // Output Variables
@@ -522,8 +516,6 @@ namespace Massing_Programming
                     new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
                     new SelectionChangedEventHandler(SelectedProgram_Chenged),
                     Slider_ValueChanged);
-
-                this.namesOfDepartments.Add(department.Name);
 
                 this.DepartmentsWrapper.Children.Add(department);
 
@@ -576,7 +568,7 @@ namespace Massing_Programming
             Button btn = sender as Button;
 
             // Setting the Name of the Department (recognizing which button was pressed)
-            if (namesOfDepartments.Contains(btn.Name.Replace("SetNameButton", "")))
+            if (btn.Name.Contains("SetNameButton"))
             {
                 Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
                 TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
