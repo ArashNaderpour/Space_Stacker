@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HelixToolkit.Wpf;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -46,8 +45,9 @@ namespace Massing_Programming
         float totalGSF = new float();
         float totalRawDepartmentCost = new float();
 
-        // Department Properties (Names Colors)
+        // Essential Data
         List<byte[]> colorsOfDepartments = new List<byte[]>();
+        Dictionary<String, Box> boxes = new Dictionary<string, Box>();
 
         // Spread-Sheet Data
         Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
@@ -109,14 +109,12 @@ namespace Massing_Programming
                     this.colorsOfDepartments.Clear();
 
                     // ProjectBox Visualization
-                    Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
-                    Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
-                    Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
-                    GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter,
+                    Box projectBox = new Box("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
                         new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
-                        projectBoxMaterial, projectBoxInsideMaterial);
-                    projectBox.SetName("ProjectBox");
-                    this.stackingVisualization.Children.Add(projectBox);
+                        new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
+
+                    this.boxes.Add(projectBox.name, projectBox);
+                    this.stackingVisualization.Children.Add(projectBox.visualizationBox);
 
                     filePath = openFileDialog.FileName;
                 }
@@ -276,18 +274,16 @@ namespace Massing_Programming
                         // Setting Program Label Background Color
                         ExtraMethods.ChangeLabelColor(department, j, gradient);
 
-                        Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
-
                         float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
-                        Point3D programBoxCenter = new Point3D(0,
-                            ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
-                            this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
 
-                        GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
-                            programBoxMaterial, programBoxMaterial);
-                        programBox.SetName(department.Name + "Box" + j.ToString());
+                        Box programBox = new Box(department.Name + "Box" + j.ToString(), 
+                            new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5), 
+                            this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight)),
+                            programBoxDims , MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2])), 
+                            MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2])));
 
-                        this.stackingVisualization.Children.Add(programBox);
+                        this.boxes.Add(programBox.name, programBox);
+                        this.stackingVisualization.Children.Add(programBox. visualizationBox);
                     }
                 }
 
