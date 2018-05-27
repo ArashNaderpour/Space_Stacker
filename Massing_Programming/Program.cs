@@ -8,13 +8,13 @@ using HelixToolkit.Wpf;
 
 namespace Massing_Programming
 {
-    class Box
+    class Program
     {
-        public string name { get; set; }
-        public Point3D boxCenter { get; set; }
-        public GeometryModel3D visualizationBox { get; set; }
+        public string name;
+        public Point3D boxCenter;
+        public GeometryModel3D visualizationBox;
 
-        public Box(string name, Point3D boxCenter, float[] dims, Material boxMaterial, Material boxInsideMaterial)
+        public Program(string name, Point3D boxCenter, float[] dims, Material boxMaterial, Material boxInsideMaterial)
         {
             this.name = name;
             this.boxCenter = boxCenter;
