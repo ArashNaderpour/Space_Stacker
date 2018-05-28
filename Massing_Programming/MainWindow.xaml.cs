@@ -67,15 +67,15 @@ namespace Massing_Programming
             this.FloorHeight.Text = this.initialProgramHeight.ToString();
 
             // ProjectBox Visualization
+            string projectBoxName = "ProjectBox";
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
             Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
-            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxCenter,
+            GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter,
                 new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                 projectBoxMaterial, projectBoxInsideMaterial);
-            projectBox.SetName("ProjectBox");
-            this.stackingVisualization.Children.Add(projectBox);
 
+            this.stackingVisualization.Children.Add(projectBox);
             this.Visualization.Content = stackingVisualization;
         }
 
@@ -109,12 +109,17 @@ namespace Massing_Programming
                     this.colorsOfDepartments.Clear();
 
                     // ProjectBox Visualization
-                    Box projectBox = new Box("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
-                        new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
+                    string projectBoxName = "ProjectBox";
+                    Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
+                    float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
+
+                    Box projectBox = new Box(projectBoxName, projectBoxCenter);
+
+                    GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
                     this.boxesOfTheProject.Add(projectBox.name, projectBox);
-                    this.stackingVisualization.Children.Add(projectBox.visualizationBox);
+                    this.stackingVisualization.Children.Add(projectVisualizationBox);
 
                     filePath = openFileDialog.FileName;
                 }
@@ -280,14 +285,17 @@ namespace Massing_Programming
                             this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                        Box programBox = new Box(programBoxName, programBoxCenter, programBoxDims , programBoxMaterial, programBoxMaterial);
+                        Box programBox = new Box(programBoxName, programBoxCenter);
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRoomsValue = (float)keyRooms.Value;
                         programBox.DGSF = (float)DGSF.Value;
-                        programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
-                        
+                        programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+
+                        GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
+                            programBoxMaterial, programBoxMaterial);
+
                         this.boxesOfTheProject.Add(programBox.name, programBox);
-                        this.stackingVisualization.Children.Add(programBox. visualizationBox);
+                        this.stackingVisualization.Children.Add(programBoxVisualization);
                     }
                 }
 
@@ -446,14 +454,17 @@ namespace Massing_Programming
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                                Box programBox = new Box(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                                Box programBox = new Box(programBoxName, programBoxCenter);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRoomsValue = (float)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
-                                programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
+                                programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
+                                GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
+                                    programBoxMaterial, programBoxMaterial);
+                                
                                 this.boxesOfTheProject.Add(programBox.name, programBox);
-                                this.stackingVisualization.Children.Insert(this.stackingVisualization.Children.Count, programBox.visualizationBox);
+                                this.stackingVisualization.Children.Add(programBoxVisualization);
                             }
                         }
 
@@ -505,12 +516,17 @@ namespace Massing_Programming
             this.FloorHeight.Text = initialProgramHeight.ToString();
 
             // ProjectBox Visualization
-            Box projectBox = new Box("ProjectBox", new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5),
-                new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
+            string projectBoxName = "ProjectBox";
+            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
+            float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
+
+            Box projectBox = new Box(projectBoxName, projectBoxCenter);
+
+            GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                 new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
             this.boxesOfTheProject.Add(projectBox.name, projectBox);
-            this.stackingVisualization.Children.Add(projectBox.visualizationBox);
+            this.stackingVisualization.Children.Add(projectVisualizationBox);
 
             // Generating initial Expanders and programs visualization
             for (int i = 0; i < initialNumberOfDepartments; i++)
@@ -554,14 +570,17 @@ namespace Massing_Programming
                         ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
-                    Box programBox = new Box(programBoxName, programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                    Box programBox = new Box(programBoxName, programBoxCenter);
                     programBox.function = program.SelectedItem.ToString();
                     programBox.keyRoomsValue = (float)keyRooms.Value;
                     programBox.DGSF = (float)DGSF.Value;
-                    programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBox.dims[2]));
+                    programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+
+                    GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
+                        programBoxMaterial, programBoxMaterial);
 
                     this.boxesOfTheProject.Add(programBox.name, programBox);
-                    this.stackingVisualization.Children.Add(programBox.visualizationBox);
+                    this.stackingVisualization.Children.Add(programBoxVisualization);
                 }
             }
 
@@ -678,16 +697,23 @@ namespace Massing_Programming
                                 this.totalRawDepartmentCost += ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
                                 // Calculating Length of Each Program Based on Width of The Project Box
+                                string programBoxName = department.Name + "ProgramBox" + (i).ToString();
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
                                     ((totalExistingProgramsLength + ((i - existingPrograms) * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
 
-                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
-                                    programBoxMaterial, programBoxMaterial);
-                                programBox.SetName(department.Name + "Box" + (i).ToString());
+                                Box programBox = new Box(programBoxName, programBoxCenter);
+                                programBox.function = program.SelectedItem.ToString();
+                                programBox.keyRoomsValue = (float)keyRooms.Value;
+                                programBox.DGSF = (float)DGSF.Value;
+                                programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
-                                this.stackingVisualization.Children.Insert(lastProgramBoxIndex, programBox);
+                                GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
+                                    programBoxMaterial, programBoxMaterial);
+
+                                this.boxesOfTheProject.Add(programBoxName, programBox);
+                                this.stackingVisualization.Children.Insert(lastProgramBoxIndex, programBoxVisualization);
                                 lastProgramBoxIndex += 1;
                             }
                         }
@@ -829,19 +855,18 @@ namespace Massing_Programming
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
 
-                                float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
+                                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
+                                float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
                                     (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
-
                                 double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5) + (newLength / 2);
-
-                                Point3D programBoxCenter = new Point3D(0, newProgramCenterY,
+                                Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
 
-                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                                programBox.SetName(this.stackingVisualization.Children[i].GetName());
+                                this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBox);
@@ -852,19 +877,18 @@ namespace Massing_Programming
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
 
-                                float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
+                                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
+                                float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
                                     (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
-
-                                double newProgramCenterY = TotalDepartmentLength + (programBoxDims[1] / 2);
-
-                                Point3D programBoxCenter = new Point3D(0, newProgramCenterY,
+                                double newProgramCenterY = TotalDepartmentLength + (newProgramBoxDims[1] / 2);
+                                Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
 
-                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                                GeometryModel3D programBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                                programBox.SetName(this.stackingVisualization.Children[i].GetName());
+                                this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBox);
@@ -958,7 +982,7 @@ namespace Massing_Programming
                 if (floorHeightInput > 0)
                 {
 
-                    double scaleCenterY = this.initialProjectBoxDims[1] * -0.5;
+                    double newProgramCenterY = this.initialProjectBoxDims[1] * -0.5;
 
                     for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
                     {
@@ -967,45 +991,42 @@ namespace Massing_Programming
 
                         if (programIndex == 0)
                         {
-                            scaleCenterY = (this.initialProjectBoxDims[1] * -0.5) + (this.stackingVisualization.Children[i].Bounds.SizeY / 2);
-
-                            float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) this.stackingVisualization.Children[i].Bounds.SizeY,
+                            string newProgramName = this.stackingVisualization.Children[i].GetName();
+                            newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5) + (this.stackingVisualization.Children[i].Bounds.SizeY / 2);
+                            float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) this.stackingVisualization.Children[i].Bounds.SizeY,
                                     floorHeightInput };
-
-                            Point3D programBoxCenter = new Point3D(0, scaleCenterY,
+                            Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
                                 floorHeightInput * 0.5 + (departmentIndex * floorHeightInput));
-
-                            GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                            GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramName, newProgramBoxCenter, newProgramBoxDims,
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                            programBox.SetName(this.stackingVisualization.Children[i].GetName());
+                            this.boxesOfTheProject[newProgramName].boxCenter = newProgramBoxCenter;
 
                             this.stackingVisualization.Children.RemoveAt(i);
-                            this.stackingVisualization.Children.Insert(i, programBox);
+                            this.stackingVisualization.Children.Insert(i, newProgramBox);
 
-                            scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
+                            newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                         }
                         else
                         {
-                            scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
+                            newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
 
-                            float[] programBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) this.stackingVisualization.Children[i].Bounds.SizeY,
+                            string newProgramName = this.stackingVisualization.Children[i].GetName();
+                            float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) this.stackingVisualization.Children[i].Bounds.SizeY,
                                     floorHeightInput };
-
-                            Point3D programBoxCenter = new Point3D(0, scaleCenterY,
+                            Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
                                 floorHeightInput * 0.5 + (departmentIndex * floorHeightInput));
-
-                            GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                            GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramName, newProgramBoxCenter, newProgramBoxDims,
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                            programBox.SetName(this.stackingVisualization.Children[i].GetName());
+                            this.boxesOfTheProject[newProgramName].boxCenter = newProgramBoxCenter;
 
                             this.stackingVisualization.Children.RemoveAt(i);
-                            this.stackingVisualization.Children.Insert(i, programBox);
+                            this.stackingVisualization.Children.Insert(i, newProgramBox);
 
-                            scaleCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
+                            newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                         }
 
                     }
@@ -1045,19 +1066,19 @@ namespace Massing_Programming
             int programIndex = int.Parse(cbx.Name[cbx.Name.Length - 1].ToString());
 
             // Extracting the Department That Changed
-            Expander expander = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
+            Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
             // Extracting the Sliders that Need Changes
             String keyRoomsSliderName = cbx.Name.Substring(0, 2) + "Rooms" + programIndex.ToString();
             String DGSFSliderName = cbx.Name.Substring(0, 2) + "DGSF" + programIndex.ToString();
 
             // Calculating length of each program based on total area of the program and width of the Project Box
-            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(expander, keyRoomsSliderName) as Slider;
+            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, keyRoomsSliderName) as Slider;
             keyRooms.Minimum = this.functions[cbx.SelectedItem.ToString()]["keyMin"];
             keyRooms.Value = this.functions[cbx.SelectedItem.ToString()]["keyVal"]; ;
             keyRooms.Maximum = this.functions[cbx.SelectedItem.ToString()]["keyMax"]; ;
 
-            Slider DGSF = LogicalTreeHelper.FindLogicalNode(expander, DGSFSliderName) as Slider;
+            Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, DGSFSliderName) as Slider;
             DGSF.Minimum = this.functions[cbx.SelectedItem.ToString()]["DGSFMin"];
             DGSF.Value = this.functions[cbx.SelectedItem.ToString()]["DGSFVal"];
             DGSF.Maximum = this.functions[cbx.SelectedItem.ToString()]["DGSFMax"];
@@ -1086,7 +1107,7 @@ namespace Massing_Programming
             // Length of the Program Before Scale
             double totalProgramLength = 0;
 
-            // Calculating Y Cordinate of the Scale Center for Each ProgramBox
+            // Calculating Y Cordinate of The New Center for Each ProgramBox
             double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5f);
 
             for (int i = firstProgramBoxIndex; i <= lastProgramBoxIndex; i++)
@@ -1099,22 +1120,22 @@ namespace Massing_Programming
                 {
                     newProgramCenterY += (newProgramLength / 2);
 
-                    float[] programBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                    string newProgramName = department.Name + "ProgramBox" + (i - firstProgramBoxIndex).ToString();
+                    float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             newProgramLength, (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-
-                    Point3D programBoxCenter = new Point3D(0,
+                    Point3D newProgramBoxCenter = new Point3D(0,
                         newProgramCenterY, float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
 
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                    GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramName, newProgramBoxCenter, newProgramBoxDims,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                    programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
+                    this.boxesOfTheProject[newProgramName].boxCenter = newProgramBoxCenter;
 
                     totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
-                    this.stackingVisualization.Children.Insert(i, programBox);
+                    this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                     newProgramCenterY += (newProgramLength / 2);
 
@@ -1123,23 +1144,22 @@ namespace Massing_Programming
                 {
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
 
-                    float[] programBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                    string newProgramName = department.Name + "ProgramBox" + (i - firstProgramBoxIndex).ToString();
+                    float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeY,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-                    // MessageBox.Show(scaleCenterY.ToString());
-                    Point3D programBoxCenter = new Point3D(0,
+                    Point3D newProgramBoxCenter = new Point3D(0,
                         newProgramCenterY, float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
-
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                    GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramName, newProgramBoxCenter, newProgramBoxDims,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                    programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
+                    this.boxesOfTheProject[newProgramName].boxCenter = newProgramBoxCenter;
 
                     totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
-                    this.stackingVisualization.Children.Insert(i, programBox);
+                    this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                 }
@@ -1157,7 +1177,7 @@ namespace Massing_Programming
             int programIndex = int.Parse(slider.Name[slider.Name.Length - 1].ToString());
 
             // Extracting the Department That Changed
-            Expander expander = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
+            Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
             // Extracting Sliders of The Program
             Slider keyRooms = new Slider();
@@ -1165,14 +1185,14 @@ namespace Massing_Programming
 
             if (slider.Name.Contains("Rooms"))
             {
-                keyRooms = LogicalTreeHelper.FindLogicalNode(expander, slider.Name) as Slider;
-                DGSF = LogicalTreeHelper.FindLogicalNode(expander, slider.Name.Replace("Rooms", "DGSF")) as Slider;
+                keyRooms = LogicalTreeHelper.FindLogicalNode(department, slider.Name) as Slider;
+                DGSF = LogicalTreeHelper.FindLogicalNode(department, slider.Name.Replace("Rooms", "DGSF")) as Slider;
             }
 
             if (slider.Name.Contains("DGSF"))
             {
-                DGSF = LogicalTreeHelper.FindLogicalNode(expander, slider.Name) as Slider;
-                keyRooms = LogicalTreeHelper.FindLogicalNode(expander, slider.Name.Replace("DGSF", "Rooms")) as Slider;
+                DGSF = LogicalTreeHelper.FindLogicalNode(department, slider.Name) as Slider;
+                keyRooms = LogicalTreeHelper.FindLogicalNode(department, slider.Name.Replace("DGSF", "Rooms")) as Slider;
             }
 
             // Calculating indices of First and Last ProgramBox in Each department
@@ -1212,22 +1232,21 @@ namespace Massing_Programming
                 {
                     newProgramCenterY += (newProgramLength / 2);
 
-                    float[] programBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                    string newProgramName = department.Name + "ProgramBox" + (i - firstProgramBoxIndex).ToString();
+                    float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             newProgramLength, (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-
-                    Point3D programBoxCenter = new Point3D(0,
+                    Point3D newProgramBoxCenter = new Point3D(0,
                         newProgramCenterY, float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
-
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                    GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramName, newProgramBoxCenter, newProgramBoxDims,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                    programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
+                    this.boxesOfTheProject[newProgramName].boxCenter = newProgramBoxCenter;
 
                     totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
-                    this.stackingVisualization.Children.Insert(i, programBox);
+                    this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                     newProgramCenterY += (newProgramLength / 2);
 
@@ -1236,23 +1255,23 @@ namespace Massing_Programming
                 {
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
 
-                    float[] programBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                    string newProgramName = department.Name + "ProgramBox" + (i - firstProgramBoxIndex).ToString();
+                    float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeY,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-                    // MessageBox.Show(scaleCenterY.ToString());
-                    Point3D programBoxCenter = new Point3D(0,
+                    Point3D newProgramBoxCenter = new Point3D(0,
                         newProgramCenterY, float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
 
-                    GeometryModel3D programBox = VisualizationMethods.GenerateBox(programBoxCenter, programBoxDims,
+                    GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramName, newProgramBoxCenter, newProgramBoxDims,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                    programBox.SetName(expander.Name + "Box" + (i - firstProgramBoxIndex).ToString());
+                    this.boxesOfTheProject[newProgramName].boxCenter = newProgramBoxCenter;
 
                     totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
-                    this.stackingVisualization.Children.Insert(i, programBox);
+                    this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                 }

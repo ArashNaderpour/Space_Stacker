@@ -7,7 +7,7 @@ namespace Massing_Programming
     class VisualizationMethods
     {
         /*------------ Generate a box that represents boundaries of the project and programs in each department ------------*/
-        public static GeometryModel3D GenerateBox(Point3D center, float[] dimenstions, Material material, Material insideMaterial)
+        public static GeometryModel3D GenerateBox(string name, Point3D center, float[] dimenstions, Material material, Material insideMaterial)
         {
             // Create a mesh builder and add a box to it
             var meshBuilder = new MeshBuilder(false, false);
@@ -17,6 +17,8 @@ namespace Massing_Programming
             var mesh = meshBuilder.ToMesh(true);
 
             GeometryModel3D box = new GeometryModel3D { Geometry = mesh, Material = material, BackMaterial = insideMaterial };
+
+            box.SetName(name);
 
             return box;
         }
