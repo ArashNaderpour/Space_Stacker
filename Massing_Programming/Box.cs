@@ -12,10 +12,9 @@ namespace Massing_Programming
     {
         public string name { get; set; }
         public Point3D boxCenter { get; set; }
-        public float[] dims { get; set; }
         public string function { get; set; }
-        public float keyRoomsValue { get; set; }
-        public float DGSF { get; set; }
+        public float GSFValue { get; set; }
+        public float rawCostValue { get; set; }
         public int floor { get; set; }
 
         public Box(string name, Point3D boxCenter)
