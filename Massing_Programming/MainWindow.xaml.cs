@@ -256,7 +256,7 @@ namespace Massing_Programming
                     ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
                         this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
                         new SelectionChangedEventHandler(SelectedProgram_Chenged),
-                        Slider_ValueChanged);
+                        ProgramSlider_ValueChanged);
 
                     this.DepartmentsWrapper.Children.Add(department);
 
@@ -317,31 +317,32 @@ namespace Massing_Programming
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Enabling the Disabled Controllers
-                this.ProjectWidth.IsReadOnly = false;
-                this.ProjectWidth.Background = Brushes.White;
+                this.ProjectWidth.IsEnabled = true;
                 this.ProjectWidthButton.IsEnabled = true;
                 this.Seperator.Visibility = Visibility.Visible;
 
-                this.ProjectLength.IsReadOnly = false;
-                this.ProjectLength.Background = Brushes.White;
+                this.ProjectLength.IsEnabled = true;
                 this.ProjectLengthButton.IsEnabled = true;
 
-                this.ProjectHeight.IsReadOnly = false;
-                this.ProjectHeight.Background = Brushes.White;
+                this.ProjectHeight.IsEnabled = true;
                 this.ProjectHeightButton.IsEnabled = true;
 
                 this.BGSFBox.IsEnabled = true;
                 this.ProgramLabel.IsEnabled = true;
 
-                this.FloorHeight.IsReadOnly = false;
-                this.FloorHeight.Background = Brushes.White;
+                this.FloorHeight.IsEnabled = true;
                 this.FloorHeightButton.IsEnabled = true;
 
                 this.NumberOfDepartments.IsEnabled = true;
-                this.NumberOfDepartments.Background = Brushes.White;
 
                 this.NumberOfDepartmentsButton.IsEnabled = true;
                 this.ResetDepartmentsButton.IsEnabled = true;
+
+                this.TotalBudget.IsEnabled = true;
+                this.TotalBudgetButton.IsEnabled = true;
+                this.CirculationSlider.IsEnabled = true;
+                this.MEPSlider.IsEnabled = true;
+                this.ExteriorStackSlider.IsEnabled = true;
             }
             else
             {
@@ -429,7 +430,7 @@ namespace Massing_Programming
                             ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
                                 new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
                                 new SelectionChangedEventHandler(SelectedProgram_Chenged),
-                                Slider_ValueChanged);
+                                ProgramSlider_ValueChanged);
 
                             this.DepartmentsWrapper.Children.Add(department);
 
@@ -546,7 +547,7 @@ namespace Massing_Programming
                 ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
                     new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
                     new SelectionChangedEventHandler(SelectedProgram_Chenged),
-                    Slider_ValueChanged);
+                    ProgramSlider_ValueChanged);
 
                 this.DepartmentsWrapper.Children.Add(department);
 
@@ -667,7 +668,7 @@ namespace Massing_Programming
 
                         int difference = input - existingPrograms;
                         ExtraMethods.AddProgram(programs, difference, existingPrograms, department, this.functions,
-                            new SelectionChangedEventHandler(SelectedProgram_Chenged), Slider_ValueChanged);
+                            new SelectionChangedEventHandler(SelectedProgram_Chenged), ProgramSlider_ValueChanged);
 
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(department);
 
@@ -1208,7 +1209,7 @@ namespace Massing_Programming
         }
 
         /*---------------- Handeling Program Slider Change Event ----------------*/
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ProgramSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // ... Get Slider reference.
             Slider slider = sender as Slider;
@@ -1341,8 +1342,6 @@ namespace Massing_Programming
         /* ----------------------------------- Handeling Total Budget Button Event ----------------------------------- */
         private void TotalBudgetButton_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;
-
             float tempTotalBudget = new float();
 
             // Only Work When a Project is Open
@@ -1391,6 +1390,13 @@ namespace Massing_Programming
                 this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
                 return;
             }
+        }
+
+        /*---------------- Handeling Program Slider Change Event ----------------*/
+        private void GrossMultiplierSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // All The Calculation, Prepration, and Visualization of The Output Data
+            CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */

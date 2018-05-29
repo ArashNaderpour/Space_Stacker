@@ -64,20 +64,20 @@
                                 </Grid.RowDefinitions>
                                 <!-- Set Width of BGSF Box-->
                                 <TextBlock Text="Width" VerticalAlignment="Center" Grid.Column="0"
-                                               Grid.Row="0" Margin="0 0 0 5"/>
+                                           Grid.Row="0" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectWidth" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="0" Margin="0 0 0 5" IsReadOnly="True" 
-                                         Background="#e2e2e2"/>
+                                         Grid.Column="1" Grid.Row="0" Margin="0 0 0 5" 
+                                         IsEnabled="False"/>
                                 <Button x:Name="ProjectWidthButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="0" Margin="0 0 0 5" Click="ProjectSize_Click"
                                         IsEnabled="False"/>
                                 <!--======================-->
                                 <!-- Set Length of BGSF Box-->
                                 <TextBlock Text="Length" VerticalAlignment="Center" Grid.Column="0"
-                                               Grid.Row="1" Margin="0 0 0 5"/>
+                                           Grid.Row="1" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectLength" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" IsReadOnly="True"
-                                         Background="#e2e2e2"/>
+                                         Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" 
+                                         IsEnabled="False"/>
                                 <Button x:Name="ProjectLengthButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="1" Margin="0 0 0 5" Click="ProjectSize_Click"
                                         IsEnabled="False"/>
@@ -86,8 +86,8 @@
                                 <TextBlock Text="Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectHeight" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsReadOnly="True"
-                                         Background="#e2e2e2"/>
+                                         Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" 
+                                         IsEnabled="False"/>
                                 <Button x:Name="ProjectHeightButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="2" Margin="0 0 0 5" Click="ProjectSize_Click"
                                         IsEnabled="False"/>
@@ -96,8 +96,8 @@
                                 <TextBlock Text="Floor Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="3" Margin="0 0 0 5"/>
                                 <TextBox x:Name="FloorHeight" Padding="2" HorizontalAlignment="Stretch" 
-                                         IsReadOnly="True" Grid.Column="1" Grid.Row="3" Margin="0 0 0 5" 
-                                         Background="#e2e2e2"/>
+                                         IsEnabled="False" Grid.Column="1" Grid.Row="3" 
+                                         Margin="0 0 0 5"/>
                                 <Button x:Name="FloorHeightButton" Content="Set" Grid.Column="2" Grid.Row="3" 
                                         Margin="0 0 0 5" Click="ProjectSize_Click" IsEnabled="False"/>
                                 <!--=============================-->
@@ -128,7 +128,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="NumberOfDepartments" Grid.Column="0" IsEnabled="False" 
-                                             Background="#e2e2e2" Padding="2"/>
+                                             Padding="2"/>
                                     <Button x:Name="NumberOfDepartmentsButton" Grid.Column ="1" 
                                             IsEnabled="False" Content="Set" Click="NumberOfDepartments_Click"/>
                                 </Grid>
@@ -194,9 +194,10 @@
                                            Grid.Column="0" Margin="0 0 0 5"/>
                                 <TextBox x:Name="TotalBudget" Padding="2" 
                                          HorizontalAlignment="Stretch" Grid.Column="1" 
-                                         Margin="0 0 0 5"/>
+                                         Margin="0 0 0 5" IsEnabled="False"/>
                                 <Button x:Name="TotalBudgetButton" Content="Set" Grid.Column="2" 
-                                        Margin="0 0 0 5" Click="TotalBudgetButton_Click"/>
+                                        Margin="0 0 0 5" IsEnabled="False"
+                                        Click="TotalBudgetButton_Click"/>
                             </Grid>
                             <!--======================-->
                             <!--Gross Miltiplier setting-->
@@ -220,27 +221,27 @@
                                                Grid.Row="0" Margin="0 0 0 5"/>
                                 <Slider x:Name="CirculationSlider" Grid.Column="1" Grid.Row="0" 
                                         HorizontalAlignment="Stretch" Minimum="0" Maximum="100"
-                                        Value="20" TickFrequency="1" IsSnapToTickEnabled="True"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" IsEnabled="False"
                                         TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" 
-                                        Margin="0 0 0 5"/>
+                                        Margin="0 0 0 5" ValueChanged="GrossMultiplierSlider_ValueChanged"/>
                                 <!--======================-->
                                 <!-- Set MEP Multiplier-->
                                 <TextBlock Text="MEP %" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="1" Margin="0 0 0 5"/>
                                 <Slider x:Name="MEPSlider" Grid.Column="1" Grid.Row="1"
                                         HorizontalAlignment="Stretch" Minimum="0" Maximum="100"
-                                        Value="30" TickFrequency="1" IsSnapToTickEnabled="True"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" IsEnabled="False"
                                         TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" 
-                                        Margin="0 0 0 5"/>
+                                        Margin="0 0 0 5" ValueChanged="GrossMultiplierSlider_ValueChanged"/>
                                 <!--======================-->
                                 <!-- Set Exterior/Stacking Multiplier-->
                                 <TextBlock Text="Exterior/Stack %" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
                                 <Slider x:Name="ExteriorStackSlider" Grid.Column="1" Grid.Row="2" 
                                         HorizontalAlignment="Stretch" Minimum="0" Maximum="100"
-                                        Value="10" TickFrequency="1" IsSnapToTickEnabled="True"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" IsEnabled="False"
                                         TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" 
-                                        Margin="0 0 0 5"/>
+                                        Margin="0 0 0 5" ValueChanged="GrossMultiplierSlider_ValueChanged"/>
                                 <!--======================-->
                                 <!-- Set Indirect Multiplier-->
                                 <TextBlock Text="Indirect" VerticalAlignment="Center" Grid.Column="0"
