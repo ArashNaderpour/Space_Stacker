@@ -1257,10 +1257,12 @@ namespace Massing_Programming
 
             for (int i = firstProgramBoxIndex; i <= lastProgramBoxIndex; i++)
             {
+                // Programs Before The Changed One
                 if (i < programBoxIndex)
                 {
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY;
                 }
+                // The Changed Program
                 if (i == programBoxIndex)
                 {
                     newProgramCenterY += (newProgramLength / 2);
@@ -1281,7 +1283,26 @@ namespace Massing_Programming
 
                     newProgramCenterY += (newProgramLength / 2);
 
+                    // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
+                    float oldGSF = this.boxesOfTheProject[programName].GSFValue;
+                    float oldRawProgramCost = this.boxesOfTheProject[programName].rawCostValue;
+
+                    float newGSF = (float)(keyRooms.Value * DGSF.Value);
+
+                    float newRawProgramCost = newGSF * this.functions[this.boxesOfTheProject[programName].function]["cost"];
+
+                    float GSFDifference = newGSF - oldGSF;
+                    float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
+
+                    this.totalGSF += GSFDifference;
+                    this.totalRawDepartmentCost += rawProgramCostDifference;
+
+                    this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
+                    this.boxesOfTheProject[programName].GSFValue = newGSF;
+                    this.boxesOfTheProject[programName].rawCostValue = newRawProgramCost;
+
                 }
+                // Programs After The Changed One
                 if (i > programBoxIndex)
                 {
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
@@ -1305,6 +1326,9 @@ namespace Massing_Programming
                     newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                 }
             }
+
+            // All The Calculation, Prepration, and Visualization of The Output Data
+            CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
