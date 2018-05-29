@@ -251,9 +251,11 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="0.75*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="IndirectMultiplier" Text="1.5" Grid.Column="0" Padding="2" 
-                                             HorizontalAlignment="Stretch" Margin="0 0 0 5"/>
-                                    <Button Content="Set" Grid.Column="1" Margin="0 0 0 5"/>
+                                    <TextBox x:Name="IndirectMultiplier" Grid.Column="0" Padding="2" 
+                                             HorizontalAlignment="Stretch" Margin="0 0 0 5"
+                                             IsEnabled="False"/>
+                                    <Button x:Name="IndirectMultiplierButton" Content="Set" Grid.Column="1" 
+                                            Margin="0 0 0 5" IsEnabled="False" Click="IndirectMultiplier_Click"/>
                                 </Grid>
                                 <!--======================-->
                             </Grid>

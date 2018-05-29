@@ -43,6 +43,7 @@ namespace Massing_Programming
 
         // Cost Variables
         float totalBudget = 150000000;
+        float indirectMultiplier = 1;
 
         // Temp Output Variables
         float totalGSF = new float();
@@ -70,6 +71,7 @@ namespace Massing_Programming
 
             // Setting Up Initial Values of The Project Cost Tab
             this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
+            this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
 
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
@@ -340,9 +342,13 @@ namespace Massing_Programming
 
                 this.TotalBudget.IsEnabled = true;
                 this.TotalBudgetButton.IsEnabled = true;
+
                 this.CirculationSlider.IsEnabled = true;
                 this.MEPSlider.IsEnabled = true;
                 this.ExteriorStackSlider.IsEnabled = true;
+
+                this.IndirectMultiplier.IsEnabled = true;
+                this.IndirectMultiplierButton.IsEnabled = true;
             }
             else
             {
@@ -1399,6 +1405,55 @@ namespace Massing_Programming
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
+        /* ----------------------------------- Handeling Indirect Multiplier Button Event ----------------------------------- */
+        private void IndirectMultiplier_Click(object sender, RoutedEventArgs e)
+        {
+            float tempIndirectMultiplier = new float();
+
+            try
+            {
+                tempIndirectMultiplier = float.Parse(this.IndirectMultiplier.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
+                return;
+            }
+
+            if (tempIndirectMultiplier > 0)
+            {
+                this.indirectMultiplier = tempIndirectMultiplier;
+
+                this.projectCost = this.constructionCost * this.indirectMultiplier;
+
+                // Information Outputs
+                this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
+                this.ProjectCost.Text = ExtraMethods.CastDollar(this.projectCost);
+
+                // Budget Difference
+                this.budgetDifference = this.totalBudget - this.projectCost;
+
+                if (budgetDifference > 0)
+                {
+                    this.BudgetDifference.Foreground = Brushes.Green;
+                    this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+                }
+                else
+                {
+                    this.BudgetDifference.Foreground = Brushes.Red;
+                    this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than Zero.");
+                this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
+                return;
+            }
+
+        }
+
         /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
 
         /* ----------------------------------- The Method For All The Calculations and Visualizations of The Data ----------------------------------- */
@@ -1423,7 +1478,7 @@ namespace Massing_Programming
             this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
                 landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
 
-            this.projectCost = this.constructionCost * float.Parse(this.IndirectMultiplier.Text);
+            this.projectCost = this.constructionCost * this.indirectMultiplier;
 
             // Information Outputs
             this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
