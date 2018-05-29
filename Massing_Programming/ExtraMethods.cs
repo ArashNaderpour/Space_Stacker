@@ -12,7 +12,16 @@ namespace Massing_Programming
 
         public static string CastDollar(float dollar)
         {
-            return dollar.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
+            if (dollar >= 0)
+            {
+                return dollar.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
+            }
+            else
+            {
+                dollar = Math.Abs(dollar);
+
+                return "-" + dollar.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
+            }
         }
 
         public static float MapValue(float min1, float max1, float min2, float max2, float val)

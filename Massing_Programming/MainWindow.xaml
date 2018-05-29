@@ -190,13 +190,13 @@
                                     <ColumnDefinition Width="0.75*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="Total Budget" VerticalAlignment="Center" 
+                                <TextBlock x:Name="TotalBudgetLabel" Text="Total Budget" VerticalAlignment="Center" 
                                            Grid.Column="0" Margin="0 0 0 5"/>
-                                <TextBox x:Name="TotalBudget" Text="150000000" Padding="2" 
+                                <TextBox x:Name="TotalBudget" Padding="2" 
                                          HorizontalAlignment="Stretch" Grid.Column="1" 
                                          Margin="0 0 0 5"/>
                                 <Button x:Name="TotalBudgetButton" Content="Set" Grid.Column="2" 
-                                        Margin="0 0 0 5"/>
+                                        Margin="0 0 0 5" Click="TotalBudgetButton_Click"/>
                             </Grid>
                             <!--======================-->
                             <!--Gross Miltiplier setting-->

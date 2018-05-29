@@ -41,6 +41,9 @@ namespace Massing_Programming
         float totalBGSF = new float();
         float limitOfBGSF = new float();
 
+        // Cost Variables
+        float totalBudget = 150000000;
+
         // Temp Output Variables
         float totalGSF = new float();
         float totalRawDepartmentCost = new float();
@@ -59,12 +62,14 @@ namespace Massing_Programming
         {
             InitializeComponent();
 
-            // Setting up values of the initial dimensions of the Project Box and Floor Height
+            // Setting Up Values of The Initial Dimensions of The Project Box and Floor Height
             this.ProjectWidth.Text = this.initialProjectBoxDims[0].ToString();
             this.ProjectLength.Text = this.initialProjectBoxDims[1].ToString();
             this.ProjectHeight.Text = this.initialProjectBoxDims[2].ToString();
-
             this.FloorHeight.Text = this.initialProgramHeight.ToString();
+
+            // Setting Up Initial Values of The Project Cost Tab
+            this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
 
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
@@ -131,7 +136,7 @@ namespace Massing_Programming
                 if (filePath.Substring(filePath.Length - 3).ToLower() != "xls" &&
                     filePath.Substring(filePath.Length - 4).ToLower() != "xlsx")
                 {
-                    MessageBox.Show("Please Select an Execl File.");
+                    MessageBox.Show("Please Select An Execl File.");
                     return;
                 }
             }
@@ -165,7 +170,7 @@ namespace Massing_Programming
                         }
                         catch
                         {
-                            MessageBox.Show("\"Cost\" Value is not accessable for " + "\"" + name + "\"" + ", \"500\" will be considered as the cost value automatically.");
+                            MessageBox.Show("\"Cost\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"500\" Will Be Considered As The Cost Value Automatically.");
                             tempDictionary.Add("cost", 500);
                         }
                         if (name == "MEP" || name == "Circulation" || name == "BES" || name == "Building Exterior Stacking")
@@ -185,7 +190,7 @@ namespace Massing_Programming
                             }
                             catch
                             {
-                                MessageBox.Show("\"Key Rooms Slider Minimum\" Value is not accessable for " + "\"" + name + "\"" + ", \"1\" will be considered as the cost value automatically.");
+                                MessageBox.Show("\"Key Rooms Slider Minimum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"1\" Will Be Considered As The Cost Value Automatically.");
                                 tempDictionary.Add("keyMin", 1);
                             }
                             try
@@ -194,7 +199,7 @@ namespace Massing_Programming
                             }
                             catch
                             {
-                                MessageBox.Show("\"Key Rooms Slider Value\" Value is not accessable for " + "\"" + name + "\"" + ", \"5\" will be considered as the cost value automatically.");
+                                MessageBox.Show("\"Key Rooms Slider Value\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"5\" Will Be Considered As The Cost Value Automatically.");
                                 tempDictionary.Add("keyVal", 5);
                             }
                             try
@@ -203,7 +208,7 @@ namespace Massing_Programming
                             }
                             catch
                             {
-                                MessageBox.Show("\"Key Rooms Slider Maximum\" Value is not accessable for " + "\"" + name + "\"" + ", \"10\" will be considered as the cost value automatically.");
+                                MessageBox.Show("\"Key Rooms Slider Maximum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"10\" Will Be Considered As The Cost Value Automatically.");
                                 tempDictionary.Add("keyMax", 10);
                             }
                             try
@@ -212,7 +217,7 @@ namespace Massing_Programming
                             }
                             catch
                             {
-                                MessageBox.Show("\"DGSF Slider Minimum\" Value is not accessable for " + "\"" + name + "\"" + ", \"100\" will be considered as the cost value automatically.");
+                                MessageBox.Show("\"DGSF Slider Minimum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"100\" Will Be Considered As The Cost Value Automatically.");
                                 tempDictionary.Add("DGSFMin", 100);
                             }
                             try
@@ -221,7 +226,7 @@ namespace Massing_Programming
                             }
                             catch
                             {
-                                MessageBox.Show("\"DGSF Slider Value\" Value is not accessable for " + "\"" + name + "\"" + ", \"500\" will be considered as the cost value automatically.");
+                                MessageBox.Show("\"DGSF Slider Value\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"500\" Will Be Considered As The Cost Value Automatically.");
                                 tempDictionary.Add("DGSFVal", 500);
                             }
                             try
@@ -230,7 +235,7 @@ namespace Massing_Programming
                             }
                             catch
                             {
-                                MessageBox.Show("\"DGSF Slider Maximum\" Value is not accessable for " + "\"" + name + "\"" + ", \"1000\" will be considered as the cost value automatically.");
+                                MessageBox.Show("\"DGSF Slider Maximum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"1000\" Will Be Considered As The Cost Value Automatically.");
                                 tempDictionary.Add("DGSFMax", 1000);
                             }
                         }
@@ -340,7 +345,7 @@ namespace Massing_Programming
             }
             else
             {
-                MessageBox.Show("Format of the Data in the Excel File is Inappropriate.");
+                MessageBox.Show("Format Of The Data In The Excel File Is Inappropriate.");
                 return;
             }
         }
@@ -362,7 +367,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting Number.");
+                    MessageBox.Show("Please Enter A Number.");
                     this.NumberOfDepartments.Text = existingDepartments.ToString();
                     return;
                 }
@@ -402,7 +407,7 @@ namespace Massing_Programming
                                 int lastProgramIndex = this.stackingVisualization.Children.Count - 1;
 
                                 // Remove The Removed Box From The Dictionary of The Boxes
-                                this.boxesOfTheProject.Remove(this.stackingVisualization.Children[lastProgramIndex].GetName());  
+                                this.boxesOfTheProject.Remove(this.stackingVisualization.Children[lastProgramIndex].GetName());
 
                                 this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
                             }
@@ -468,7 +473,7 @@ namespace Massing_Programming
 
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
-                                
+
                                 this.boxesOfTheProject.Add(programBox.name, programBox);
                                 this.stackingVisualization.Children.Add(programBoxVisualization);
                             }
@@ -484,10 +489,10 @@ namespace Massing_Programming
                     }
                 }
 
-                // If user input for Number of Departments is equal to zero
+                // If user input for Number of Departments is Equal to Zero
                 else
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting Number.");
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
                     this.NumberOfDepartments.Text = existingDepartments.ToString();
                 }
             }
@@ -613,7 +618,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter a Name Inside the \"Name of Department\" Box.");
+                    MessageBox.Show("Please Enter A Name Inside The \"Name of Department\" Box.");
                     return;
                 }
             }
@@ -635,7 +640,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting Number.");
+                    MessageBox.Show("Please Enter A Number.");
                     numberTextBox.Text = existingPrograms.ToString();
                     return;
                 }
@@ -704,7 +709,7 @@ namespace Massing_Programming
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
                                 float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
                                 this.totalGSF += GSF;
-                                this.totalRawDepartmentCost += rawCost; 
+                                this.totalRawDepartmentCost += rawCost;
 
                                 // Calculating Length of Each Program Based on Width of The Project Box
                                 string programBoxName = department.Name + "ProgramBox" + (i).ToString();
@@ -821,18 +826,18 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Number of Departments has to be a Counting Number.");
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
                     numberTextBox.Text = existingPrograms.ToString();
                 }
             }
         }
 
-        /*------------------ Project Size Change Events ------------------*/
+        /*------------------ Handeling Project Size Change Events ------------------*/
         private void ProjectSize_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
 
-            // Handeling Project Width changes events
+            // Handeling Project Width Changes Events
             if (btn.Name == "ProjectWidthButton")
             {
                 float projectWidthInput = new float();
@@ -843,7 +848,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please Enter a Number.");
+                    MessageBox.Show("Please Enter A Number.");
                     this.ProjectWidth.Text = this.stackingVisualization.Children[0].Bounds.SizeX.ToString();
                     return;
                 }
@@ -915,7 +920,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter a Number Larger than Zero.");
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
                     this.ProjectWidth.Text = this.stackingVisualization.Children[0].Bounds.SizeX.ToString();
                     return;
                 }
@@ -932,7 +937,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please Enter a Number.");
+                    MessageBox.Show("Please Enter A Number.");
                     this.ProjectLength.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
                     return;
                 }
@@ -945,7 +950,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter a Number Larger than Zero.");
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
                     this.ProjectLength.Text = this.stackingVisualization.Children[0].Bounds.SizeY.ToString();
                     return;
                 }
@@ -962,7 +967,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please Enter a Number.");
+                    MessageBox.Show("Please Enter A Number.");
                     this.FloorHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeZ.ToString();
                     return;
                 }
@@ -974,7 +979,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter a Number Larger than Zero.");
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
                     this.ProjectHeight.Text = this.stackingVisualization.Children[0].Bounds.SizeZ.ToString();
                     return;
                 }
@@ -990,7 +995,7 @@ namespace Massing_Programming
                 }
                 catch
                 {
-                    MessageBox.Show("Please Enter a Number.");
+                    MessageBox.Show("Please Enter A Number.");
                     this.FloorHeight.Text = this.stackingVisualization.Children[1].Bounds.SizeZ.ToString();
                     return;
                 }
@@ -1048,7 +1053,7 @@ namespace Massing_Programming
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter a Number Larger than Zero.");
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
                     this.ProjectHeight.Text = this.stackingVisualization.Children[1].Bounds.SizeZ.ToString();
                     return;
                 }
@@ -1071,15 +1076,15 @@ namespace Massing_Programming
             }
         }
 
-        /* ------------------------ Program ComboBox Change Event Handler /* ------------------------ */
+        /* ------------------------ Handeling Program ComboBox Change Event ------------------------ */
         void SelectedProgram_Chenged(object sender, EventArgs e)
         {
             ComboBox cbx = sender as ComboBox;
-            
+
             // Extracting The Department and The Program Indices of The Changed ComboBox
             int departmentIndex = int.Parse(cbx.Name[1].ToString()) - 1;
             int programIndex = int.Parse(cbx.Name[cbx.Name.Length - 1].ToString());
-            
+
             // Extracting The Department That Changed
             Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
@@ -1202,7 +1207,7 @@ namespace Massing_Programming
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
-        /*---------------- Program Slider Change Event Handler ----------------*/
+        /*---------------- Handeling Program Slider Change Event ----------------*/
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // ... Get Slider reference.
@@ -1331,79 +1336,136 @@ namespace Massing_Programming
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
+        /* ########################################################### Handeling Events of The Cost Tab ########################################################### */
+
+        /* ----------------------------------- Handeling Total Budget Button Event ----------------------------------- */
+        private void TotalBudgetButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+
+            float tempTotalBudget = new float();
+
+            // Only Work When a Project is Open
+            if (this.functions.Count > 0)
+            {
+                try
+                {
+                    tempTotalBudget = float.Parse(this.TotalBudget.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Please Enter A Number.");
+                    this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
+                    return;
+                }
+
+                if (tempTotalBudget > 0)
+                {
+                    this.totalBudget = tempTotalBudget;
+
+                    this.budgetDifference = float.Parse(this.TotalBudget.Text) - this.projectCost;
+
+                    if (budgetDifference > 0)
+                    {
+                        this.BudgetDifference.Foreground = Brushes.Green;
+                        this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+                    }
+                    else
+                    {
+                        this.BudgetDifference.Foreground = Brushes.Red;
+                        this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+                    }
+
+                    this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
+                }
+                else
+                {
+                    MessageBox.Show("Please Enter A Number Larger Than Zero.");
+                    this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please Open A Spread Sheet That Contains Information Of The Project.");
+                return;
+            }
+        }
+
         /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
 
-/* ----------------------------------- The Method For All The Calculations and Visualizations of The Data /* ----------------------------------- */
-private void CalculationsAndOutputs(float totalGSF, float totalRawDepartmentCost)
-{
-    // Other Project Costs
-    float landCost = float.Parse(this.LandCost.Text);
+        /* ----------------------------------- The Method For All The Calculations and Visualizations of The Data ----------------------------------- */
+        private void CalculationsAndOutputs(float totalGSF, float totalRawDepartmentCost)
+        {
+            // Other Project Costs
+            float landCost = float.Parse(this.LandCost.Text);
 
-    float generalCosts = float.Parse(this.GeneralCosts.Text);
-    float designContingency = float.Parse(this.DesignContingency.Text);
-    float buildContingency = float.Parse(this.BuildContingency.Text);
-    float CCIP = float.Parse(this.CCIP.Text);
-    float CMFee = float.Parse(this.CMFee.Text);
+            float generalCosts = float.Parse(this.GeneralCosts.Text);
+            float designContingency = float.Parse(this.DesignContingency.Text);
+            float buildContingency = float.Parse(this.BuildContingency.Text);
+            float CCIP = float.Parse(this.CCIP.Text);
+            float CMFee = float.Parse(this.CMFee.Text);
 
-    // Calculating Total Construction Cost and Project Cost
-    float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
+            // Calculating Total Construction Cost and Project Cost
+            float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
 
-    float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
+            float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];
 
-    float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
+            float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
 
-    this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
-        landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
+            this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
+                landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
 
-    this.projectCost = this.constructionCost * float.Parse(this.IndirectMultiplier.Text);
+            this.projectCost = this.constructionCost * float.Parse(this.IndirectMultiplier.Text);
 
-    // Information Outputs
-    this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
-    this.ProjectCost.Text = ExtraMethods.CastDollar(this.projectCost);
+            // Information Outputs
+            this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
+            this.ProjectCost.Text = ExtraMethods.CastDollar(this.projectCost);
 
-    this.budgetDifference = float.Parse(this.TotalBudget.Text) - this.projectCost;
+            // Budget Difference
+            this.budgetDifference = this.totalBudget - this.projectCost;
 
-    if (budgetDifference > 0)
-    {
-        this.BudgetDifference.Foreground = Brushes.Green;
-        this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+            if (budgetDifference > 0)
+            {
+                this.BudgetDifference.Foreground = Brushes.Green;
+                this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+            }
+            else
+            {
+                this.BudgetDifference.Foreground = Brushes.Red;
+                this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
+            }
+
+            // BGSF Limit
+            this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) *
+                (float.Parse(this.ProjectHeight.Text) / float.Parse(this.FloorHeight.Text));
+            this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+
+            // Calculating Total BGSF Used
+            float circulationGSF = (((float)this.CirculationSlider.Value) / 100) * totalGSF;
+
+            float MEPGSF = (((float)this.MEPSlider.Value) / 100) * (totalGSF + circulationGSF);
+
+            float exteriorStackGSF = (((float)this.ExteriorStackSlider.Value) / 100) * (totalGSF + circulationGSF + MEPGSF);
+
+            this.totalBGSF = totalGSF + circulationGSF + MEPGSF + exteriorStackGSF;
+
+            if (this.totalBGSF < this.limitOfBGSF)
+            {
+                this.TotalBGSF.Foreground = this.TotalBGSFLabel.Foreground;
+                this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+            }
+            else
+            {
+                this.TotalBGSF.Foreground = Brushes.Red;
+                this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+            }
+
+            // Calculating and Visualizing Cost/GSF
+            this.costPerGSF = this.constructionCost / this.totalBGSF;
+            this.CostPerGSF.Text = this.costPerGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
+        }
     }
-    else
-    {
-        this.BudgetDifference.Foreground = Brushes.Red;
-        this.BudgetDifference.Text = ExtraMethods.CastDollar(this.budgetDifference);
-    }
-
-    // BGSF Limit
-    this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) *
-        (float.Parse(this.ProjectHeight.Text) / float.Parse(this.FloorHeight.Text));
-    this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
-
-    // Calculating Total BGSF Used
-    float circulationGSF = (((float)this.CirculationSlider.Value) / 100) * totalGSF;
-
-    float MEPGSF = (((float)this.MEPSlider.Value) / 100) * (totalGSF + circulationGSF);
-
-    float exteriorStackGSF = (((float)this.ExteriorStackSlider.Value) / 100) * (totalGSF + circulationGSF + MEPGSF);
-
-    this.totalBGSF = totalGSF + circulationGSF + MEPGSF + exteriorStackGSF;
-
-    if (this.totalBGSF < this.limitOfBGSF)
-    {
-        this.TotalBGSF.Foreground = this.TotalBGSFLabel.Foreground;
-        this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
-    }
-    else
-    {
-        this.TotalBGSF.Foreground = Brushes.Red;
-        this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
-    }
-
-    // Calculating and Visualizing Cost/GSF
-    this.costPerGSF = this.constructionCost / this.totalBGSF;
-    this.CostPerGSF.Text = this.costPerGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
-}
-}
 }
 
 
