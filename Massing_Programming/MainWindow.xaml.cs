@@ -1388,6 +1388,7 @@ namespace Massing_Programming
             else
             {
                 MessageBox.Show("Please Open A Spread Sheet That Contains Information Of The Project.");
+                this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
                 return;
             }
         }
