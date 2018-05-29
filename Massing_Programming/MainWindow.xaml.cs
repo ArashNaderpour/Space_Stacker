@@ -1206,7 +1206,7 @@ namespace Massing_Programming
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             // ... Get Slider reference.
-            var slider = sender as Slider;
+            Slider slider = sender as Slider;
 
             // Extracting Department and Program Indices of The Changed ComboBox
             int departmentIndex = int.Parse(slider.Name[1].ToString()) - 1;
@@ -1252,9 +1252,6 @@ namespace Massing_Programming
             // Calculating the Scale Factor of Each ProgramBox
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
 
-            // Length of the Program Before Scale
-            double totalProgramLength = 0;
-
             // Calculating Y Cordinate of the Scale Center for Each ProgramBox
             double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5f);
 
@@ -1279,8 +1276,6 @@ namespace Massing_Programming
 
                     this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
 
-                    totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
-
                     this.stackingVisualization.Children.RemoveAt(i);
                     this.stackingVisualization.Children.Insert(i, newProgramBox);
 
@@ -1303,8 +1298,6 @@ namespace Massing_Programming
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                     this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
-
-                    totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                     this.stackingVisualization.Children.RemoveAt(i);
                     this.stackingVisualization.Children.Insert(i, newProgramBox);
