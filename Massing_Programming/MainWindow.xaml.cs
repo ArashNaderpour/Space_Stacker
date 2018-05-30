@@ -45,6 +45,11 @@ namespace Massing_Programming
         float totalBudget = 150000000;
         float indirectMultiplier = 1;
         float landCost = 10000000;
+        float generalCosts = new float();
+        float designContingency = new float();
+        float buildContingency = new float();
+        float cCIP = new float();
+        float cMFee = new float();
 
         // Temp Output Variables
         float totalGSF = new float();
@@ -74,6 +79,11 @@ namespace Massing_Programming
             this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
             this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
             this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+            this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
+            this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+            this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
+            this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
+            this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
 
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
@@ -354,6 +364,21 @@ namespace Massing_Programming
 
                 this.LandCost.IsEnabled = true;
                 this.LandCostButton.IsEnabled = true;
+
+                this.GeneralCosts.IsEnabled = true;
+                this.GeneralCostsButton.IsEnabled = true;
+
+                this.DesignContingency.IsEnabled = true;
+                this.DesignContingencyButton.IsEnabled = true;
+
+                this.BuildContingency.IsEnabled = true;
+                this.BuildContingencyButton.IsEnabled = true;
+
+                this.CCIP.IsEnabled = true;
+                this.CCIPButton.IsEnabled = true;
+
+                this.CMFee.IsEnabled = true;
+                this.CMFeeButton.IsEnabled = true;
             }
             else
             {
@@ -1474,7 +1499,7 @@ namespace Massing_Programming
                 return;
             }
 
-            if (tempLandCost > 0)
+            if (tempLandCost >= 0)
             {
                 this.landCost = tempLandCost;
 
@@ -1485,8 +1510,173 @@ namespace Massing_Programming
             }
             else
             {
-                MessageBox.Show("Please Enter A Number Larger Than Zero.");
+                MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
                 this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+                return;
+            }
+        }
+
+        /* ----------------------------------- Handeling General Costs Button Event ----------------------------------- */
+        private void GeneralCosts_Click(object sender, RoutedEventArgs e)
+        {
+            float tempGeneralCosts = new float();
+
+            try
+            {
+                tempGeneralCosts = float.Parse(this.GeneralCosts.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
+                return;
+            }
+
+            if (tempGeneralCosts >= 0)
+            {
+                this.generalCosts = tempGeneralCosts;
+
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
+                this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
+                return;
+            }
+        }
+
+        /* ----------------------------------- Handeling Design Contingency Button Event ----------------------------------- */
+        private void DesignContingency_Click(object sender, RoutedEventArgs e)
+        {
+            float tempDesignContingency = new float();
+
+            try
+            {
+                tempDesignContingency = float.Parse(this.DesignContingency.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+                return;
+            }
+
+            if (tempDesignContingency >= 0)
+            {
+                this.designContingency = tempDesignContingency;
+
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
+                this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+                return;
+            }
+        }
+
+        /* ----------------------------------- Handeling Build Contingency Button Event ----------------------------------- */
+        private void BuildContingency_Click(object sender, RoutedEventArgs e)
+        {
+            float tempBuildContingency = new float();
+
+            try
+            {
+                tempBuildContingency = float.Parse(this.BuildContingency.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
+                return;
+            }
+
+            if (tempBuildContingency >= 0)
+            {
+                this.buildContingency = tempBuildContingency;
+
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
+                this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
+                return;
+            }
+        }
+
+        /* ----------------------------------- Handeling CCIP Button Event ----------------------------------- */
+        private void CCIP_Click(object sender, RoutedEventArgs e)
+        {
+            float tempCCIP = new float();
+
+            try
+            {
+                tempCCIP = float.Parse(this.CCIP.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
+                return;
+            }
+
+            if (tempCCIP >= 0)
+            {
+                this.cCIP = tempCCIP;
+
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
+                this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
+                return;
+            }
+        }
+
+        /* ----------------------------------- Handeling CMFee Button Event ----------------------------------- */
+        private void CMFee_Click(object sender, RoutedEventArgs e)
+        {
+            float tempCMFee = new float();
+
+            try
+            {
+                tempCMFee = float.Parse(this.CMFee.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
+                return;
+            }
+
+            if (tempCMFee >= 0)
+            {
+                this.cMFee = tempCMFee;
+
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
+                this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
                 return;
             }
         }
@@ -1496,15 +1686,6 @@ namespace Massing_Programming
         /* ----------------------------------- The Method For All The Calculations and Visualizations of The Data ----------------------------------- */
         private void CalculationsAndOutputs(float totalGSF, float totalRawDepartmentCost)
         {
-            // Other Project Costs
-            float landCost = this.landCost;
-
-            float generalCosts = float.Parse(this.GeneralCosts.Text);
-            float designContingency = float.Parse(this.DesignContingency.Text);
-            float buildContingency = float.Parse(this.BuildContingency.Text);
-            float CCIP = float.Parse(this.CCIP.Text);
-            float CMFee = float.Parse(this.CMFee.Text);
-
             // Calculating Total Construction Cost and Project Cost
             float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
 
@@ -1513,7 +1694,7 @@ namespace Massing_Programming
             float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * this.functions["BES"]["cost"];
 
             this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
-                landCost + generalCosts + designContingency + buildContingency + CCIP + CMFee;
+                this.landCost + this.generalCosts + this.designContingency + this.buildContingency + this.cCIP + this.cMFee;
 
             this.projectCost = this.constructionCost * this.indirectMultiplier;
 
