@@ -182,7 +182,7 @@
 
                             <!-- Set Project's Budget-->
                             <TextBlock Text="PROJECT'S BUDGET" FontWeight="Bold" FontSize="15"
-                                       Margin="0 10 0 1"/>
+                                       Margin="0 10 0 0"/>
                             <Grid Margin="0 10 0 0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -202,7 +202,7 @@
                             <!--======================-->
                             <!--Gross Miltiplier setting-->
                             <TextBlock Text="GROSS MULTIPLIER" FontWeight="Bold" FontSize="15"
-                                       Margin="0 10 0 1"/>
+                                       Margin="0 10 0 0"/>
                             <Grid Margin="0 10 0 0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -286,6 +286,29 @@
                             <TextBlock Text="Other Costs" HorizontalAlignment="Stretch"
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
+
+                            <TextBlock Text="METHOD" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
+
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="Input Method" VerticalAlignment="Center" 
+                                           Grid.Column="0"/>
+                                <RadioButton x:Name="Amount" Content="Amount" IsChecked="True" 
+                                             Grid.Column="1" HorizontalAlignment="Stretch" 
+                                             VerticalAlignment="Center" IsEnabled="False"/>
+                                <RadioButton x:Name="Percentage" Content="Percentage" 
+                                             Grid.Column="2" HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Center" IsEnabled="False"/>
+                            </Grid>
+
+                            <TextBlock Text="USER INPUTS" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
 
                             <Grid Margin="0 10 0 0">
                                 <Grid.ColumnDefinitions>
