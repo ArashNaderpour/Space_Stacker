@@ -44,6 +44,7 @@ namespace Massing_Programming
         // Cost Variables
         float totalBudget = 150000000;
         float indirectMultiplier = 1;
+        float landCost = 10000000;
 
         // Temp Output Variables
         float totalGSF = new float();
@@ -72,6 +73,7 @@ namespace Massing_Programming
             // Setting Up Initial Values of The Project Cost Tab
             this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
             this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
+            this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
 
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
@@ -349,6 +351,9 @@ namespace Massing_Programming
 
                 this.IndirectMultiplier.IsEnabled = true;
                 this.IndirectMultiplierButton.IsEnabled = true;
+
+                this.LandCost.IsEnabled = true;
+                this.LandCostButton.IsEnabled = true;
             }
             else
             {
@@ -1451,7 +1456,39 @@ namespace Massing_Programming
                 this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
                 return;
             }
+        }
 
+        /* ----------------------------------- Handeling Land Cost Button Event ----------------------------------- */
+        private void LandCost_Click(object sender, RoutedEventArgs e)
+        {
+            float tempLandCost = new float();
+
+            try
+            {
+                tempLandCost = float.Parse(this.LandCost.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Please Enter A Number.");
+                this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+                return;
+            }
+
+            if (tempLandCost > 0)
+            {
+                this.landCost = tempLandCost;
+
+                // All The Calculation, Prepration, and Visualization of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+            }
+            else
+            {
+                MessageBox.Show("Please Enter A Number Larger Than Zero.");
+                this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+                return;
+            }
         }
 
         /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
@@ -1460,7 +1497,7 @@ namespace Massing_Programming
         private void CalculationsAndOutputs(float totalGSF, float totalRawDepartmentCost)
         {
             // Other Project Costs
-            float landCost = float.Parse(this.LandCost.Text);
+            float landCost = this.landCost;
 
             float generalCosts = float.Parse(this.GeneralCosts.Text);
             float designContingency = float.Parse(this.DesignContingency.Text);

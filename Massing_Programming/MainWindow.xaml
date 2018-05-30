@@ -260,7 +260,7 @@
                                 <!--======================-->
                             </Grid>
                             <!--========================-->
-                            <!-- Set Lands Costs and Information-->
+                            <!-- Set Lands Costs And Information-->
                             <TextBlock Text="LAND'S INFORMATION" FontWeight="Bold" FontSize="15"
                                        Margin="0 10 0 1"/>
                             <Grid Margin="0 10 0 0">
@@ -270,13 +270,15 @@
                                     <ColumnDefinition Width="0.75*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="Land's Cost" VerticalAlignment="Center" Grid.Column="0"
-                                               Margin="0 0 0 5"/>
-                                <TextBox x:Name="LandCost" Text="10000000" Padding="2" 
+                                <TextBlock x:Name="LandCostLabel" Text="Land's Cost" 
+                                           VerticalAlignment="Center" Grid.Column="0"
+                                           Margin="0 0 0 5"/>
+                                <TextBox x:Name="LandCost" IsEnabled="False" Padding="2" 
                                          HorizontalAlignment="Stretch" 
                                          Grid.Column="1" Margin="0 0 0 5"/>
                                 <Button x:Name="LandCostButton" Content="Set" 
-                                        Grid.Column="2" Margin="0 0 0 5"/>
+                                        Grid.Column="2" Margin="0 0 0 5" IsEnabled="False"
+                                        Click="LandCost_Click"/>
                             </Grid>
                             <!--================================-->
                             <!--====================-->
