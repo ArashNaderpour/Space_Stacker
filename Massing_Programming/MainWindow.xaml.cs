@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using HelixToolkit.Wpf;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -308,6 +300,8 @@ namespace Massing_Programming
 
                         Box programBox = new Box(programBoxName, programBoxCenter);
                         programBox.function = program.SelectedItem.ToString();
+                        programBox.keyRooms = (int)keyRooms.Value;
+                        programBox.DGSF = (float)DGSF.Value;
                         programBox.GSFValue = GSF;
                         programBox.rawCostValue = rawCost;
                         programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -504,6 +498,8 @@ namespace Massing_Programming
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
                                 programBox.function = program.SelectedItem.ToString();
+                                programBox.keyRooms = (int)keyRooms.Value;
+                                programBox.DGSF = (float)DGSF.Value;
                                 programBox.GSFValue = GSF;
                                 programBox.rawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -622,6 +618,8 @@ namespace Massing_Programming
 
                     Box programBox = new Box(programBoxName, programBoxCenter);
                     programBox.function = program.SelectedItem.ToString();
+                    programBox.keyRooms = (int)keyRooms.Value;
+                    programBox.DGSF = (float)DGSF.Value;
                     programBox.GSFValue = GSF;
                     programBox.rawCostValue = rawCost;
                     programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -757,6 +755,8 @@ namespace Massing_Programming
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
                                 programBox.function = program.SelectedItem.ToString();
+                                programBox.keyRooms = (int)keyRooms.Value;
+                                programBox.DGSF = (float)DGSF.Value;
                                 programBox.GSFValue = GSF;
                                 programBox.rawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));

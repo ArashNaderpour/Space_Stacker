@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
-using HelixToolkit.Wpf;
+﻿using System.Windows.Media.Media3D;
+
 
 namespace Massing_Programming
 {
@@ -13,6 +8,8 @@ namespace Massing_Programming
         public string name { get; set; }
         public Point3D boxCenter { get; set; }
         public string function { get; set; }
+        public int keyRooms { get; set; }
+        public float DGSF { get; set; }
         public float GSFValue { get; set; }
         public float rawCostValue { get; set; }
         public int floor { get; set; }
