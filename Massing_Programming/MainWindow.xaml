@@ -142,9 +142,9 @@
                                               VerticalAlignment="Center"/>
                                     <!--=================-->
                                     <!--Programming CheckBox-->
-                                    <CheckBox x:Name="Program" Content="Program" IsEnabled="False" 
+                                    <CheckBox x:Name="ProgramsCheckBox" Content="Programs" IsEnabled="False" 
                                               HorizontalAlignment="Right"
-                                              VerticalAlignment="Center"/>
+                                              VerticalAlignment="Center" Click="Programs_Click"/>
                                     <!--=================-->
                                 </DockPanel>
                                 <!--====================================================-->

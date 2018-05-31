@@ -39,3 +39,5 @@ C:\Users\arash\Desktop\C#\Programming_Stacking\Massing_Programming\obj\Debug\Mas
 C:\Users\arash\Desktop\C#\Programming_Stacking\Massing_Programming\obj\Debug\Massing_Programming.Properties.Resources.resources
 C:\Users\arash\Desktop\C#\Programming_Stacking\Massing_Programming\obj\Debug\Massing_Programming.csproj.GenerateResource.Cache
 C:\Users\arash\Desktop\C#\Programming_Stacking\Massing_Programming\obj\Debug\Massing_Programming.csproj.ResolveComReference.cache
+C:\Users\arash\Desktop\C#\Programming_Stacking\Massing_Programming\obj\Debug\ProgramsSubWindow.g.cs
+C:\Users\arash\Desktop\C#\Programming_Stacking\Massing_Programming\obj\Debug\ProgramsSubWindow.baml

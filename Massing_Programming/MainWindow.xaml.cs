@@ -373,6 +373,8 @@ namespace Massing_Programming
 
                 this.CMFee.IsEnabled = true;
                 this.CMFeeButton.IsEnabled = true;
+
+                this.ProgramsCheckBox.IsEnabled = true;
             }
             else
             {
@@ -1680,6 +1682,22 @@ namespace Massing_Programming
                 return;
             }
         }
+
+
+        /* ########################################################### Stacking and Programs Events ########################################################### */
+
+        /* ----------------------------------- Handeling Programs CheckBox Event and Programs SubWindow ----------------------------------- */
+        private void Programs_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = sender as CheckBox;
+
+            if (checkBox.IsChecked == true)
+            {
+                ProgramsSubWindow programsWindow = new ProgramsSubWindow();
+                programsWindow.Show();
+            }
+        }
+
 
         /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
 
