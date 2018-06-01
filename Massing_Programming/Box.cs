@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Media3D;
+﻿using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 
 namespace Massing_Programming
@@ -7,6 +8,7 @@ namespace Massing_Programming
     {
         public string name { get; set; }
         public Point3D boxCenter { get; set; }
+        public Color boxColor { get; set; }
         public string function { get; set; }
         public int keyRooms { get; set; }
         public float DGSF { get; set; }

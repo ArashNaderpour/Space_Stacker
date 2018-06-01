@@ -299,6 +299,7 @@ namespace Massing_Programming
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                         Box programBox = new Box(programBoxName, programBoxCenter);
+                        programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRooms = (int)keyRooms.Value;
                         programBox.DGSF = (float)DGSF.Value;
@@ -499,6 +500,7 @@ namespace Massing_Programming
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
+                                programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
@@ -619,6 +621,7 @@ namespace Massing_Programming
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
                     Box programBox = new Box(programBoxName, programBoxCenter);
+                    programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                     programBox.function = program.SelectedItem.ToString();
                     programBox.keyRooms = (int)keyRooms.Value;
                     programBox.DGSF = (float)DGSF.Value;
@@ -756,6 +759,7 @@ namespace Massing_Programming
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
+                                programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;

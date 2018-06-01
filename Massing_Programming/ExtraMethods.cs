@@ -378,6 +378,7 @@ namespace Massing_Programming
             for (int i = 0; i < stackingVisualization.Children.Count; i++)
             {
                 RowDefinition gridRow = new RowDefinition();
+                gridRow.Height = new GridLength(40);
                 subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
 
                 // Project Box Is Not Included
@@ -385,7 +386,20 @@ namespace Massing_Programming
                 {
                     string boxName = ((GeometryModel3D)stackingVisualization.Children[i]).GetName();
                     int index = int.Parse(boxName.Split('x')[1]);
-                    
+
+                    SolidColorBrush backgroundColor = new SolidColorBrush(boxes[boxName].boxColor);
+                    SolidColorBrush foregroundColor = new SolidColorBrush();
+
+                    if ((boxes[boxName].boxColor.R + boxes[boxName].boxColor.G + boxes[boxName].boxColor.B) / 3 < 120 )
+                    {
+                        foregroundColor = Brushes.White;
+                    }
+                    else
+                    {
+                        foregroundColor = Brushes.Black;
+                    }
+
+                    // Generate And Display Label Of Each Program
                     Label programLabel = new Label();
                     if (index < alphabet.Length)
                     {
@@ -395,8 +409,16 @@ namespace Massing_Programming
                     {
                         programLabel.Content = (index - alphabet.Length).ToString();
                     }
+                    programLabel.Width = 30;
+                    programLabel.Height = 30;
                     programLabel.FontSize = 16;
-                    programLabel.FontWeight = FontWeights.SemiBold;
+                    programLabel.FontWeight = FontWeights.DemiBold;
+                    programLabel.Foreground = foregroundColor;
+                    programLabel.Background = backgroundColor;
+                    programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programLabel.VerticalContentAlignment = VerticalAlignment.Center;
+                    programLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                    programLabel.VerticalAlignment = VerticalAlignment.Center;
                     Grid.SetColumn(programLabel, 0);
                     Grid.SetRow(programLabel, i);
                     subWindow.ProgramsDataChart.Children.Add(programLabel);
