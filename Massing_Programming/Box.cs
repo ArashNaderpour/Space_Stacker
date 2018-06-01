@@ -7,6 +7,7 @@ namespace Massing_Programming
     class Box
     {
         public string name { get; set; }
+        public string departmentName { get; set; }
         public Point3D boxCenter { get; set; }
         public Color boxColor { get; set; }
         public string function { get; set; }

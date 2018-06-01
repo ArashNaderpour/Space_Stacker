@@ -411,7 +411,7 @@ namespace Massing_Programming
                     }
                     programLabel.Width = 30;
                     programLabel.Height = 30;
-                    programLabel.FontSize = 16;
+                    programLabel.FontSize = 14;
                     programLabel.FontWeight = FontWeights.DemiBold;
                     programLabel.Foreground = foregroundColor;
                     programLabel.Background = backgroundColor;
@@ -422,6 +422,22 @@ namespace Massing_Programming
                     Grid.SetColumn(programLabel, 0);
                     Grid.SetRow(programLabel, i);
                     subWindow.ProgramsDataChart.Children.Add(programLabel);
+
+                    // Generate And Display Label Of Each Program
+                    Label programDepartment = new Label();
+                    programDepartment.Content = boxes[boxName].departmentName;
+                    programDepartment.Height = 30;
+                    programDepartment.FontSize = 14;
+                    programDepartment.FontWeight = FontWeights.DemiBold;
+                    programDepartment.Foreground = foregroundColor;
+                    programDepartment.Background = backgroundColor;
+                    programDepartment.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programDepartment.VerticalContentAlignment = VerticalAlignment.Center;
+                    programDepartment.HorizontalAlignment = HorizontalAlignment.Center;
+                    programDepartment.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(programDepartment, 1);
+                    Grid.SetRow(programDepartment, i);
+                    subWindow.ProgramsDataChart.Children.Add(programDepartment);
                 }
             }
         }

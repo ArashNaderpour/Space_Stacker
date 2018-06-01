@@ -15,7 +15,7 @@
             <Grid x:Name="ProgramsDataChart" Margin="0 30 0 0"
                   Width="810" MinWidth="810">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.5*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>

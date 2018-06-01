@@ -299,6 +299,7 @@ namespace Massing_Programming
                         Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                         Box programBox = new Box(programBoxName, programBoxCenter);
+                        programBox.departmentName = department.Header.ToString();
                         programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRooms = (int)keyRooms.Value;
@@ -500,6 +501,7 @@ namespace Massing_Programming
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
+                                programBox.departmentName = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
@@ -621,6 +623,7 @@ namespace Massing_Programming
                         float.Parse(this.FloorHeight.Text) * 0.5 + (i * float.Parse(this.FloorHeight.Text)));
 
                     Box programBox = new Box(programBoxName, programBoxCenter);
+                    programBox.departmentName = department.Header.ToString();
                     programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                     programBox.function = program.SelectedItem.ToString();
                     programBox.keyRooms = (int)keyRooms.Value;
@@ -651,10 +654,15 @@ namespace Massing_Programming
             {
                 Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
                 TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
-
+                
                 if (nameTextBox.Text != "")
                 {
-                    department.Header = nameTextBox.Text; ;
+                    department.Header = nameTextBox.Text;
+                    for(int i = 0; i < this.stackingVisualization.Children.Count; i++) {
+                        if (this.stackingVisualization.Children[i].GetName().Contains(department.Name)) {
+                            this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].departmentName = nameTextBox.Text;
+                        }
+                    }
                 }
                 else
                 {
@@ -759,6 +767,7 @@ namespace Massing_Programming
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
+                                programBox.departmentName = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
