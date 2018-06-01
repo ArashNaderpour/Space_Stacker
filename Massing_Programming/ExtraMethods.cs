@@ -409,7 +409,6 @@ namespace Massing_Programming
                     {
                         programLabel.Content = (index - alphabet.Length).ToString();
                     }
-                    programLabel.Width = 30;
                     programLabel.Height = 30;
                     programLabel.FontSize = 14;
                     programLabel.FontWeight = FontWeights.DemiBold;
@@ -417,13 +416,13 @@ namespace Massing_Programming
                     programLabel.Background = backgroundColor;
                     programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
                     programLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                    programLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                    programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
                     programLabel.VerticalAlignment = VerticalAlignment.Center;
                     Grid.SetColumn(programLabel, 0);
                     Grid.SetRow(programLabel, i);
                     subWindow.ProgramsDataChart.Children.Add(programLabel);
 
-                    // Generate And Display Label Of Each Program
+                    // Generate And Display Department Of Each Program
                     Label programDepartment = new Label();
                     programDepartment.Content = boxes[boxName].departmentName;
                     programDepartment.Height = 30;
@@ -433,11 +432,92 @@ namespace Massing_Programming
                     programDepartment.Background = backgroundColor;
                     programDepartment.HorizontalContentAlignment = HorizontalAlignment.Center;
                     programDepartment.VerticalContentAlignment = VerticalAlignment.Center;
-                    programDepartment.HorizontalAlignment = HorizontalAlignment.Center;
+                    programDepartment.HorizontalAlignment = HorizontalAlignment.Stretch;
                     programDepartment.VerticalAlignment = VerticalAlignment.Center;
                     Grid.SetColumn(programDepartment, 1);
                     Grid.SetRow(programDepartment, i);
                     subWindow.ProgramsDataChart.Children.Add(programDepartment);
+
+                    // Generate And Display Function Of Each Program
+                    Label programFunction = new Label();
+                    programFunction.Content = boxes[boxName].function;
+                    programFunction.Height = 30;
+                    programFunction.FontSize = 14;
+                    programFunction.FontWeight = FontWeights.DemiBold;
+                    programFunction.Foreground = foregroundColor;
+                    programFunction.Background = backgroundColor;
+                    programFunction.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programFunction.VerticalContentAlignment = VerticalAlignment.Center;
+                    programFunction.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    programFunction.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(programFunction, 2);
+                    Grid.SetRow(programFunction, i);
+                    subWindow.ProgramsDataChart.Children.Add(programFunction);
+
+                    // Generate And Display Floor Of Each Program
+                    Label programFloor = new Label();
+                    programFloor.Content = boxes[boxName].floor;
+                    programFloor.Height = 30;
+                    programFloor.FontSize = 14;
+                    programFloor.FontWeight = FontWeights.DemiBold;
+                    programFloor.Foreground = foregroundColor;
+                    programFloor.Background = backgroundColor;
+                    programFloor.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programFloor.VerticalContentAlignment = VerticalAlignment.Center;
+                    programFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    programFloor.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(programFloor, 3);
+                    Grid.SetRow(programFloor, i);
+                    subWindow.ProgramsDataChart.Children.Add(programFloor);
+
+                    // Generate And Display Total Program GSF Of Each Program
+                    Label programTotalGSF = new Label();
+                    programTotalGSF.Content = boxes[boxName].boxTotalGSFValue.ToString("C0", 
+                        System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+                    programTotalGSF.Height = 30;
+                    programTotalGSF.FontSize = 14;
+                    programTotalGSF.FontWeight = FontWeights.DemiBold;
+                    programTotalGSF.Foreground = foregroundColor;
+                    programTotalGSF.Background = backgroundColor;
+                    programTotalGSF.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programTotalGSF.VerticalContentAlignment = VerticalAlignment.Center;
+                    programTotalGSF.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    programTotalGSF.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(programTotalGSF, 4);
+                    Grid.SetRow(programTotalGSF, i);
+                    subWindow.ProgramsDataChart.Children.Add(programTotalGSF);
+
+                    // Generate And Display Cost Per GSF Of Each Program
+                    Label costPerGSF = new Label();
+                    costPerGSF.Content = ExtraMethods.CastDollar(boxes[boxName].cost);
+                    costPerGSF.Height = 30;
+                    costPerGSF.FontSize = 14;
+                    costPerGSF.FontWeight = FontWeights.DemiBold;
+                    costPerGSF.Foreground = foregroundColor;
+                    costPerGSF.Background = backgroundColor;
+                    costPerGSF.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    costPerGSF.VerticalContentAlignment = VerticalAlignment.Center;
+                    costPerGSF.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    costPerGSF.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(costPerGSF, 5);
+                    Grid.SetRow(costPerGSF, i);
+                    subWindow.ProgramsDataChart.Children.Add(costPerGSF);
+
+                    // Generate And Display Total Raw Cost Program
+                    Label programRawCost = new Label();
+                    programRawCost.Content = ExtraMethods.CastDollar(boxes[boxName].totalRawCostValue);
+                    programRawCost.Height = 30;
+                    programRawCost.FontSize = 14;
+                    programRawCost.FontWeight = FontWeights.DemiBold;
+                    programRawCost.Foreground = foregroundColor;
+                    programRawCost.Background = backgroundColor;
+                    programRawCost.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programRawCost.VerticalContentAlignment = VerticalAlignment.Center;
+                    programRawCost.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    programRawCost.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(programRawCost, 6);
+                    Grid.SetRow(programRawCost, i);
+                    subWindow.ProgramsDataChart.Children.Add(programRawCost);
                 }
             }
         }

@@ -95,9 +95,6 @@ namespace Massing_Programming
         /*---------------- Handeling Open Spread-Sheet File Event ----------------*/
         private void OpenSpreadSheet_Click(object sender, RoutedEventArgs e)
         {
-            // Clear all the lists and Dictionaries
-            this.functions.Clear();
-
             // Open the Spread Sheet File
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
 
@@ -114,6 +111,7 @@ namespace Massing_Programming
                 if (this.DepartmentsWrapper.Children.Count > 0)
                 {
                     // Clear all the lists
+                    this.functions.Clear();
                     this.DepartmentsWrapper.Children.Clear();
                     this.stackingVisualization.Children.Clear();
                     this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
@@ -304,8 +302,9 @@ namespace Massing_Programming
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRooms = (int)keyRooms.Value;
                         programBox.DGSF = (float)DGSF.Value;
-                        programBox.GSFValue = GSF;
-                        programBox.rawCostValue = rawCost;
+                        programBox.cost = this.functions[program.SelectedItem.ToString()]["cost"];
+                        programBox.boxTotalGSFValue = GSF;
+                        programBox.totalRawCostValue = rawCost;
                         programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
                         GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
@@ -506,8 +505,9 @@ namespace Massing_Programming
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
-                                programBox.GSFValue = GSF;
-                                programBox.rawCostValue = rawCost;
+                                programBox.cost = this.functions[program.SelectedItem.ToString()]["cost"];
+                                programBox.boxTotalGSFValue = GSF;
+                                programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
@@ -628,8 +628,9 @@ namespace Massing_Programming
                     programBox.function = program.SelectedItem.ToString();
                     programBox.keyRooms = (int)keyRooms.Value;
                     programBox.DGSF = (float)DGSF.Value;
-                    programBox.GSFValue = GSF;
-                    programBox.rawCostValue = rawCost;
+                    programBox.cost = this.functions[program.SelectedItem.ToString()]["cost"];
+                    programBox.boxTotalGSFValue = GSF;
+                    programBox.totalRawCostValue = rawCost;
                     programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
                     GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
@@ -772,8 +773,9 @@ namespace Massing_Programming
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
-                                programBox.GSFValue = GSF;
-                                programBox.rawCostValue = rawCost;
+                                programBox.cost = this.functions[program.SelectedItem.ToString()]["cost"];
+                                programBox.boxTotalGSFValue = GSF;
+                                programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
@@ -1205,8 +1207,8 @@ namespace Massing_Programming
                         ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                     // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
-                    float oldGSF = this.boxesOfTheProject[programName].GSFValue;
-                    float oldRawProgramCost = this.boxesOfTheProject[programName].rawCostValue;
+                    float oldGSF = this.boxesOfTheProject[programName].boxTotalGSFValue;
+                    float oldRawProgramCost = this.boxesOfTheProject[programName].totalRawCostValue;
 
                     float newGSF = (float)(keyRooms.Value * DGSF.Value);
                     float newRawProgramCost = newGSF * this.functions[cbx.SelectedItem.ToString()]["cost"];
@@ -1218,8 +1220,12 @@ namespace Massing_Programming
                     this.totalRawDepartmentCost += rawProgramCostDifference;
 
                     this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
-                    this.boxesOfTheProject[programName].GSFValue = newGSF;
-                    this.boxesOfTheProject[programName].rawCostValue = newRawProgramCost;
+                    this.boxesOfTheProject[programName].function = cbx.SelectedItem.ToString();
+                    this.boxesOfTheProject[programName].keyRooms = (int)keyRooms.Value;
+                    this.boxesOfTheProject[programName].DGSF = (float)DGSF.Value;
+                    this.boxesOfTheProject[programName].boxTotalGSFValue = newGSF;
+                    this.boxesOfTheProject[programName].cost = this.functions[cbx.SelectedItem.ToString()]["cost"];
+                    this.boxesOfTheProject[programName].totalRawCostValue = newRawProgramCost;
 
                     totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
@@ -1341,8 +1347,8 @@ namespace Massing_Programming
                     newProgramCenterY += (newProgramLength / 2);
 
                     // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
-                    float oldGSF = this.boxesOfTheProject[programName].GSFValue;
-                    float oldRawProgramCost = this.boxesOfTheProject[programName].rawCostValue;
+                    float oldGSF = this.boxesOfTheProject[programName].boxTotalGSFValue;
+                    float oldRawProgramCost = this.boxesOfTheProject[programName].totalRawCostValue;
 
                     float newGSF = (float)(keyRooms.Value * DGSF.Value);
 
@@ -1355,8 +1361,10 @@ namespace Massing_Programming
                     this.totalRawDepartmentCost += rawProgramCostDifference;
 
                     this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
-                    this.boxesOfTheProject[programName].GSFValue = newGSF;
-                    this.boxesOfTheProject[programName].rawCostValue = newRawProgramCost;
+                    this.boxesOfTheProject[programName].keyRooms = (int) keyRooms.Value;
+                    this.boxesOfTheProject[programName].DGSF = (float) DGSF.Value;
+                    this.boxesOfTheProject[programName].boxTotalGSFValue = newGSF;
+                    this.boxesOfTheProject[programName].totalRawCostValue = newRawProgramCost;
 
                 }
                 // Programs After The Changed One

@@ -13,8 +13,9 @@ namespace Massing_Programming
         public string function { get; set; }
         public int keyRooms { get; set; }
         public float DGSF { get; set; }
-        public float GSFValue { get; set; }
-        public float rawCostValue { get; set; }
+        public float cost { get; set; }
+        public float boxTotalGSFValue { get; set; }
+        public float totalRawCostValue { get; set; }
         public int floor { get; set; }
 
         public Box(string name, Point3D boxCenter)
