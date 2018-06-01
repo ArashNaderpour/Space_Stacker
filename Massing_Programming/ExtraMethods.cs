@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections.Generic;
-
+using HelixToolkit.Wpf;
+using System.Windows.Media.Media3D;
 
 namespace Massing_Programming
 {
@@ -365,6 +366,41 @@ namespace Massing_Programming
                 ppt.Children.Add(r);
                 Grid.SetColumn(r, 2);
                 Grid.SetRow(r, i);
+            }
+        }
+
+        /* ------------- Method for adding programs to an existing Department ------------- */
+        public static void DisplayProgramData(Dictionary<String, Box> boxes, Model3DGroup stackingVisualization,
+            ProgramsSubWindow subWindow)
+        {
+            char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+            for (int i = 0; i < stackingVisualization.Children.Count; i++)
+            {
+                RowDefinition gridRow = new RowDefinition();
+                subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
+
+                // Project Box Is Not Included
+                if (i > 0)
+                {
+                    string boxName = ((GeometryModel3D)stackingVisualization.Children[i]).GetName();
+                    int index = int.Parse(boxName.Split('x')[1]);
+                    
+                    Label programLabel = new Label();
+                    if (index < alphabet.Length)
+                    {
+                        programLabel.Content = alphabet[index].ToString();
+                    }
+                    else
+                    {
+                        programLabel.Content = (index - alphabet.Length).ToString();
+                    }
+                    programLabel.FontSize = 16;
+                    programLabel.FontWeight = FontWeights.SemiBold;
+                    Grid.SetColumn(programLabel, 0);
+                    Grid.SetRow(programLabel, i);
+                    subWindow.ProgramsDataChart.Children.Add(programLabel);
+                }
             }
         }
     }

@@ -1693,7 +1693,13 @@ namespace Massing_Programming
 
             if (checkBox.IsChecked == true)
             {
+                // Generating An Instance Of The SubWindow
                 ProgramsSubWindow programsWindow = new ProgramsSubWindow();
+                
+                // Generating Programs' Data And Add Them To The Programs SubWindow
+                ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.stackingVisualization, programsWindow);
+
+                // Display Programs SubWindow
                 programsWindow.Show();
             }
         }
