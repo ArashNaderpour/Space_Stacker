@@ -80,6 +80,9 @@ namespace Massing_Programming
             this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
             this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
 
+            // SubWindows: Programs Window
+            this.programsWindow.Owner = this;
+
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -1735,6 +1738,7 @@ namespace Massing_Programming
 
                     // Initiate A New Program Window
                     this.programsWindow = new ProgramsSubWindow();
+                    this.programsWindow.Owner = this;
 
                     // Generating Programs' Data And Add Them To The Programs SubWindow
                     ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.stackingVisualization, this.programsWindow);
