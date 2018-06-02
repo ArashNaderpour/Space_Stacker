@@ -80,9 +80,6 @@ namespace Massing_Programming
             this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
             this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
 
-            // SubWindows: Programs Window
-            this.programsWindow.Owner = this;
-
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -264,9 +261,7 @@ namespace Massing_Programming
                     Expander department = ExtraMethods.DepartmentGernerator(i);
 
                     ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
-                        this.functions, new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
-                        new SelectionChangedEventHandler(SelectedProgram_Chenged),
-                        ProgramSlider_ValueChanged);
+                        this.functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, ProgramSlider_ValueChanged);
 
                     this.DepartmentsWrapper.Children.Add(department);
 
@@ -318,6 +313,9 @@ namespace Massing_Programming
 
                         this.boxesOfTheProject.Add(programBox.name, programBox);
                         this.stackingVisualization.Children.Add(programBoxVisualization);
+
+                        // Generate And Visualize Stacking Data Of The Stacking Tab
+                        ExtraMethods.ProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
                 }
 
@@ -467,9 +465,7 @@ namespace Massing_Programming
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
 
                             ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
-                                new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
-                                new SelectionChangedEventHandler(SelectedProgram_Chenged),
-                                ProgramSlider_ValueChanged);
+                                DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, ProgramSlider_ValueChanged);
 
                             this.DepartmentsWrapper.Children.Add(department);
 
@@ -598,9 +594,7 @@ namespace Massing_Programming
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
-                    new RoutedEventHandler(DepartmentNameAndNumberButton_Click),
-                    new SelectionChangedEventHandler(SelectedProgram_Chenged),
-                    ProgramSlider_ValueChanged);
+                    DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, ProgramSlider_ValueChanged);
 
                 this.DepartmentsWrapper.Children.Add(department);
 
@@ -733,7 +727,7 @@ namespace Massing_Programming
 
                         int difference = input - existingPrograms;
                         ExtraMethods.AddProgram(programs, difference, existingPrograms, department, this.functions,
-                            new SelectionChangedEventHandler(SelectedProgram_Chenged), ProgramSlider_ValueChanged);
+                            SelectedProgram_Chenged, ProgramSlider_ValueChanged);
 
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(department);
 
@@ -1759,6 +1753,13 @@ namespace Massing_Programming
             {
                 this.programsWindow.Close();
             }
+        }
+
+        /* ----------------------------------- Handeling Stacking Button Event----------------------------------- */
+        private void StackingButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            MessageBox.Show(btn.Name);
         }
 
 

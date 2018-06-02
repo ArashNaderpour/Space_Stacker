@@ -10,7 +10,7 @@ namespace Massing_Programming
 {
     class ExtraMethods
     {
-
+        /* ------------------------ Method for Casting Float To Dollar ------------------------ */
         public static string CastDollar(float dollar)
         {
             if (dollar >= 0)
@@ -25,11 +25,13 @@ namespace Massing_Programming
             }
         }
 
+        /* ------------------------ Method For Mapping A Value ------------------------ */
         public static float MapValue(float min1, float max1, float min2, float max2, float val)
         {
             return min2 + (max2 - min2) * ((val - min1) / (max1 - min1));
         }
 
+        /* ------------------------ Method For Generating Expander For Each Department ------------------------ */
         public static Expander DepartmentGernerator(int index)
         {
             Expander department = new Expander();
@@ -43,6 +45,7 @@ namespace Massing_Programming
             return department;
         }
 
+        /* ------------------------ Method For Changing Color Of Labels ------------------------ */
         public static void ChangeLabelColor(Expander department, int index, byte[] color)
         {
             Label programLabel = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + index.ToString()) as Label;
@@ -58,6 +61,7 @@ namespace Massing_Programming
 
         }
 
+        /* ------------------------ Method For Generating Elements Inisde Each Department's Expander ------------------------ */
         public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput,
             Dictionary<string, Dictionary<string, float>> functions,
             RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged,
@@ -94,6 +98,7 @@ namespace Massing_Programming
             TextBox nameInput = new TextBox();
             nameInput.HorizontalAlignment = HorizontalAlignment.Stretch;
             nameInput.Name = department.Name + "NameInputTextBox";
+            nameInput.Padding = new Thickness(2);
 
             // Button for setting the Departments Name
             Button setName = new Button();
@@ -135,6 +140,7 @@ namespace Massing_Programming
             numberInput.Text = numberOfProgramsInput.ToString();
             numberInput.HorizontalAlignment = HorizontalAlignment.Stretch;
             numberInput.Name = department.Name + "NumberInputTextBox";
+            numberInput.Padding = new Thickness(2);
 
             // Button for setting the Departments Name
             Button setNumber = new Button();
@@ -263,7 +269,7 @@ namespace Massing_Programming
             department.Content = expanderWrapper;
         }
 
-        /* ------------- Method for adding programs to an existing Department ------------- */
+        /* --------------------- Method For Adding Programs To An Existing Department --------------------- */
         public static void AddProgram(Grid ppt, int count, int start, Expander department,
             Dictionary<string, Dictionary<string, float>> functions, SelectionChangedEventHandler ComboBox_SelectionChanged,
             RoutedPropertyChangedEventHandler<double> Slider_ValueChanged)
@@ -369,7 +375,7 @@ namespace Massing_Programming
             }
         }
 
-        /* ------------- Method for adding programs to an existing Department ------------- */
+        /* --------------------- Method For Adding Data Of The Programs To The Program Window --------------------- */
         public static void DisplayProgramData(Dictionary<String, Box> boxes, Model3DGroup stackingVisualization,
             ProgramsSubWindow subWindow)
         {
@@ -390,7 +396,7 @@ namespace Massing_Programming
                     SolidColorBrush backgroundColor = new SolidColorBrush(boxes[boxName].boxColor);
                     SolidColorBrush foregroundColor = new SolidColorBrush();
 
-                    if ((boxes[boxName].boxColor.R + boxes[boxName].boxColor.G + boxes[boxName].boxColor.B) / 3 < 120 )
+                    if ((boxes[boxName].boxColor.R + boxes[boxName].boxColor.G + boxes[boxName].boxColor.B) / 3 < 120)
                     {
                         foregroundColor = Brushes.White;
                     }
@@ -472,7 +478,7 @@ namespace Massing_Programming
 
                     // Generate And Display Total Program GSF Of Each Program
                     Label programTotalGSF = new Label();
-                    programTotalGSF.Content = boxes[boxName].boxTotalGSFValue.ToString("C0", 
+                    programTotalGSF.Content = boxes[boxName].boxTotalGSFValue.ToString("C0",
                         System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
                     programTotalGSF.Height = 30;
                     programTotalGSF.FontSize = 14;
@@ -518,6 +524,93 @@ namespace Massing_Programming
                     Grid.SetColumn(programRawCost, 6);
                     Grid.SetRow(programRawCost, i);
                     subWindow.ProgramsDataChart.Children.Add(programRawCost);
+                }
+            }
+        }
+
+        /* --------------------- Method For Generating And Displaying Stacking Controllers --------------------- */
+        public static void ProgramsStacking(Dictionary<String, Box> boxes, Model3DGroup stackingVisualization,
+            Grid ProgramsStackingGrid, RoutedEventHandler Button_Clicked)
+        {
+            char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+            for (int i = 0; i < stackingVisualization.Children.Count; i++)
+            {
+                RowDefinition gridRow = new RowDefinition();
+                gridRow.Height = new GridLength(1, GridUnitType.Auto);
+                ProgramsStackingGrid.RowDefinitions.Add(gridRow);
+
+                // Project Box Is Not Included
+                if (i > 0)
+                {
+                    string boxName = ((GeometryModel3D)stackingVisualization.Children[i]).GetName();
+                    int index = int.Parse(boxName.Split('x')[1]);
+
+                    SolidColorBrush backgroundColor = new SolidColorBrush(boxes[boxName].boxColor);
+                    SolidColorBrush foregroundColor = new SolidColorBrush();
+
+                    if ((boxes[boxName].boxColor.R + boxes[boxName].boxColor.G + boxes[boxName].boxColor.B) / 3 < 120)
+                    {
+                        foregroundColor = Brushes.White;
+                    }
+                    else
+                    {
+                        foregroundColor = Brushes.Black;
+                    }
+
+                    // Generate And Display Label Of Each Program
+                    Label programLabel = new Label();
+                    if (index < alphabet.Length)
+                    {
+                        programLabel.Content = alphabet[index].ToString();
+                    }
+                    else
+                    {
+                        programLabel.Content = (index - alphabet.Length).ToString();
+                    }
+                    programLabel.Width = 30;
+                    programLabel.Height = 30;
+                    programLabel.FontSize = 14;
+                    programLabel.Margin = new Thickness(0, 0, 0, 5);
+                    programLabel.FontWeight = FontWeights.DemiBold;
+                    programLabel.Foreground = foregroundColor;
+                    programLabel.Background = backgroundColor;
+                    programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
+                    programLabel.VerticalContentAlignment = VerticalAlignment.Center;
+                    programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    programLabel.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(programLabel, 0);
+                    Grid.SetRow(programLabel, i - 1);
+                    ProgramsStackingGrid.Children.Add(programLabel);
+
+                    // Generate And Display Text Box For Each Program
+                    TextBox programFloor = new TextBox();
+                    programFloor.Height = 30;
+                    programFloor.FontSize = 14;
+                    programFloor.Margin = new Thickness(0, 0, 0, 5);
+                    programFloor.Text = boxes[boxName].floor.ToString();
+                    programFloor.Name = boxName + "TextBox";
+                    programFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    programFloor.VerticalAlignment = VerticalAlignment.Center;
+                    programFloor.VerticalContentAlignment = VerticalAlignment.Center;
+                    programFloor.Padding = new Thickness(2);
+                    Grid.SetColumn(programFloor, 1);
+                    Grid.SetRow(programFloor, i - 1);
+                    ProgramsStackingGrid.Children.Add(programFloor);
+
+                    // Generate And Display Button For Each Program
+                    Button setFloor = new Button();
+                    setFloor.Height = 30;
+                    setFloor.FontSize = 14;
+                    setFloor.Margin = new Thickness(0, 0, 0, 5);
+                    setFloor.Content = "SET";
+                    setFloor.Name = boxName + "SetButton";
+                    setFloor.Click += Button_Clicked;
+                    setFloor.HorizontalAlignment = HorizontalAlignment.Stretch;     
+                    setFloor.VerticalContentAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(setFloor, 2);
+                    Grid.SetRow(setFloor, i - 1);
+                    ProgramsStackingGrid.Children.Add(setFloor);
                 }
             }
         }
