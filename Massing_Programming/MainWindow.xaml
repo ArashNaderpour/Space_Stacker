@@ -118,6 +118,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Number of Departments" Grid.Column="0"
                                                HorizontalAlignment="Left" Grid.Row="0"/>
@@ -155,6 +156,14 @@
                                 <!--Open Excel File Button-->
                                 <Button x:Name="OpenExcelFile" Grid.Column="1" Grid.Row="2" Background="#98AD80"
                                         Content="Spread Sheet" Margin="2.5 5 0 5" Click="OpenSpreadSheet_Click"/>
+                                <!--=================-->
+                                <!--Reset Departments Button-->
+                                <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3" IsEnabled="False" 
+                                        Content="Save Project" Margin="0 5 2.5 5" Click="SaveProject_Click"/>
+                                <!--=================-->
+                                <!--Open Excel File Button-->
+                                <Button x:Name="LoadProject" Grid.Column="1" Grid.Row="3" Background="#98AD80"
+                                        Content="Load Project" Margin="2.5 5 0 5" Click="LoadProject_Click"/>
                                 <!--=================-->
                             </Grid>
                             <!--=====================-->
