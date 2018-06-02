@@ -54,6 +54,9 @@ namespace Massing_Programming
         // Spread-Sheet Data
         Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
 
+        // SubWindows: Programs Window
+        ProgramsSubWindow programsWindow = new ProgramsSubWindow();
+
         // Random Object
         Random random = new Random(20);
 
@@ -565,6 +568,15 @@ namespace Massing_Programming
             this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
             this.FloorHeight.Text = initialProgramHeight.ToString();
 
+            // CheckBoxes
+            this.ProgramsCheckBox.IsChecked = false;
+
+            // SubWindows: Programs Window
+            if (this.programsWindow != null)
+            {
+                this.programsWindow.Close();
+            }
+
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -655,12 +667,14 @@ namespace Massing_Programming
             {
                 Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
                 TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
-                
+
                 if (nameTextBox.Text != "")
                 {
                     department.Header = nameTextBox.Text;
-                    for(int i = 0; i < this.stackingVisualization.Children.Count; i++) {
-                        if (this.stackingVisualization.Children[i].GetName().Contains(department.Name)) {
+                    for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
+                    {
+                        if (this.stackingVisualization.Children[i].GetName().Contains(department.Name))
+                        {
                             this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].departmentName = nameTextBox.Text;
                         }
                     }
@@ -1361,8 +1375,8 @@ namespace Massing_Programming
                     this.totalRawDepartmentCost += rawProgramCostDifference;
 
                     this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
-                    this.boxesOfTheProject[programName].keyRooms = (int) keyRooms.Value;
-                    this.boxesOfTheProject[programName].DGSF = (float) DGSF.Value;
+                    this.boxesOfTheProject[programName].keyRooms = (int)keyRooms.Value;
+                    this.boxesOfTheProject[programName].DGSF = (float)DGSF.Value;
                     this.boxesOfTheProject[programName].boxTotalGSFValue = newGSF;
                     this.boxesOfTheProject[programName].totalRawCostValue = newRawProgramCost;
 
@@ -1714,14 +1728,32 @@ namespace Massing_Programming
 
             if (checkBox.IsChecked == true)
             {
-                // Generating An Instance Of The SubWindow
-                ProgramsSubWindow programsWindow = new ProgramsSubWindow();
-                
-                // Generating Programs' Data And Add Them To The Programs SubWindow
-                ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.stackingVisualization, programsWindow);
+                if (this.programsWindow != null)
+                {
+                    // Close The Open Program
+                    this.programsWindow.Close();
 
-                // Display Programs SubWindow
-                programsWindow.Show();
+                    // Initiate A New Program Window
+                    this.programsWindow = new ProgramsSubWindow();
+
+                    // Generating Programs' Data And Add Them To The Programs SubWindow
+                    ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.stackingVisualization, this.programsWindow);
+
+                    // Display Programs SubWindow
+                    this.programsWindow.Show();
+                }
+                else
+                {
+                    // Generating Programs' Data And Add Them To The Programs SubWindow
+                    ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.stackingVisualization, programsWindow);
+
+                    // Display Programs SubWindow
+                    programsWindow.Show();
+                }
+            }
+            else
+            {
+                this.programsWindow.Close();
             }
         }
 
