@@ -316,9 +316,6 @@ namespace Massing_Programming
 
                         this.boxesOfTheProject.Add(programBox.name, programBox);
                         this.stackingVisualization.Children.Add(programBoxVisualization);
-
-                        // Generate And Visualize Stacking Data Of The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
                 }
 
@@ -331,6 +328,9 @@ namespace Massing_Programming
 
                 // All The Calculation, Prepration, and Visualization of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                // Generate And Visualize Stacking Data Of The Stacking Tab
+                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
 
                 // Enabling the Disabled Controllers
                 this.ProjectWidth.IsEnabled = true;
@@ -456,6 +456,9 @@ namespace Massing_Programming
 
                         // All The Calculation, Prepration, and Visualization of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                        // Omit Stacking Data From The Stacking Tab
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
                     // Increase Number of Departments
@@ -659,7 +662,7 @@ namespace Massing_Programming
             // All The Calculation, Prepration, and Visualization of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
-            // Generate And Visualize Stacking Data Of The Stacking Tab
+            // Generate And Visualize Stacking Data To The Stacking Tab
             ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
         }
 
@@ -895,6 +898,9 @@ namespace Massing_Programming
 
                         // All The Calculation, Prepration, and Visualization of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                        // Omit Stacking Data From The Stacking Tab
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
                     if (input == existingPrograms)
                     {

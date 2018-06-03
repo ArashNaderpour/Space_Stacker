@@ -530,22 +530,26 @@ namespace Massing_Programming
 
         /* --------------------- Method For Generating And Displaying Stacking Controllers --------------------- */
         public static void GenerateProgramsStacking(Dictionary<String, Box> boxes, Model3DGroup stackingVisualization,
-            Grid ProgramsStackingGrid, RoutedEventHandler Button_Clicked)
+            Grid programsStackingGrid, RoutedEventHandler Button_Clicked)
         {
+            // Clear Rows Of The Grid
+            programsStackingGrid.Children.Clear();
+            programsStackingGrid.RowDefinitions.Clear();
+            
             char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-
+            
             for (int i = 0; i < stackingVisualization.Children.Count; i++)
             {
                 RowDefinition gridRow = new RowDefinition();
                 gridRow.Height = new GridLength(1, GridUnitType.Auto);
-                ProgramsStackingGrid.RowDefinitions.Add(gridRow);
+                programsStackingGrid.RowDefinitions.Add(gridRow);
 
                 // Project Box Is Not Included
                 if (i > 0)
                 {
                     string boxName = ((GeometryModel3D)stackingVisualization.Children[i]).GetName();
                     int index = int.Parse(boxName.Split('x')[1]);
-
+                   
                     SolidColorBrush backgroundColor = new SolidColorBrush(boxes[boxName].boxColor);
                     SolidColorBrush foregroundColor = new SolidColorBrush();
 
@@ -581,8 +585,8 @@ namespace Massing_Programming
                     programLabel.VerticalAlignment = VerticalAlignment.Center;
                     Grid.SetColumn(programLabel, 0);
                     Grid.SetRow(programLabel, i - 1);
-                    ProgramsStackingGrid.Children.Add(programLabel);
-
+                    programsStackingGrid.Children.Add(programLabel);
+                    
                     // Generate And Display Text Box For Each Program
                     TextBox programFloor = new TextBox();
                     programFloor.Height = 30;
@@ -596,7 +600,7 @@ namespace Massing_Programming
                     programFloor.Padding = new Thickness(2);
                     Grid.SetColumn(programFloor, 1);
                     Grid.SetRow(programFloor, i - 1);
-                    ProgramsStackingGrid.Children.Add(programFloor);
+                    programsStackingGrid.Children.Add(programFloor);
 
                     // Generate And Display Button For Each Program
                     Button setFloor = new Button();
@@ -610,89 +614,9 @@ namespace Massing_Programming
                     setFloor.VerticalContentAlignment = VerticalAlignment.Center;
                     Grid.SetColumn(setFloor, 2);
                     Grid.SetRow(setFloor, i - 1);
-                    ProgramsStackingGrid.Children.Add(setFloor);
+                    programsStackingGrid.Children.Add(setFloor);
                 }
             }
-        }
-
-        /* --------------------- Method For Adding Stacking Controllers --------------------- */
-        public static void AddProgramsStacking( int boxIndex, Dictionary<String, Box> boxes, Model3DGroup stackingVisualization,
-            Grid ProgramsStackingGrid, RoutedEventHandler Button_Clicked)
-        {
-            char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-
-            RowDefinition gridRow = new RowDefinition();
-            gridRow.Height = new GridLength(1, GridUnitType.Auto);
-            ProgramsStackingGrid.RowDefinitions.Add(gridRow);
-
-            string boxName = ((GeometryModel3D)stackingVisualization.Children[boxIndex]).GetName();
-            int index = int.Parse(boxName.Split('x')[1]);
-
-            SolidColorBrush backgroundColor = new SolidColorBrush(boxes[boxName].boxColor);
-            SolidColorBrush foregroundColor = new SolidColorBrush();
-
-            if ((boxes[boxName].boxColor.R + boxes[boxName].boxColor.G + boxes[boxName].boxColor.B) / 3 < 120)
-            {
-                foregroundColor = Brushes.White;
-            }
-            else
-            {
-                foregroundColor = Brushes.Black;
-            }
-
-            // Generate And Display Label Of Each Program
-            Label programLabel = new Label();
-            if (index < alphabet.Length)
-            {
-                programLabel.Content = alphabet[index].ToString();
-            }
-            else
-            {
-                programLabel.Content = (index - alphabet.Length).ToString();
-            }
-            programLabel.Width = 30;
-            programLabel.Height = 30;
-            programLabel.FontSize = 14;
-            programLabel.Margin = new Thickness(0, 0, 0, 5);
-            programLabel.FontWeight = FontWeights.DemiBold;
-            programLabel.Foreground = foregroundColor;
-            programLabel.Background = backgroundColor;
-            programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
-            programLabel.VerticalContentAlignment = VerticalAlignment.Center;
-            programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
-            programLabel.VerticalAlignment = VerticalAlignment.Center;
-            Grid.SetColumn(programLabel, 0);
-            Grid.SetRow(programLabel, boxIndex - 1);
-            ProgramsStackingGrid.Children.Add(programLabel);
-
-            // Generate And Display Text Box For Each Program
-            TextBox programFloor = new TextBox();
-            programFloor.Height = 30;
-            programFloor.FontSize = 14;
-            programFloor.Margin = new Thickness(0, 0, 0, 5);
-            programFloor.Text = boxes[boxName].floor.ToString();
-            programFloor.Name = boxName + "TextBox";
-            programFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
-            programFloor.VerticalAlignment = VerticalAlignment.Center;
-            programFloor.VerticalContentAlignment = VerticalAlignment.Center;
-            programFloor.Padding = new Thickness(2);
-            Grid.SetColumn(programFloor, 1);
-            Grid.SetRow(programFloor, boxIndex - 1);
-            ProgramsStackingGrid.Children.Add(programFloor);
-
-            // Generate And Display Button For Each Program
-            Button setFloor = new Button();
-            setFloor.Height = 30;
-            setFloor.FontSize = 14;
-            setFloor.Margin = new Thickness(0, 0, 0, 5);
-            setFloor.Content = "SET";
-            setFloor.Name = boxName + "SetButton";
-            setFloor.Click += Button_Clicked;
-            setFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
-            setFloor.VerticalContentAlignment = VerticalAlignment.Center;
-            Grid.SetColumn(setFloor, 2);
-            Grid.SetRow(setFloor, boxIndex - 1);
-            ProgramsStackingGrid.Children.Add(setFloor);
         }
     }
 }
