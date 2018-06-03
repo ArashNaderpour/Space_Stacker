@@ -1795,12 +1795,12 @@ namespace Massing_Programming
 
             string boxName = btn.Name.Replace("SetButton", "");
 
-            int targetFloor = new int();
+            int inputFloor = new int();
 
             try
             {
                 // User Input
-                targetFloor = int.Parse(programNumberTextBox.Text);
+                inputFloor = int.Parse(programNumberTextBox.Text);
             }
             catch
             {
@@ -1809,34 +1809,49 @@ namespace Massing_Programming
                 return;
             }
 
-            if (targetFloor >= 0)
+            if (inputFloor >= 0)
             {
                 string targetBoxDepartment = boxName.Replace("ProgramBo", "").Split('x')[0];
 
                 // Box Number In Its Department
-                int boxNumber = int.Parse(boxName.Replace("ProgramBo", "").Split('x')[1]);
+                int targetBoxNumber = int.Parse(boxName.Replace("ProgramBo", "").Split('x')[1]);
 
                 // Index Of The Visualization Box
                 int visualizationBoxIndex = int.MaxValue;
 
                 float targetBoxLength = new float();
 
+                // Extract Length And Index Of The Target Visualization Box
                 for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
                 {
                     if (i > 0)
                     {
+                        // Get Target Program Box Index And Length
                         if (this.stackingVisualization.Children[i].GetName() == boxName)
                         {
+                            // Visualization Index
                             visualizationBoxIndex = i;
 
+                            // Length Of The Target Visualization Box
                             targetBoxLength = (float)this.stackingVisualization.Children[i].Bounds.SizeY;
-
-                            this.stackingVisualization.Children.RemoveAt(i);
                         }
-                        if (i >= visualizationBoxIndex &&
-                            this.stackingVisualization.Children[i].GetName().Replace("ProgramBo", "").Split('x')[0] == targetBoxDepartment)
+                    }
+                }
+
+                // Y Value Of The Center Of The New Box
+                float newTargetCenterY = (this.initialProjectBoxDims[1] * -0.5f);
+
+                // Moving The Boxes After The Target Box
+                for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        string programName = this.stackingVisualization.Children[i].GetName();
+
+                        // Program Boxes After Target Program Box
+                        if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == this.boxesOfTheProject[boxName].floor &&
+                            this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].boxCenter.Y > this.boxesOfTheProject[boxName].boxCenter.Y)
                         {
-                            string programName = this.stackingVisualization.Children[i].GetName();
                             float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeY,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
@@ -1855,35 +1870,30 @@ namespace Massing_Programming
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, newProgramBox);
                         }
-                    }
-                }
 
-                float newTargetCenterY = (this.initialProjectBoxDims[1] * -0.5f);
-
-                for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
-                {
-                    if (i > 0)
-                    {
-                        string programName = this.stackingVisualization.Children[i].GetName();
-
-                        if (this.boxesOfTheProject[programName].floor == targetFloor)
+                        // Calculating Y Value Of The Center Of The New Box
+                        if (this.boxesOfTheProject[programName].floor == inputFloor)
                         {
                             newTargetCenterY += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
                     }
                 }
+
                 newTargetCenterY += targetBoxLength / 2;
+
+                // Generating New Visualization Box To Replace The Old Box
                 float[] newBoxDims = { float.Parse(this.ProjectWidth.Text), targetBoxLength, float.Parse(this.FloorHeight.Text) };
-                Point3D newBoxCenter = new Point3D(0, newTargetCenterY, (targetFloor * float.Parse(this.FloorHeight.Text)) + (float.Parse(this.FloorHeight.Text) / 2));
+                Point3D newBoxCenter = new Point3D(0, newTargetCenterY, (inputFloor * float.Parse(this.FloorHeight.Text)) + (float.Parse(this.FloorHeight.Text) / 2));
                 Material newBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(this.boxesOfTheProject[boxName].boxColor.R,
                     this.boxesOfTheProject[boxName].boxColor.G, this.boxesOfTheProject[boxName].boxColor.B));
 
                 GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(boxName, newBoxCenter, newBoxDims, newBoxMaterial, newBoxMaterial);
 
+                this.stackingVisualization.Children.RemoveAt(visualizationBoxIndex);
                 this.stackingVisualization.Children.Insert(visualizationBoxIndex, newProgramBoxVisualization);
-
+                
                 this.boxesOfTheProject[boxName].boxCenter = newBoxCenter;
-                this.boxesOfTheProject[boxName].floor = targetFloor;
+                this.boxesOfTheProject[boxName].floor = inputFloor;
             }
             else
             {
