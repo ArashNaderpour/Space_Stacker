@@ -6,8 +6,7 @@
         xmlns:HelixToolkit="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
         xmlns:local="clr-namespace:Massing_Programming"
         mc:Ignorable="d"
-        Title="Controller" Height="800" Width="1000" MinHeight="600" MinWidth="1000"
-        WindowState="Maximized">
+        Title="PST" Height="800" Width="1000" MinHeight="600" MinWidth="1000">
 
     <!-- Setting up window.DataContext-->
     <!--<Window.DataContext>

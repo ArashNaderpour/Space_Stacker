@@ -91,6 +91,9 @@ namespace Massing_Programming
 
             this.stackingVisualization.Children.Add(projectBox);
             this.Visualization.Content = stackingVisualization;
+
+            // Terminating The Thread After Closing The Window
+            this.Closed += (sender, e) => this.Dispatcher.InvokeShutdown();
         }
 
         /* ########################################################### End of Windows Load and Start of Handeling Events ########################################################### */
