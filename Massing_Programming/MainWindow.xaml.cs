@@ -318,7 +318,7 @@ namespace Massing_Programming
                         this.stackingVisualization.Children.Add(programBoxVisualization);
 
                         // Generate And Visualize Stacking Data Of The Stacking Tab
-                        ExtraMethods.ProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
                 }
 
@@ -525,6 +525,9 @@ namespace Massing_Programming
 
                         // All The Calculation, Prepration, and Visualization of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                        // Add Stacking Data To The Stacking Tab
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
                     // Input is equal to existing number of Departments
                     if (existingDepartments == input)
@@ -655,6 +658,9 @@ namespace Massing_Programming
 
             // All The Calculation, Prepration, and Visualization of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+            // Generate And Visualize Stacking Data Of The Stacking Tab
+            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
         }
 
         /* ----------------The Event for Setting Name of The Departments and The Number of Programs It Contains ---------------- */
@@ -803,6 +809,9 @@ namespace Massing_Programming
 
                         // All The Calculation, Prepration, and Visualization of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                        // Add Stacking Data To The Stacking Tab
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
                     // Decrease Number of Programs
