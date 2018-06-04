@@ -1817,8 +1817,9 @@ namespace Massing_Programming
                 // Box Number In Its Department
                 int targetBoxNumber = int.Parse(boxName.Replace("ProgramBo", "").Split('x')[1]);
 
-                // Index Of The Visualization Box
-                int visualizationBoxIndex = int.MaxValue;
+                // Indexes Of The Visualization Box
+                int oldVisualizationBoxIndex = int.MaxValue;
+                int newVisualizationBoxIndex = 0;
 
                 float targetBoxLength = new float();
 
@@ -1831,14 +1832,18 @@ namespace Massing_Programming
                         if (this.stackingVisualization.Children[i].GetName() == boxName)
                         {
                             // Visualization Index
-                            visualizationBoxIndex = i;
+                            oldVisualizationBoxIndex = i;
 
                             // Length Of The Target Visualization Box
                             targetBoxLength = (float)this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
+                        if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor < inputFloor + 1)
+                        {
+                            newVisualizationBoxIndex += 1;
+                        }
                     }
                 }
-
+                
                 // Y Value Of The Center Of The New Box
                 float newTargetCenterY = (this.initialProjectBoxDims[1] * -0.5f);
 
@@ -1890,8 +1895,8 @@ namespace Massing_Programming
 
                 GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(boxName, newBoxCenter, newBoxDims, newBoxMaterial, newBoxMaterial);
 
-                this.stackingVisualization.Children.RemoveAt(visualizationBoxIndex);
-                this.stackingVisualization.Children.Insert(visualizationBoxIndex, newProgramBoxVisualization);
+                this.stackingVisualization.Children.RemoveAt(oldVisualizationBoxIndex);
+                this.stackingVisualization.Children.Insert(newVisualizationBoxIndex, newProgramBoxVisualization);
                 
                 this.boxesOfTheProject[boxName].boxCenter = newBoxCenter;
                 this.boxesOfTheProject[boxName].floor = inputFloor;
