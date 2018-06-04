@@ -940,7 +940,7 @@ namespace Massing_Programming
                 if (projectWidthInput > 0)
                 {
 
-                    double TotalDepartmentLength = this.initialProjectBoxDims[1] * -0.5;
+                    double totalDepartmentLength = this.initialProjectBoxDims[1] * -0.5;
 
                     for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
                     {
@@ -953,8 +953,9 @@ namespace Massing_Programming
                         }
                         else
                         {
-                            int departmentIndex = int.Parse(this.stackingVisualization.Children[i].GetName()[1].ToString()) - 1;
-                            int ProgramIndex = int.Parse(this.stackingVisualization.Children[i].GetName()[this.stackingVisualization.Children[i].GetName().Length - 1].ToString());
+                            string programBoxName = this.stackingVisualization.Children[i].GetName();
+                            int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
+                            int ProgramIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
                             if (ProgramIndex == 0)
                             {
@@ -976,7 +977,7 @@ namespace Massing_Programming
 
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
 
-                                TotalDepartmentLength = (this.initialProjectBoxDims[1] * -0.5) + this.stackingVisualization.Children[i].Bounds.SizeY;
+                                totalDepartmentLength = (this.initialProjectBoxDims[1] * -0.5) + this.stackingVisualization.Children[i].Bounds.SizeY;
                             }
                             else
                             {
@@ -985,7 +986,7 @@ namespace Massing_Programming
                                 string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
                                 float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
                                     (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
-                                double newProgramCenterY = TotalDepartmentLength + (newProgramBoxDims[1] / 2);
+                                double newProgramCenterY = totalDepartmentLength + (newProgramBoxDims[1] / 2);
                                 Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
 
@@ -998,7 +999,7 @@ namespace Massing_Programming
 
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
 
-                                TotalDepartmentLength += this.stackingVisualization.Children[i].Bounds.SizeY;
+                                totalDepartmentLength += this.stackingVisualization.Children[i].Bounds.SizeY;
                             }
                         }
                     }
