@@ -957,7 +957,7 @@ namespace Massing_Programming
                             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
                             int ProgramIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
-                            if (ProgramIndex == 0)
+                            if ((this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2) == this.initialProjectBoxDims[1] * -0.5)
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
 
@@ -965,8 +965,7 @@ namespace Massing_Programming
                                 float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
                                     (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
                                 double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5) + (newLength / 2);
-                                Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
-                                    float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
+                                Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY, this.boxesOfTheProject[programBoxName].boxCenter.Z);
 
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
@@ -987,8 +986,7 @@ namespace Massing_Programming
                                 float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
                                     (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
                                 double newProgramCenterY = totalDepartmentLength + (newProgramBoxDims[1] / 2);
-                                Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY,
-                                    float.Parse(this.FloorHeight.Text) * 0.5 + (departmentIndex * int.Parse(this.FloorHeight.Text)));
+                                Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY, this.boxesOfTheProject[programBoxName].boxCenter.Z);
 
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
@@ -1812,94 +1810,104 @@ namespace Massing_Programming
 
             if (inputFloor >= 0)
             {
-                string targetBoxDepartment = boxName.Replace("ProgramBo", "").Split('x')[0];
-
-                // Box Number In Its Department
-                int targetBoxNumber = int.Parse(boxName.Replace("ProgramBo", "").Split('x')[1]);
-
-                // Indexes Of The Visualization Box
-                int oldVisualizationBoxIndex = int.MaxValue;
-                int newVisualizationBoxIndex = 0;
-
-                float targetBoxLength = new float();
-
-                // Extract Length And Index Of The Target Visualization Box
-                for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
+                // If New Input Is Simillar To Old Old Value
+                if (inputFloor == this.boxesOfTheProject[boxName].floor)
                 {
-                    if (i > 0)
-                    {
-                        // Get Target Program Box Index And Length
-                        if (this.stackingVisualization.Children[i].GetName() == boxName)
-                        {
-                            // Visualization Index
-                            oldVisualizationBoxIndex = i;
+                    return;
+                }
 
-                            // Length Of The Target Visualization Box
-                            targetBoxLength = (float)this.stackingVisualization.Children[i].Bounds.SizeY;
-                        }
-                        if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor < inputFloor + 1)
+                // If New Value Is Different with Old Value
+                else
+                {
+                    string targetBoxDepartment = boxName.Replace("ProgramBo", "").Split('x')[0];
+
+                    // Box Number In Its Department
+                    int targetBoxNumber = int.Parse(boxName.Replace("ProgramBo", "").Split('x')[1]);
+
+                    // Indexes Of The Visualization Box
+                    int oldVisualizationBoxIndex = int.MaxValue;
+                    int newVisualizationBoxIndex = 0;
+
+                    float targetBoxLength = new float();
+
+                    // Extract Length And Index Of The Target Visualization Box
+                    for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
+                    {
+                        if (i > 0)
                         {
-                            newVisualizationBoxIndex += 1;
+                            // Get Target Program Box Index And Length
+                            if (this.stackingVisualization.Children[i].GetName() == boxName)
+                            {
+                                // Visualization Index
+                                oldVisualizationBoxIndex = i;
+
+                                // Length Of The Target Visualization Box
+                                targetBoxLength = (float)this.stackingVisualization.Children[i].Bounds.SizeY;
+                            }
+                            if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor < inputFloor + 1)
+                            {
+                                newVisualizationBoxIndex += 1;
+                            }
                         }
                     }
-                }
-                
-                // Y Value Of The Center Of The New Box
-                float newTargetCenterY = (this.initialProjectBoxDims[1] * -0.5f);
 
-                // Moving The Boxes After The Target Box
-                for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
-                {
-                    if (i > 0)
+                    // Y Value Of The Center Of The New Box
+                    float newTargetCenterY = (this.initialProjectBoxDims[1] * -0.5f);
+
+                    // Moving The Boxes After The Target Box
+                    for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
                     {
-                        string programName = this.stackingVisualization.Children[i].GetName();
-
-                        // Program Boxes After Target Program Box
-                        if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == this.boxesOfTheProject[boxName].floor &&
-                            this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].boxCenter.Y > this.boxesOfTheProject[boxName].boxCenter.Y)
+                        if (i > 0)
                         {
-                            float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                            string programName = this.stackingVisualization.Children[i].GetName();
+
+                            // Program Boxes After Target Program Box
+                            if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == this.boxesOfTheProject[boxName].floor &&
+                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].boxCenter.Y > this.boxesOfTheProject[boxName].boxCenter.Y)
+                            {
+                                float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeY,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
 
-                            float newProgramCenterY = ((float)this.boxesOfTheProject[programName].boxCenter.Y) - targetBoxLength;
+                                float newProgramCenterY = ((float)this.boxesOfTheProject[programName].boxCenter.Y) - targetBoxLength;
 
-                            Point3D newProgramBoxCenter = new Point3D(0,
-                                newProgramCenterY, ((float)this.boxesOfTheProject[programName].boxCenter.Z));
+                                Point3D newProgramBoxCenter = new Point3D(0,
+                                    newProgramCenterY, ((float)this.boxesOfTheProject[programName].boxCenter.Z));
 
-                            GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(programName, newProgramBoxCenter, newProgramBoxDims,
-                                ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
-                                ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+                                GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(programName, newProgramBoxCenter, newProgramBoxDims,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                            this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
+                                this.boxesOfTheProject[programName].boxCenter = newProgramBoxCenter;
 
-                            this.stackingVisualization.Children.RemoveAt(i);
-                            this.stackingVisualization.Children.Insert(i, newProgramBox);
-                        }
+                                this.stackingVisualization.Children.RemoveAt(i);
+                                this.stackingVisualization.Children.Insert(i, newProgramBox);
+                            }
 
-                        // Calculating Y Value Of The Center Of The New Box
-                        if (this.boxesOfTheProject[programName].floor == inputFloor)
-                        {
-                            newTargetCenterY += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
+                            // Calculating Y Value Of The Center Of The New Box
+                            if (this.boxesOfTheProject[programName].floor == inputFloor)
+                            {
+                                newTargetCenterY += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
+                            }
                         }
                     }
+
+                    newTargetCenterY += targetBoxLength / 2;
+
+                    // Generating New Visualization Box To Replace The Old Box
+                    float[] newBoxDims = { float.Parse(this.ProjectWidth.Text), targetBoxLength, float.Parse(this.FloorHeight.Text) };
+                    Point3D newBoxCenter = new Point3D(0, newTargetCenterY, (inputFloor * float.Parse(this.FloorHeight.Text)) + (float.Parse(this.FloorHeight.Text) / 2));
+                    Material newBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(this.boxesOfTheProject[boxName].boxColor.R,
+                        this.boxesOfTheProject[boxName].boxColor.G, this.boxesOfTheProject[boxName].boxColor.B));
+
+                    GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(boxName, newBoxCenter, newBoxDims, newBoxMaterial, newBoxMaterial);
+
+                    this.stackingVisualization.Children.RemoveAt(oldVisualizationBoxIndex);
+                    this.stackingVisualization.Children.Insert(newVisualizationBoxIndex, newProgramBoxVisualization);
+
+                    this.boxesOfTheProject[boxName].boxCenter = newBoxCenter;
+                    this.boxesOfTheProject[boxName].floor = inputFloor;
                 }
-
-                newTargetCenterY += targetBoxLength / 2;
-
-                // Generating New Visualization Box To Replace The Old Box
-                float[] newBoxDims = { float.Parse(this.ProjectWidth.Text), targetBoxLength, float.Parse(this.FloorHeight.Text) };
-                Point3D newBoxCenter = new Point3D(0, newTargetCenterY, (inputFloor * float.Parse(this.FloorHeight.Text)) + (float.Parse(this.FloorHeight.Text) / 2));
-                Material newBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(this.boxesOfTheProject[boxName].boxColor.R,
-                    this.boxesOfTheProject[boxName].boxColor.G, this.boxesOfTheProject[boxName].boxColor.B));
-
-                GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(boxName, newBoxCenter, newBoxDims, newBoxMaterial, newBoxMaterial);
-
-                this.stackingVisualization.Children.RemoveAt(oldVisualizationBoxIndex);
-                this.stackingVisualization.Children.Insert(newVisualizationBoxIndex, newProgramBoxVisualization);
-                
-                this.boxesOfTheProject[boxName].boxCenter = newBoxCenter;
-                this.boxesOfTheProject[boxName].floor = inputFloor;
             }
             else
             {
