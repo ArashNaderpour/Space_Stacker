@@ -161,9 +161,10 @@
                                 <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3" IsEnabled="False" 
                                         Content="Save Project" Margin="0 5 2.5 0"/>
                                 <!--=================-->
-                                <!--Open Excel File Button-->
+                                <!--Load Existing Project File Button-->
                                 <Button x:Name="LoadProject" Grid.Column="1" Grid.Row="3" Background="#98AD80"
-                                        Content="Load Project" Margin="2.5 5 0 0"/>
+                                        Content="Load Project" Margin="2.5 5 0 0"
+                                        IsEnabled="False"/>
                                 <!--=================-->
                             </Grid>
                             <!--=====================-->
