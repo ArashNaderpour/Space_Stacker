@@ -956,7 +956,7 @@ namespace Massing_Programming
                             string programBoxName = this.stackingVisualization.Children[i].GetName();
                             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
                             int ProgramIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
-
+                            
                             if ((this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2) == this.initialProjectBoxDims[1] * -0.5)
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
@@ -981,17 +981,18 @@ namespace Massing_Programming
                             else
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
-
+                               
                                 string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
                                 float[] newProgramBoxDims = {(float) this.stackingVisualization.Children[0].Bounds.SizeX, (float) newLength,
                                     (float) this.stackingVisualization.Children[i].Bounds.SizeZ };
                                 double newProgramCenterY = totalDepartmentLength + (newProgramBoxDims[1] / 2);
+
                                 Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY, this.boxesOfTheProject[programBoxName].boxCenter.Z);
 
                                 GeometryModel3D programBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
-
+                                
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBox);
 
@@ -1901,8 +1902,12 @@ namespace Massing_Programming
                         this.boxesOfTheProject[boxName].boxColor.G, this.boxesOfTheProject[boxName].boxColor.B));
 
                     GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(boxName, newBoxCenter, newBoxDims, newBoxMaterial, newBoxMaterial);
-
+                    
                     this.stackingVisualization.Children.RemoveAt(oldVisualizationBoxIndex);
+
+                    if (newVisualizationBoxIndex < oldVisualizationBoxIndex) {
+                        newVisualizationBoxIndex = newVisualizationBoxIndex + 1;
+                    }
                     this.stackingVisualization.Children.Insert(newVisualizationBoxIndex, newProgramBoxVisualization);
 
                     this.boxesOfTheProject[boxName].boxCenter = newBoxCenter;
