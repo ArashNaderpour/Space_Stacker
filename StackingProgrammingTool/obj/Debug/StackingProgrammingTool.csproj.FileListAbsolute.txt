@@ -10,7 +10,6 @@ C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\HelixToolkit.xml
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\HelixToolkit.Wpf.pdb
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\HelixToolkit.Wpf.xml
-C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojResolveAssemblyReference.cache
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\MainWindow.g.cs
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ProgramsSubWindow.g.cs
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\App.g.cs
