@@ -17,6 +17,7 @@ namespace Massing_Programming
         public float boxTotalGSFValue { get; set; }
         public float totalRawCostValue { get; set; }
         public int floor { get; set; }
+        public int visualizationIndex { get; set; }
 
         public Box(string name, Point3D boxCenter)
         {
