@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 
@@ -6,7 +7,7 @@ namespace StackingProgrammingTool
 {
     class VisualizationMethods
     {
-        /*------------ Generate a box that represents boundaries of the project and programs in each department ------------*/
+        /*------------ Generate A Box That Represents Boundaries Of The Project And Programs In Each Department ------------*/
         public static GeometryModel3D GenerateBox(string name, Point3D center, float[] dimenstions, Material material, Material insideMaterial)
         {
             // Create a mesh builder and add a box to it
@@ -23,7 +24,7 @@ namespace StackingProgrammingTool
             return box;
         }
 
-        /*------------ Generate gradients of a color ------------*/
+        /*------------ Generate Gradients Of A Color ------------*/
         public static byte[] GenerateGradientColor(byte[] color, float stop)
         {
             float stepR = (255 - color[0]) * stop;
@@ -37,6 +38,46 @@ namespace StackingProgrammingTool
             byte[] result = { Convert.ToByte(R), Convert.ToByte(G), Convert.ToByte(B) };
 
             return result;
+        }
+
+        /*------------ Generate Settings Of The Visualization Boxes' Labels ------------*/
+        public static void GenerateLabelSettings(TextVisual3D labelLeft, TextVisual3D labelRight, string content,
+            Point3D center, float[] dims, Color color)
+        {
+            labelLeft.Text = content;
+            labelRight.Text = content;
+
+            labelLeft.Position = new Point3D(center.X + (dims[0]/2 + 0.01), center.Y, center.Z);
+            labelRight.Position = new Point3D(center.X - (dims[0]/2 + 0.01), center.Y, center.Z);
+
+            labelLeft.Height = Math.Min(dims[1], dims[2]);
+            labelRight.Height = Math.Min(dims[1], dims[2]);
+
+            labelLeft.UpDirection = new Vector3D(0, 0, 1);
+            labelRight.UpDirection = new Vector3D(0, 0, 1);
+
+            labelLeft.TextDirection = new Vector3D(0, 1, 0);
+            labelRight.TextDirection = new Vector3D(0, 1, 0);
+
+            labelLeft.Padding = new System.Windows.Thickness(2);
+            labelRight.Padding = new System.Windows.Thickness(2);
+
+            labelLeft.Background = Brushes.Transparent;
+            labelRight.Background = Brushes.Transparent;
+
+            int mid = (color.R + color.G + color.B) / 3;
+
+            if (mid < 120)
+            {
+                labelLeft.Foreground = Brushes.White;
+                labelRight.Foreground = Brushes.White;
+            }
+            else
+            {
+                labelLeft.Foreground = Brushes.Black;
+                labelRight.Foreground = Brushes.Black;
+            }
+
         }
     }
 }

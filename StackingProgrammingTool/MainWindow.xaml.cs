@@ -14,14 +14,15 @@ namespace StackingProgrammingTool
     /// </summary>
     public partial class MainWindow : Window
     {
-        /*----- Initial Parameters -----*/
+        
+        // Visualization Variables
         Model3DGroup stackingVisualization = new Model3DGroup();
+        TextGroupVisual3D programVisualizationLabelsGroup = new TextGroupVisual3D();
 
+        // Initial Project Variables
         float initialProgramHeight = 15;
         float initialProgramLength = 0;
-
         float[] initialProjectBoxDims = { 150, 200, 100 };
-
         int initialNumberOfDepartments = 4;
         int initialNumberOfPrograms = 4;
 
@@ -89,8 +90,12 @@ namespace StackingProgrammingTool
                 new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                 projectBoxMaterial, projectBoxInsideMaterial);
 
+            // Visualization Boxes In The Viewport3D
             this.stackingVisualization.Children.Add(projectBox);
             this.Visualization.Content = stackingVisualization;
+
+            // Visualization Labels In The Viewport3D
+            this.Visualization.Children.Add(this.programVisualizationLabelsGroup);
 
             // Terminating The Thread After Closing The Window
             this.Closed += (sender, e) => this.Dispatcher.InvokeShutdown();
@@ -279,6 +284,7 @@ namespace StackingProgrammingTool
                         ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                         Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                         Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                        Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
                         // Adding to Total GSF and Total Raw Cost
@@ -311,11 +317,24 @@ namespace StackingProgrammingTool
                         programBox.totalRawCostValue = rawCost;
                         programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
 
-                        GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
-                            programBoxMaterial, programBoxMaterial);
+                        GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, 
+                            programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+                        
+                        // Visualizations Of The Labels Of The Boxes
+                        TextVisual3D programLabelLeft = new TextVisual3D();
+                        TextVisual3D programLabelRight = new TextVisual3D();
 
+                        VisualizationMethods.GenerateLabelSettings(programLabelLeft, programLabelRight, labelElement.Content.ToString(),
+                            programBoxCenter, programBoxDims, programBox.boxColor);
+
+                        // Dictionary That Contains Information Of Boxes Of The Project
                         this.boxesOfTheProject.Add(programBox.name, programBox);
+
+                        // List Of Geomeries Of Boxes Of The Project
                         this.stackingVisualization.Children.Add(programBoxVisualization);
+                        // Group Of TextVisual3Ds That Illustrates Labels Of The Boxes In Viewport3D
+                        this.programVisualizationLabelsGroup.Children.Add(programLabelLeft);
+                        this.programVisualizationLabelsGroup.Children.Add(programLabelRight);
 
                         // Add Index Of The Box To The Dictionary
                         this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
@@ -333,7 +352,8 @@ namespace StackingProgrammingTool
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Generate And Visualize Stacking Data Of The Stacking Tab
-                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, 
+                    this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
 
                 // Enabling the Disabled Controllers
                 this.ProjectWidth.IsEnabled = true;
@@ -1165,7 +1185,7 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // BGSF Limit on Output Window Changes
+            // BGSF Limit On Output Window Changes
             this.limitOfBGSF = (float.Parse(this.ProjectWidth.Text) * float.Parse(this.ProjectLength.Text)) *
                 (float.Parse(this.ProjectHeight.Text) / float.Parse(this.FloorHeight.Text));
             this.BGSFLimit.Text = this.limitOfBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
