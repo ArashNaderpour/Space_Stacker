@@ -41,9 +41,12 @@ namespace StackingProgrammingTool
         }
 
         /*------------ Generate Settings Of The Visualization Boxes' Labels ------------*/
-        public static void GenerateLabelSettings(TextVisual3D labelLeft, TextVisual3D labelRight, string content,
+        public static void GenerateLabelSettings(TextGroupVisual3D textGroup, string content,
             Point3D center, float[] dims, Color color)
         {
+            TextVisual3D labelLeft = new TextVisual3D();
+            TextVisual3D labelRight = new TextVisual3D();
+
             labelLeft.Text = content;
             labelRight.Text = content;
 
@@ -78,6 +81,8 @@ namespace StackingProgrammingTool
                 labelRight.Foreground = Brushes.Black;
             }
 
+            textGroup.Children.Add(labelLeft);
+            textGroup.Children.Add(labelRight);
         }
     }
 }

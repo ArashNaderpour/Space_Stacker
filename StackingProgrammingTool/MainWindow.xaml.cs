@@ -316,26 +316,18 @@ namespace StackingProgrammingTool
                         programBox.boxTotalGSFValue = GSF;
                         programBox.totalRawCostValue = rawCost;
                         programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                        programBox.visualizationLabel = labelElement.Content.ToString();
 
                         GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, 
                             programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
                         
                         // Visualizations Of The Labels Of The Boxes
-                        TextVisual3D programLabelLeft = new TextVisual3D();
-                        TextVisual3D programLabelRight = new TextVisual3D();
-
-                        VisualizationMethods.GenerateLabelSettings(programLabelLeft, programLabelRight, labelElement.Content.ToString(),
+                        VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                             programBoxCenter, programBoxDims, programBox.boxColor);
 
-                        // Dictionary That Contains Information Of Boxes Of The Project
                         this.boxesOfTheProject.Add(programBox.name, programBox);
-
-                        // List Of Geomeries Of Boxes Of The Project
                         this.stackingVisualization.Children.Add(programBoxVisualization);
-                        // Group Of TextVisual3Ds That Illustrates Labels Of The Boxes In Viewport3D
-                        this.programVisualizationLabelsGroup.Children.Add(programLabelLeft);
-                        this.programVisualizationLabelsGroup.Children.Add(programLabelRight);
-
+                        
                         // Add Index Of The Box To The Dictionary
                         this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                     }
@@ -583,6 +575,7 @@ namespace StackingProgrammingTool
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
             this.colorsOfDepartments.Clear();
             this.boxesOfTheProject.Clear();
+            this.programVisualizationLabelsGroup.Children.Clear();
 
             // Output Variables
             this.constructionCost = 0;
@@ -633,7 +626,7 @@ namespace StackingProgrammingTool
 
                 this.DepartmentsWrapper.Children.Add(department);
 
-                /*---------------- Setting up initial Departments and Programs visualization ----------------*/
+                /* Setting up initial Departments and Programs visualization */
                 // Generating a random color in the format of an array that contains three bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                 this.colorsOfDepartments.Add(color);
@@ -644,6 +637,7 @@ namespace StackingProgrammingTool
                     ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                     Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                     Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                     this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
                     // Adding To Total GSF and Total Raw Cost
@@ -676,9 +670,14 @@ namespace StackingProgrammingTool
                     programBox.boxTotalGSFValue = GSF;
                     programBox.totalRawCostValue = rawCost;
                     programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                    programBox.visualizationLabel = labelElement.Content.ToString();
 
                     GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
                         programBoxMaterial, programBoxMaterial);
+
+                    // Visualizations Of The Labels Of The Boxes
+                    VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                        programBoxCenter, programBoxDims, programBox.boxColor);
 
                     this.boxesOfTheProject.Add(programBox.name, programBox);
                     this.stackingVisualization.Children.Add(programBoxVisualization);
@@ -953,6 +952,10 @@ namespace StackingProgrammingTool
         {
             Button btn = sender as Button;
 
+
+            // Clear Visualizatin Labels
+            this.programVisualizationLabelsGroup.Children.Clear();
+
             // Handeling Project Width Changes Events
             if (btn.Name == "ProjectWidthButton")
             {
@@ -988,6 +991,7 @@ namespace StackingProgrammingTool
                             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
                             int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
+                            // First Box In Each Floor
                             if ((this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2) == this.initialProjectBoxDims[1] * -0.5)
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
@@ -1001,6 +1005,10 @@ namespace StackingProgrammingTool
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+                                
+                                // Visualizations Of The Labels Of The Boxes
+                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[programBoxName].visualizationLabel,
+                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);
@@ -1011,6 +1019,8 @@ namespace StackingProgrammingTool
 
                                 totalDepartmentLength = (this.initialProjectBoxDims[1] * -0.5) + this.stackingVisualization.Children[i].Bounds.SizeY;
                             }
+
+                            // Other Boxes Of Each Floor
                             else
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
@@ -1025,6 +1035,10 @@ namespace StackingProgrammingTool
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+
+                                // Visualizations Of The Labels Of The Boxes
+                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[programBoxName].visualizationLabel,
+                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);

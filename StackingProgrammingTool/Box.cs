@@ -18,6 +18,7 @@ namespace StackingProgrammingTool
         public float totalRawCostValue { get; set; }
         public int floor { get; set; }
         public int visualizationIndex { get; set; }
+        public string visualizationLabel { get; set; }
 
         public Box(string name, Point3D boxCenter)
         {
