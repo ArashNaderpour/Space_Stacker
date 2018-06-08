@@ -1889,6 +1889,14 @@ namespace StackingProgrammingTool
                     return;
                 }
 
+                // If Input Value Is Larger Than The Number Of Existing Departments
+                if (inputFloor > this.DepartmentsWrapper.Children.Count - 1)
+                {
+                    MessageBox.Show("Department" + inputFloor.ToString() + "Does Not Exist.");
+                    programNumberTextBox.Text = this.boxesOfTheProject[boxName].floor.ToString();
+                    return;
+                }
+
                 // If New Value Is Different with Old Value
                 else
                 {
