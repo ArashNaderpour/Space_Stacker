@@ -18,6 +18,7 @@ namespace StackingProgrammingTool
         // Visualization Variables
         Model3DGroup stackingVisualization = new Model3DGroup();
         TextGroupVisual3D programVisualizationLabelsGroup = new TextGroupVisual3D();
+        Dictionary<string, int[]> labelIndexes = new Dictionary<string, int[]>();
 
         // Initial Project Variables
         float initialProgramHeight = 15;
@@ -326,6 +327,10 @@ namespace StackingProgrammingTool
                         VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                             programBoxCenter, programBoxDims, programBox.boxColor);
 
+                        // Storing Indexes Of The Labels
+                        this.labelIndexes.Add(programBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
+                            this.programVisualizationLabelsGroup.Children.Count - 2 });
+
                         this.boxesOfTheProject.Add(programBox.name, programBox);
                         this.stackingVisualization.Children.Add(programBoxVisualization);
                         
@@ -544,6 +549,10 @@ namespace StackingProgrammingTool
                                 VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                                     programBoxCenter, programBoxDims, programBox.boxColor);
 
+                                // Storing Indexes Of The Labels
+                                this.labelIndexes.Add(programBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
+                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
+
                                 this.boxesOfTheProject.Add(programBox.name, programBox);
                                 this.stackingVisualization.Children.Add(programBoxVisualization);
 
@@ -584,6 +593,7 @@ namespace StackingProgrammingTool
             this.colorsOfDepartments.Clear();
             this.boxesOfTheProject.Clear();
             this.programVisualizationLabelsGroup.Children.Clear();
+            this.labelIndexes.Clear();
 
             // Output Variables
             this.constructionCost = 0;
@@ -687,6 +697,10 @@ namespace StackingProgrammingTool
                     // Visualizations Of The Labels Of The Boxes
                     VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                         programBoxCenter, programBoxDims, programBox.boxColor);
+
+                    // Storing Indexes Of The Labels
+                    this.labelIndexes.Add(programBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
+                        this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                     this.boxesOfTheProject.Add(programBox.name, programBox);
                     this.stackingVisualization.Children.Add(programBoxVisualization);
@@ -964,6 +978,7 @@ namespace StackingProgrammingTool
 
             // Clear Visualization Labels
             this.programVisualizationLabelsGroup.Children.Clear();
+            this.labelIndexes.Clear();
 
             // Handeling Project Width Changes Events
             if (btn.Name == "ProjectWidthButton")
@@ -1016,8 +1031,12 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
                                 
                                 // Visualizations Of The Labels Of The Boxes
-                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[programBoxName].visualizationLabel,
-                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
+                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
+                                // Storing Indexes Of The Labels
+                                this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
+                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);
@@ -1047,8 +1066,11 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                                 // Visualizations Of The Labels Of The Boxes
-                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[programBoxName].visualizationLabel,
-                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
+                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
+                                // Storing Indexes Of The Labels
+                                this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1, this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);
@@ -1170,8 +1192,12 @@ namespace StackingProgrammingTool
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                             // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[programBoxName].visualizationLabel,
-                                newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
+                            VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
+                            // Storing Indexes Of The Labels
+                            this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
+                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, programBoxVisualization);
@@ -1199,8 +1225,12 @@ namespace StackingProgrammingTool
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                             // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[programBoxName].visualizationLabel,
-                                newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
+                            VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
+                            // Storing Indexes Of The Labels
+                            this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
+                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, programBoxVisualization);
