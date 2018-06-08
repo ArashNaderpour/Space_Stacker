@@ -501,6 +501,7 @@ namespace StackingProgrammingTool
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                                Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                                 this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
 
                                 // Adding To Total GSF and Total Raw Cost
@@ -524,6 +525,7 @@ namespace StackingProgrammingTool
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
+                                programBox.boxDims = programBoxDims;
                                 programBox.departmentName = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
@@ -533,9 +535,14 @@ namespace StackingProgrammingTool
                                 programBox.boxTotalGSFValue = GSF;
                                 programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                                programBox.visualizationLabel = labelElement.Content.ToString();
 
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
+
+                                // Visualizations Of The Labels Of The Boxes
+                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                                    programBoxCenter, programBoxDims, programBox.boxColor);
 
                                 this.boxesOfTheProject.Add(programBox.name, programBox);
                                 this.stackingVisualization.Children.Add(programBoxVisualization);
