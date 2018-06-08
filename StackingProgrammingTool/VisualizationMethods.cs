@@ -40,8 +40,8 @@ namespace StackingProgrammingTool
             return result;
         }
 
-        /*------------ Generate Settings Of The Visualization Boxes' Labels ------------*/
-        public static void GenerateLabelSettings(TextGroupVisual3D textGroup, string content,
+        /*------------ Generate Visualization Boxes' Labels ------------*/
+        public static void GenerateVisualizationLabel(TextGroupVisual3D textGroup, string content,
             Point3D center, float[] dims, Color color)
         {
             TextVisual3D labelLeft = new TextVisual3D();
@@ -50,8 +50,8 @@ namespace StackingProgrammingTool
             labelLeft.Text = content;
             labelRight.Text = content;
 
-            labelLeft.Position = new Point3D(center.X + (dims[0]/2 + 0.01), center.Y, center.Z);
-            labelRight.Position = new Point3D(center.X - (dims[0]/2 + 0.01), center.Y, center.Z);
+            labelLeft.Position = new Point3D(center.X + (dims[0] / 2 + 0.01), center.Y, center.Z);
+            labelRight.Position = new Point3D(center.X - (dims[0] / 2 + 0.01), center.Y, center.Z);
 
             labelLeft.Height = Math.Min(dims[1], dims[2]);
             labelRight.Height = Math.Min(dims[1], dims[2]);
@@ -83,6 +83,53 @@ namespace StackingProgrammingTool
 
             textGroup.Children.Add(labelLeft);
             textGroup.Children.Add(labelRight);
+        }
+
+        /*------------ Replace Visualization Boxes' Labels ------------*/
+        public static void ReplaceVisualizationLabel(TextGroupVisual3D textGroup, int[] indexes, string content,
+            Point3D center, float[] dims, Color color)
+        {
+            TextVisual3D labelLeft = new TextVisual3D();
+            TextVisual3D labelRight = new TextVisual3D();
+
+            labelLeft.Text = content;
+            labelRight.Text = content;
+
+            labelLeft.Position = new Point3D(center.X + (dims[0] / 2 + 0.01), center.Y, center.Z);
+            labelRight.Position = new Point3D(center.X - (dims[0] / 2 + 0.01), center.Y, center.Z);
+
+            labelLeft.Height = Math.Min(dims[1], dims[2]);
+            labelRight.Height = Math.Min(dims[1], dims[2]);
+
+            labelLeft.UpDirection = new Vector3D(0, 0, 1);
+            labelRight.UpDirection = new Vector3D(0, 0, 1);
+
+            labelLeft.TextDirection = new Vector3D(0, 1, 0);
+            labelRight.TextDirection = new Vector3D(0, 1, 0);
+
+            labelLeft.Padding = new System.Windows.Thickness(2);
+            labelRight.Padding = new System.Windows.Thickness(2);
+
+            labelLeft.Background = Brushes.Transparent;
+            labelRight.Background = Brushes.Transparent;
+
+            int mid = (color.R + color.G + color.B) / 3;
+
+            if (mid < 120)
+            {
+                labelLeft.Foreground = Brushes.White;
+                labelRight.Foreground = Brushes.White;
+            }
+            else
+            {
+                labelLeft.Foreground = Brushes.Black;
+                labelRight.Foreground = Brushes.Black;
+            }
+
+            textGroup.Children.RemoveAt(indexes[0]);
+            textGroup.Children.Insert(indexes[0], labelLeft);
+            textGroup.Children.RemoveAt(indexes[1]);
+            textGroup.Children.Insert(indexes[1], labelRight);
         }
     }
 }

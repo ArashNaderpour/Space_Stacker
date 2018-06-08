@@ -324,7 +324,7 @@ namespace StackingProgrammingTool
                             programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
                         
                         // Visualizations Of The Labels Of The Boxes
-                        VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                        VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                             programBoxCenter, programBoxDims, programBox.boxColor);
 
                         // Storing Indexes Of The Labels
@@ -546,7 +546,7 @@ namespace StackingProgrammingTool
                                     programBoxMaterial, programBoxMaterial);
 
                                 // Visualizations Of The Labels Of The Boxes
-                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                                VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                                     programBoxCenter, programBoxDims, programBox.boxColor);
 
                                 // Storing Indexes Of The Labels
@@ -695,7 +695,7 @@ namespace StackingProgrammingTool
                         programBoxMaterial, programBoxMaterial);
 
                     // Visualizations Of The Labels Of The Boxes
-                    VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                    VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                         programBoxCenter, programBoxDims, programBox.boxColor);
 
                     // Storing Indexes Of The Labels
@@ -1031,7 +1031,7 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
                                 
                                 // Visualizations Of The Labels Of The Boxes
-                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                     newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                                 // Storing Indexes Of The Labels
@@ -1066,7 +1066,7 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                                 // Visualizations Of The Labels Of The Boxes
-                                VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                     newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                                 // Storing Indexes Of The Labels
@@ -1192,7 +1192,7 @@ namespace StackingProgrammingTool
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                             // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                            VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                             // Storing Indexes Of The Labels
@@ -1225,7 +1225,7 @@ namespace StackingProgrammingTool
                                 ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                             // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateLabelSettings(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                            VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                             // Storing Indexes Of The Labels
@@ -1333,6 +1333,10 @@ namespace StackingProgrammingTool
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
+                        // Visualizations Of The Labels Of The Boxes
+                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName], this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                            newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
                         // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
                         float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
                         float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
@@ -1347,6 +1351,7 @@ namespace StackingProgrammingTool
                         this.totalRawDepartmentCost += rawProgramCostDifference;
 
                         this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+                        this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
                         this.boxesOfTheProject[newProgramBoxName].function = cbx.SelectedItem.ToString();
                         this.boxesOfTheProject[newProgramBoxName].keyRooms = (int)keyRooms.Value;
                         this.boxesOfTheProject[newProgramBoxName].DGSF = (float)DGSF.Value;
@@ -1381,12 +1386,17 @@ namespace StackingProgrammingTool
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
+                        // Visualizations Of The Labels Of The Boxes
+                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName], this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                            newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
                         totalProgramLength += this.stackingVisualization.Children[i].Bounds.SizeY;
 
                         this.stackingVisualization.Children.RemoveAt(i);
                         this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                         this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+                        this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
                         newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                     }
@@ -1479,9 +1489,14 @@ namespace StackingProgrammingTool
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
+                        // Visualizations Of The Labels Of The Boxes
+                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup,this.labelIndexes[newProgramBoxName] , this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                            newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
                         this.stackingVisualization.Children.RemoveAt(i);
                         this.stackingVisualization.Children.Insert(i, programBoxVisualization);
                         this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+                        this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
                         // Add Index Of The Box To The Dictionary
                         this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
@@ -1524,9 +1539,14 @@ namespace StackingProgrammingTool
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
+                        // Visualizations Of The Labels Of The Boxes
+                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName], this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                            newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
                         this.stackingVisualization.Children.RemoveAt(i);
                         this.stackingVisualization.Children.Insert(i, programBoxVisualization);
                         this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+                        this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
                         // Add Index Of The Box To The Dictionary
                         this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
