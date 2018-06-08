@@ -1278,13 +1278,13 @@ namespace StackingProgrammingTool
             string programBoxName = cbx.Name.Replace("ComboBox", "ProgramBox");
             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
             int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
-
+            
             // Extracting The Department That Changed
             Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
             // Extracting The Sliders That Need Changes
-            String keyRoomsSliderName = cbx.Name.Substring(0, 2) + "Rooms" + programIndex.ToString();
-            String DGSFSliderName = cbx.Name.Substring(0, 2) + "DGSF" + programIndex.ToString();
+            String keyRoomsSliderName = cbx.Name.Replace("ComboBox", "Rooms");
+            String DGSFSliderName = cbx.Name.Replace("ComboBox", "DGSF");
 
             // Calculating Length of Each Program Based on Total Area of The Program and Width of The Project Box
             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, keyRoomsSliderName) as Slider;
