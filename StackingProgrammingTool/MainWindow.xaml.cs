@@ -1953,14 +1953,6 @@ namespace StackingProgrammingTool
                     return;
                 }
 
-                //// If Input Value Is Larger Than The Number Of Existing Departments
-                //if (inputFloor > this.DepartmentsWrapper.Children.Count - 1)
-                //{
-                //    MessageBox.Show("Department" + inputFloor.ToString() + "Does Not Exist.");
-                //    programNumberTextBox.Text = this.boxesOfTheProject[boxName].floor.ToString();
-                //    return;
-                //}
-
                 // If New Value Is Different With Old Value
                 else
                 {
@@ -2038,7 +2030,9 @@ namespace StackingProgrammingTool
                             }
 
                             // Add Index Of The Boxes insert Into The Dictionary
+                            if (i > oldVisualizationBoxIndex) { 
                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i - 1;
+                            }
                         }
                     }
 
