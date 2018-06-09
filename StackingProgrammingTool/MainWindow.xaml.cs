@@ -341,7 +341,7 @@ namespace StackingProgrammingTool
 
                 xlWorkBook.Close(true, null, null);
                 xlApp.Quit();
-
+               
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
@@ -447,32 +447,78 @@ namespace StackingProgrammingTool
                             int lastIndex = this.DepartmentsWrapper.Children.Count - 1;
 
                             Expander department = this.DepartmentsWrapper.Children[lastIndex] as Expander;
-                            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(department, department.Name + "NumberInputTextBox") as TextBox;
 
-                            int numberOfPrograms = int.Parse(programNumberTextBox.Text);
+                            for (int j = this.stackingVisualization.Children.Count - 1; j > 0 ; j--)
+                            {
+                                // Name of The Program Box
+                                string programBoxName = this.stackingVisualization.Children[j].GetName();
+                               
+                                // ProgramBoxes To Remove
+                                if (programBoxName.Contains(department.Name)) {
 
-                            // Removing Departments' Properties
+                                    int programFloor = this.boxesOfTheProject[programBoxName].floor;
+
+                                    // Move Programs Of The Other Departments That Exists In The Removed Department's Floor
+                                    for(int k = 1; k < this.stackingVisualization.Children.Count; k++)
+                                    {
+                                        if (this.boxesOfTheProject[this.stackingVisualization.Children[k].GetName()].floor == programFloor && j < k && 
+                                            department.Name != this.stackingVisualization.Children[k].GetName().Replace("ProgramBo", "").Split('x')[0])
+                                        {
+                                            string newProgramBoxName = this.stackingVisualization.Children[k].GetName();
+
+                                            float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+                                                (float)this.stackingVisualization.Children[k].Bounds.SizeY,
+                                                (float)this.stackingVisualization.Children[k].Bounds.SizeZ };
+                                           
+                                            Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y - 
+                                                this.stackingVisualization.Children[j].Bounds.SizeY,
+                                                this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
+
+                                            GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
+                                                ((GeometryModel3D)this.stackingVisualization.Children[k]).Material,
+                                                ((GeometryModel3D)this.stackingVisualization.Children[k]).Material);
+
+                                            // Visualizations Of The Labels Of The Boxes
+                                            VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName], this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                                newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+
+                                            this.stackingVisualization.Children.RemoveAt(k);
+                                            this.stackingVisualization.Children.Insert(k, programBoxVisualization);
+                                            this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+                                            this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
+
+                                            // Add Index Of The Box To The Dictionary
+                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+                                        }
+                                    }
+
+                                    // Calculating Raw Cost and GSF of Each Program
+                                    ComboBox program = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "ComboBox")) as ComboBox;
+                                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "Rooms")) as Slider;
+                                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "DGSF")) as Slider;
+                                    
+                                    // Subtracting From Total GSF and Total Raw Cost
+                                    this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
+                                    this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
+                                    // Remove The Visualization Boxes
+                                    this.stackingVisualization.Children.RemoveAt(j);
+
+                                    // Remove The Removed Box From The Dictionary of The Boxes
+                                    this.boxesOfTheProject.Remove(programBoxName);
+
+                                    // Remove Visualization Labels
+                                    foreach (int index in this.labelIndexes[programBoxName]) {
+                                        this.programVisualizationLabelsGroup.Children.RemoveAt(index);
+                                    }
+                                    // Remove Labels From The Dictionary
+                                    this.labelIndexes.Remove(programBoxName);
+                                }
+                            }
+
+                            // Removing Departments' Expanders' Properties
                             this.DepartmentsWrapper.Children.RemoveAt(lastIndex);
                             this.colorsOfDepartments.RemoveAt(lastIndex);
-
-                            for (int j = 0; j < numberOfPrograms; j++)
-                            {
-                                // Calculating Raw Cost and GSF of Each Program
-                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
-                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-
-                                // Subtracting From Total GSF and Total Raw Cost
-                                this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
-                                this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
-
-                                int lastProgramIndex = this.stackingVisualization.Children.Count - 1;
-
-                                // Remove The Removed Box From The Dictionary of The Boxes
-                                this.boxesOfTheProject.Remove(this.stackingVisualization.Children[lastProgramIndex].GetName());
-
-                                this.stackingVisualization.Children.RemoveAt(lastProgramIndex);
-                            }
                         }
 
                         // All The Calculation, Prepration, and Visualization of The Output Data
@@ -1915,7 +1961,7 @@ namespace StackingProgrammingTool
 
             TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(this.ProgramsStackingGrid, btn.Name.Replace("SetButton", "TextBox")) as TextBox;
 
-            string boxName = btn.Name.Replace("SetButton", "");
+            string programBoxName = btn.Name.Replace("SetButton", "");
 
             int inputFloor = new int();
 
@@ -1927,36 +1973,36 @@ namespace StackingProgrammingTool
             catch
             {
                 MessageBox.Show("Please Enter A Number.");
-                programNumberTextBox.Text = this.boxesOfTheProject[boxName].floor.ToString();
+                programNumberTextBox.Text = this.boxesOfTheProject[programBoxName].floor.ToString();
                 return;
             }
 
             if (inputFloor >= 0)
             {
                 // If New Input Is Simillar To Old Old Value
-                if (inputFloor == this.boxesOfTheProject[boxName].floor)
+                if (inputFloor == this.boxesOfTheProject[programBoxName].floor)
                 {
                     return;
                 }
 
-                // If Input Value Is Larger Than The Number Of Existing Departments
-                if (inputFloor > this.DepartmentsWrapper.Children.Count - 1)
-                {
-                    MessageBox.Show("Department" + inputFloor.ToString() + "Does Not Exist.");
-                    programNumberTextBox.Text = this.boxesOfTheProject[boxName].floor.ToString();
-                    return;
-                }
+                //// If Input Value Is Larger Than The Number Of Existing Departments
+                //if (inputFloor > this.DepartmentsWrapper.Children.Count - 1)
+                //{
+                //    MessageBox.Show("Department" + inputFloor.ToString() + "Does Not Exist.");
+                //    programNumberTextBox.Text = this.boxesOfTheProject[boxName].floor.ToString();
+                //    return;
+                //}
 
-                // If New Value Is Different with Old Value
+                // If New Value Is Different With Old Value
                 else
                 {
-                    string targetBoxDepartment = boxName.Replace("ProgramBo", "").Split('x')[0];
+                    string targetBoxDepartment = programBoxName.Replace("ProgramBo", "").Split('x')[0];
 
                     // Box Number In Its Department
-                    int targetBoxNumber = int.Parse(boxName.Replace("ProgramBo", "").Split('x')[1]);
+                    int targetBoxNumber = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
                     // Indexes Of The Visualization Box
-                    int oldVisualizationBoxIndex = this.boxesOfTheProject[boxName].visualizationIndex;
+                    int oldVisualizationBoxIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
                     int newVisualizationBoxIndex = 0;
 
                     float targetBoxLength = new float();
@@ -1967,7 +2013,7 @@ namespace StackingProgrammingTool
                         if (i > 0)
                         {
                             // Get Target Program Box Index And Length
-                            if (this.stackingVisualization.Children[i].GetName() == boxName)
+                            if (this.stackingVisualization.Children[i].GetName() == programBoxName)
                             {
                                 // Length Of The Target Visualization Box
                                 targetBoxLength = (float)this.stackingVisualization.Children[i].Bounds.SizeY;
@@ -1990,12 +2036,12 @@ namespace StackingProgrammingTool
                             string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
 
                             // Program Boxes After Target Program Box
-                            if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == this.boxesOfTheProject[boxName].floor &&
-                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].boxCenter.Y > this.boxesOfTheProject[boxName].boxCenter.Y)
+                            if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == this.boxesOfTheProject[programBoxName].floor &&
+                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].boxCenter.Y > this.boxesOfTheProject[programBoxName].boxCenter.Y)
                             {
                                 float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
-                            (float)this.stackingVisualization.Children[i].Bounds.SizeY,
-                            (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
+                                    (float)this.stackingVisualization.Children[i].Bounds.SizeY,
+                                    (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
 
                                 float newProgramCenterY = ((float)this.boxesOfTheProject[newProgramBoxName].boxCenter.Y) - targetBoxLength;
 
@@ -2006,13 +2052,15 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
+                                // Visualizations Of The Labels Of The Boxes
+                                VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName],
+                                    this.boxesOfTheProject[newProgramBoxName].visualizationLabel, newProgramBoxCenter, newProgramBoxDims, 
+                                    this.boxesOfTheProject[newProgramBoxName].boxColor);
+
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);
-
-                                // Add Index Of The Box To The Dictionary
-                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                             }
 
                             // Calculating Y Value Of The Center Of The New Box
@@ -2020,38 +2068,45 @@ namespace StackingProgrammingTool
                             {
                                 newTargetCenterY += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
                             }
+
+                            // Add Index Of The Boxes insert Into The Dictionary
+                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i - 1;
                         }
                     }
 
                     newTargetCenterY += targetBoxLength / 2;
 
                     // Generating New Visualization Box To Replace The Old Box
-                    float[] newBoxDims = { float.Parse(this.ProjectWidth.Text), targetBoxLength, float.Parse(this.FloorHeight.Text) };
-                    Point3D newBoxCenter = new Point3D(0, newTargetCenterY, (inputFloor * float.Parse(this.FloorHeight.Text)) + (float.Parse(this.FloorHeight.Text) / 2));
-                    Material newBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(this.boxesOfTheProject[boxName].boxColor.R,
-                        this.boxesOfTheProject[boxName].boxColor.G, this.boxesOfTheProject[boxName].boxColor.B));
+                    float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), targetBoxLength, float.Parse(this.FloorHeight.Text) };
+                    Point3D programBoxCenter = new Point3D(0, newTargetCenterY, (inputFloor * float.Parse(this.FloorHeight.Text)) + (float.Parse(this.FloorHeight.Text) / 2));
+                    Material newBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(this.boxesOfTheProject[programBoxName].boxColor.R,
+                        this.boxesOfTheProject[programBoxName].boxColor.G, this.boxesOfTheProject[programBoxName].boxColor.B));
 
-                    GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(boxName, newBoxCenter, newBoxDims, newBoxMaterial, newBoxMaterial);
+                    GeometryModel3D newProgramBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims, newBoxMaterial, newBoxMaterial);
+
+                    // Visualizations Of The Labels Of The Boxes
+                    VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[programBoxName], this.boxesOfTheProject[programBoxName].visualizationLabel,
+                        programBoxCenter, programBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
 
                     this.stackingVisualization.Children.RemoveAt(oldVisualizationBoxIndex);
-
+                    
                     if (newVisualizationBoxIndex < oldVisualizationBoxIndex)
                     {
                         newVisualizationBoxIndex = newVisualizationBoxIndex + 1;
                     }
                     this.stackingVisualization.Children.Insert(newVisualizationBoxIndex, newProgramBoxVisualization);
-
+                    
                     // Add Index Of The Box To The Dictionary
-                    this.boxesOfTheProject[boxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(newProgramBoxVisualization);
+                    this.boxesOfTheProject[programBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(newProgramBoxVisualization);
 
-                    this.boxesOfTheProject[boxName].boxCenter = newBoxCenter;
-                    this.boxesOfTheProject[boxName].floor = inputFloor;
+                    this.boxesOfTheProject[programBoxName].boxCenter = programBoxCenter;
+                    this.boxesOfTheProject[programBoxName].floor = inputFloor;
                 }
             }
             else
             {
                 MessageBox.Show("Please Enter A Number Larger Than, Or Equal To Zero.");
-                programNumberTextBox.Text = this.boxesOfTheProject[boxName].floor.ToString();
+                programNumberTextBox.Text = this.boxesOfTheProject[programBoxName].floor.ToString();
                 return;
             }
         }
