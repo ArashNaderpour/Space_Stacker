@@ -1506,37 +1506,31 @@ namespace StackingProgrammingTool
             int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
             int programBoxVisualizationIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
 
-            // Calculating the Scale Factor of Each ProgramBox
+            // Calculating The Scale Factor Of The ProgramBox
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
-
-            // Calculating Y Cordinate of the Scale Center for Each ProgramBox
-            double newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5f);
-
-            for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
+            // Calculating The Length Difference Of The ProgramBox 
+            float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
+            
+            for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
             {
                 if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == programBoxFloor)
                 {
-                    // Programs Before The Changed One
-                    if (i < programBoxVisualizationIndex)
-                    {
-                        newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY;
-                    }
                     // The Changed Program
                     if (i == programBoxVisualizationIndex)
                     {
-                        newProgramCenterY += (newProgramLength / 2);
-
                         string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
                         float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             newProgramLength, (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-                        Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY, this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
+                        Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + (programLengthDifference / 2),
+                            this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
 
                         GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                         // Visualizations Of The Labels Of The Boxes
-                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup,this.labelIndexes[newProgramBoxName] , this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup,this.labelIndexes[newProgramBoxName] ,
+                            this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                             newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                         this.stackingVisualization.Children.RemoveAt(i);
@@ -1547,19 +1541,14 @@ namespace StackingProgrammingTool
                         // Add Index Of The Box To The Dictionary
                         this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
 
-                        newProgramCenterY += (newProgramLength / 2);
-
                         // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
                         float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
                         float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
-
                         float newGSF = (float)(keyRooms.Value * DGSF.Value);
-
                         float newRawProgramCost = newGSF * this.functions[this.boxesOfTheProject[newProgramBoxName].function]["cost"];
-
                         float GSFDifference = newGSF - oldGSF;
                         float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
-
+            
                         this.totalGSF += GSFDifference;
                         this.totalRawDepartmentCost += rawProgramCostDifference;
 
@@ -1573,20 +1562,20 @@ namespace StackingProgrammingTool
                     // Programs After The Changed One
                     if (i > programBoxVisualizationIndex)
                     {
-                        newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
-
                         string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
                         float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeY,
                             (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-                        Point3D newProgramBoxCenter = new Point3D(0, newProgramCenterY, this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
+                        Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + programLengthDifference, 
+                            this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
 
                         GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
                         // Visualizations Of The Labels Of The Boxes
-                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName], this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, this.labelIndexes[newProgramBoxName], 
+                            this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                             newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                         this.stackingVisualization.Children.RemoveAt(i);
@@ -1596,9 +1585,12 @@ namespace StackingProgrammingTool
 
                         // Add Index Of The Box To The Dictionary
                         this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
-
-                        newProgramCenterY += this.stackingVisualization.Children[i].Bounds.SizeY / 2;
                     }
+                }
+                // Break The Loop On Next Floor
+                else
+                {
+                    break;
                 }
             }
 
