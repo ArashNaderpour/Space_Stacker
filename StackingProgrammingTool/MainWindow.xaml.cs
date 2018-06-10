@@ -18,7 +18,6 @@ namespace StackingProgrammingTool
         // Visualization Variables
         Model3DGroup stackingVisualization = new Model3DGroup();
         TextGroupVisual3D programVisualizationLabelsGroup = new TextGroupVisual3D();
-        Dictionary<string, int[]> labelIndexes = new Dictionary<string, int[]>();
 
         // Initial Project Variables
         float initialProgramHeight = 15;
@@ -327,10 +326,6 @@ namespace StackingProgrammingTool
                         VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                             programBoxCenter, programBoxDims, programBox.boxColor);
 
-                        // Storing Indexes Of The Labels
-                        this.labelIndexes.Add(programBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
-                            this.programVisualizationLabelsGroup.Children.Count - 2 });
-
                         this.boxesOfTheProject.Add(programBox.name, programBox);
                         this.stackingVisualization.Children.Add(programBoxVisualization);
 
@@ -510,12 +505,8 @@ namespace StackingProgrammingTool
                                     this.boxesOfTheProject.Remove(programBoxName);
 
                                     // Remove Visualization Labels
-                                    foreach (int index in this.labelIndexes[programBoxName])
-                                    {
-                                        this.programVisualizationLabelsGroup.Children.RemoveAt(index);
-                                    }
-                                    // Remove Labels From The Dictionary
-                                    this.labelIndexes.Remove(programBoxName);
+                                    this.programVisualizationLabelsGroup.Children.RemoveAt((2 * j) - 1);
+                                    this.programVisualizationLabelsGroup.Children.RemoveAt((2 * j) - 2);
                                 }
                             }
 
@@ -598,10 +589,6 @@ namespace StackingProgrammingTool
                                 VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                                     programBoxCenter, programBoxDims, programBox.boxColor);
 
-                                // Storing Indexes Of The Labels
-                                this.labelIndexes.Add(programBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
-                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
-
                                 this.boxesOfTheProject.Add(programBox.name, programBox);
                                 this.stackingVisualization.Children.Add(programBoxVisualization);
 
@@ -642,7 +629,6 @@ namespace StackingProgrammingTool
             this.colorsOfDepartments.Clear();
             this.boxesOfTheProject.Clear();
             this.programVisualizationLabelsGroup.Children.Clear();
-            this.labelIndexes.Clear();
 
             // Output Variables
             this.constructionCost = 0;
@@ -746,10 +732,6 @@ namespace StackingProgrammingTool
                     // Visualizations Of The Labels Of The Boxes
                     VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                         programBoxCenter, programBoxDims, programBox.boxColor);
-
-                    // Storing Indexes Of The Labels
-                    this.labelIndexes.Add(programBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
-                        this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                     this.boxesOfTheProject.Add(programBox.name, programBox);
                     this.stackingVisualization.Children.Add(programBoxVisualization);
@@ -1027,7 +1009,6 @@ namespace StackingProgrammingTool
 
             // Clear Visualization Labels
             this.programVisualizationLabelsGroup.Children.Clear();
-            this.labelIndexes.Clear();
 
             // Handeling Project Width Changes Events
             if (btn.Name == "ProjectWidthButton")
@@ -1083,10 +1064,6 @@ namespace StackingProgrammingTool
                                 VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                     newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
-                                // Storing Indexes Of The Labels
-                                this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
-                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
-
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
@@ -1117,9 +1094,6 @@ namespace StackingProgrammingTool
                                 // Visualizations Of The Labels Of The Boxes
                                 VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                     newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
-
-                                // Storing Indexes Of The Labels
-                                this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1, this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                                 this.stackingVisualization.Children.RemoveAt(i);
                                 this.stackingVisualization.Children.Insert(i, programBoxVisualization);
@@ -1244,10 +1218,6 @@ namespace StackingProgrammingTool
                             VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
-                            // Storing Indexes Of The Labels
-                            this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
-                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
-
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, programBoxVisualization);
                             this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
@@ -1276,10 +1246,6 @@ namespace StackingProgrammingTool
                             // Visualizations Of The Labels Of The Boxes
                             VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
-
-                            // Storing Indexes Of The Labels
-                            this.labelIndexes.Add(newProgramBoxName, new int[] { this.programVisualizationLabelsGroup.Children.Count - 1,
-                                    this.programVisualizationLabelsGroup.Children.Count - 2 });
 
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, programBoxVisualization);
@@ -1989,7 +1955,7 @@ namespace StackingProgrammingTool
                             }
                         }
                     }
-                    
+
                     // Y Value Of The Center Of The New Box
                     float newTargetCenterY = (this.initialProjectBoxDims[1] * -0.5f);
 
@@ -2034,12 +2000,12 @@ namespace StackingProgrammingTool
                             newTargetCenterY += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
 
-                        // Add Index Of The Boxes Insert Into The Dictionary
+                        // If New Index Is Larger Than Old Index
                         if (oldVisualizationBoxIndex < i && i < newVisualizationBoxIndex)
                         {
                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i - 1;
                         }
-
+                        // If Old Index Is Larger Than New Index
                         if (oldVisualizationBoxIndex > i && i > newVisualizationBoxIndex)
                         {
                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i + 1;
