@@ -522,7 +522,7 @@ namespace StackingProgrammingTool
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
-                    // Increase Number of Departments
+                    // Increase Number Of Departments
                     if (existingDepartments < input)
                     {
                         int difference = input - existingDepartments;
@@ -801,7 +801,7 @@ namespace StackingProgrammingTool
 
                 if (input > 0)
                 {
-                    // Increase Number of Programs
+                    // Increase Number Of Programs
                     if (input > existingPrograms)
                     {
                         int lastProgramBoxIndex = 1;
@@ -858,6 +858,7 @@ namespace StackingProgrammingTool
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + i.ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + i.ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + i.ToString()) as Slider;
+                                Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + i.ToString()) as Label;
 
                                 // Adding to Total GSF and Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
@@ -866,13 +867,14 @@ namespace StackingProgrammingTool
                                 this.totalRawDepartmentCost += rawCost;
 
                                 // Calculating Length of Each Program Based on Width of The Project Box
-                                string programBoxName = department.Name + "ProgramBox" + (i).ToString();
-                                float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
-                                Point3D programBoxCenter = new Point3D(0,
-                                    ((totalExistingProgramsLength + ((i - existingPrograms) * programBoxDims[1]) + programBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
+                                string newProgramBoxName = department.Name + "ProgramBox" + (i).ToString();
+                                float[] newProgramBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
+                                Point3D newProgramBoxCenter = new Point3D(0,
+                                    ((totalExistingProgramsLength + ((i - existingPrograms) * newProgramBoxDims[1]) + newProgramBoxDims[1] / 2) - (float.Parse(ProjectLength.Text) * 0.5)),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
 
-                                Box programBox = new Box(programBoxName, programBoxCenter);
+                                Box programBox = new Box(newProgramBoxName, newProgramBoxCenter);
+                                programBox.boxDims = newProgramBoxDims;
                                 programBox.departmentName = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
@@ -881,16 +883,22 @@ namespace StackingProgrammingTool
                                 programBox.cost = this.functions[program.SelectedItem.ToString()]["cost"];
                                 programBox.boxTotalGSFValue = GSF;
                                 programBox.totalRawCostValue = rawCost;
-                                programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                                programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / newProgramBoxDims[2]));
+                                programBox.visualizationLabel = labelElement.Content.ToString();
 
-                                GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
+                                GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     programBoxMaterial, programBoxMaterial);
 
                                 this.stackingVisualization.Children.Insert(lastProgramBoxIndex, programBoxVisualization);
-                                this.boxesOfTheProject.Add(programBoxName, programBox);
+                                this.boxesOfTheProject.Add(newProgramBoxName, programBox);
 
                                 // Add Index Of The Box To The Dictionary
                                 this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+
+                                // Add Visualizations Of The Labels Of The Boxes
+                                VisualizationMethods.AddVisualizationLabel(this.programVisualizationLabelsGroup,
+                                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                                 lastProgramBoxIndex += 1;
                             }
@@ -1985,7 +1993,7 @@ namespace StackingProgrammingTool
 
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, programBoxVisualization);
-
+                           
                             // Visualizations Of The Labels Of The Boxes
                             VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
                                 this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
@@ -2036,7 +2044,7 @@ namespace StackingProgrammingTool
 
                     // Add Index Of The Box To The Dictionary
                     this.boxesOfTheProject[programBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(newProgramBoxVisualization);
-
+                    
                     // Visualizations Of The Labels Of The Boxes
                     VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, oldVisualizationBoxIndex,
                         this.boxesOfTheProject[programBoxName].visualizationIndex, this.boxesOfTheProject[programBoxName].visualizationLabel,
@@ -2052,12 +2060,12 @@ namespace StackingProgrammingTool
         }
 
 
-        /* ########################################################### End of Handeling Events and Start of Calculations ########################################################### */
+        /* ########################################################### End Of Handeling Events And Start Of Calculations ########################################################### */
 
-        /* ----------------------------------- The Method For All The Calculations and Visualizations of The Data ----------------------------------- */
+        /* ----------------------------------- The Method For All The Calculations And Visualizations Of The Data ----------------------------------- */
         private void CalculationsAndOutputs(float totalGSF, float totalRawDepartmentCost)
         {
-            // Calculating Total Construction Cost and Project Cost
+            // Calculating Total Construction Cost And Project Cost
             float circulationCost = (((float)this.CirculationSlider.Value) / 100) * totalGSF * this.functions["Circulation"]["cost"];
 
             float MEPCost = (((float)this.MEPSlider.Value) / 100) * totalGSF * this.functions["MEP"]["cost"];

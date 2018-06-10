@@ -134,5 +134,50 @@ namespace StackingProgrammingTool
             textGroup.Children.Insert((2 * newBoxIndex) - 1, labelRight);
             
         }
+
+        /*------------ Replace Visualization Boxes' Labels ------------*/
+        public static void AddVisualizationLabel(TextGroupVisual3D textGroup, int visBoxIndex, string content,
+            Point3D center, float[] dims, Color color)
+        {
+            TextVisual3D labelLeft = new TextVisual3D();
+            TextVisual3D labelRight = new TextVisual3D();
+
+            labelLeft.Text = content;
+            labelRight.Text = content;
+
+            labelLeft.Position = new Point3D(center.X + (dims[0] / 2 + 0.01), center.Y, center.Z);
+            labelRight.Position = new Point3D(center.X - (dims[0] / 2 + 0.01), center.Y, center.Z);
+
+            labelLeft.Height = Math.Min(dims[1], dims[2]);
+            labelRight.Height = Math.Min(dims[1], dims[2]);
+
+            labelLeft.UpDirection = new Vector3D(0, 0, 1);
+            labelRight.UpDirection = new Vector3D(0, 0, 1);
+
+            labelLeft.TextDirection = new Vector3D(0, 1, 0);
+            labelRight.TextDirection = new Vector3D(0, 1, 0);
+
+            labelLeft.Padding = new System.Windows.Thickness(2);
+            labelRight.Padding = new System.Windows.Thickness(2);
+
+            labelLeft.Background = Brushes.Transparent;
+            labelRight.Background = Brushes.Transparent;
+
+            int mid = (color.R + color.G + color.B) / 3;
+
+            if (mid < 120)
+            {
+                labelLeft.Foreground = Brushes.White;
+                labelRight.Foreground = Brushes.White;
+            }
+            else
+            {
+                labelLeft.Foreground = Brushes.Black;
+                labelRight.Foreground = Brushes.Black;
+            }
+            
+            textGroup.Children.Insert((2 * visBoxIndex) - 2, labelLeft);
+            textGroup.Children.Insert((2 * visBoxIndex) - 1, labelRight);
+        }
     }
 }
