@@ -3,6 +3,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 
+
 namespace StackingProgrammingTool
 {
     class VisualizationMethods
@@ -86,7 +87,7 @@ namespace StackingProgrammingTool
         }
 
         /*------------ Replace Visualization Boxes' Labels ------------*/
-        public static void ReplaceVisualizationLabel(TextGroupVisual3D textGroup, int[] indexes, string content,
+        public static void ReplaceVisualizationLabel(TextGroupVisual3D textGroup, int oldVisBoxIndex, int newBoxIndex, string content,
             Point3D center, float[] dims, Color color)
         {
             TextVisual3D labelLeft = new TextVisual3D();
@@ -126,10 +127,12 @@ namespace StackingProgrammingTool
                 labelRight.Foreground = Brushes.Black;
             }
 
-            textGroup.Children.RemoveAt(indexes[0]);
-            textGroup.Children.Insert(indexes[0], labelLeft);
-            textGroup.Children.RemoveAt(indexes[1]);
-            textGroup.Children.Insert(indexes[1], labelRight);
+            textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 1);
+            textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 2);
+
+            textGroup.Children.Insert((2 * newBoxIndex) - 2, labelLeft);
+            textGroup.Children.Insert((2 * newBoxIndex) - 1, labelRight);
+            
         }
     }
 }
