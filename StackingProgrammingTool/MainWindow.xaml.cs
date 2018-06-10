@@ -65,13 +65,13 @@ namespace StackingProgrammingTool
         {
             InitializeComponent();
 
-            // Setting Up Values of The Initial Dimensions of The Project Box and Floor Height
+            // Setting Up Values of The Initial Dimensions Of The Project Box And Floor Height
             this.ProjectWidth.Text = this.initialProjectBoxDims[0].ToString();
             this.ProjectLength.Text = this.initialProjectBoxDims[1].ToString();
             this.ProjectHeight.Text = this.initialProjectBoxDims[2].ToString();
             this.FloorHeight.Text = this.initialProgramHeight.ToString();
 
-            // Setting Up Initial Values of The Project Cost Tab
+            // Setting Up Initial Values Of The Project Cost Tab
             this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
             this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
             this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
@@ -101,12 +101,12 @@ namespace StackingProgrammingTool
             this.Closed += (sender, e) => this.Dispatcher.InvokeShutdown();
         }
 
-        /* ########################################################### End of Windows Load and Start of Handeling Events ########################################################### */
+        /* ########################################################### End Of Windows Load And Start Of Handeling Events ########################################################### */
 
         /*---------------- Handeling Open Spread-Sheet File Event ----------------*/
         private void OpenSpreadSheet_Click(object sender, RoutedEventArgs e)
         {
-            // Open the Spread Sheet File
+            // Open The Spread Sheet File
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
 
             // Excel File Properties
@@ -121,7 +121,7 @@ namespace StackingProgrammingTool
             {
                 if (this.DepartmentsWrapper.Children.Count > 0)
                 {
-                    // Clear all the lists
+                    // Clear All The Lists
                     this.functions.Clear();
                     this.DepartmentsWrapper.Children.Clear();
                     this.stackingVisualization.Children.Clear();
@@ -255,17 +255,17 @@ namespace StackingProgrammingTool
                             }
                         }
 
-                        //Adding Data to Main Data Dictionary
+                        //Adding Data To The Main Data Dictionary
                         this.functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
                     }
                 }
 
-                // Adding Department Expanders and Programs to the Controller Window
+                // Adding Department Expanders And Programs To The Controller Window
                 this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
                 for (int i = 0; i < this.initialNumberOfDepartments; i++)
                 {
-                    // Setting up Initial Departments' Expanders
+                    // Setting Up Initial Departments' Expanders
                     Expander department = ExtraMethods.DepartmentGernerator(i);
 
                     ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
@@ -273,27 +273,27 @@ namespace StackingProgrammingTool
 
                     this.DepartmentsWrapper.Children.Add(department);
 
-                    /*--- Setting up Initial Departments and Programs Visualization ---*/
-                    // Generating a random color in the format of an array that contains three bytes
+                    /*--- Setting Up Initial Departments And Programs Visualization ---*/
+                    // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                     byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                     this.colorsOfDepartments.Add(color);
 
                     for (int j = 0; j < initialNumberOfPrograms; j++)
                     {
-                        // Calculating Length of Each Program Based on Total Area of The Program and Width of The Project Box
+                        // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
                         ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                         Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                         Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                         Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                         this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
-                        // Adding to Total GSF and Total Raw Cost
+                        // Adding To Total GSF And Total Raw Cost
                         float GSF = ((float)(keyRooms.Value * DGSF.Value));
                         float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
                         this.totalGSF += GSF;
                         this.totalRawDepartmentCost += rawCost;
 
-                        // Generate gradient colors for programs of each department
+                        // Generate Gradient Colors For Programs Of Each Department
                         float stop = ((float)j) / ((float)initialNumberOfPrograms);
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
@@ -341,14 +341,14 @@ namespace StackingProgrammingTool
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Generate And Visualize Stacking Data Of The Stacking Tab
                 ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject,
                     this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
 
-                // Enabling the Disabled Controllers
+                // Enabling The Disabled Controllers
                 this.ProjectWidth.IsEnabled = true;
                 this.ProjectWidthButton.IsEnabled = true;
                 this.Seperator.Visibility = Visibility.Visible;
@@ -407,12 +407,12 @@ namespace StackingProgrammingTool
             }
         }
 
-        /*---------------- Handeling Number of Departments Button Event ----------------*/
+        /*---------------- Handeling Number Of Departments Button Event ----------------*/
         private void NumberOfDepartments_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
 
-            /* Set Number of Departments Event*/
+            /* Set Number Of Departments Event*/
             if (btn.Name == "NumberOfDepartmentsButton")
             {
                 int input = new int();
@@ -429,10 +429,10 @@ namespace StackingProgrammingTool
                     return;
                 }
 
-                // If user Input for Number of Departments is Larger Than Zero
+                // If User Input For Number Of Departments Is Larger Than Zero
                 if (input > 0)
                 {
-                    // Decrease Number of Departments
+                    // Decrease Number Of Departments
                     if (existingDepartments > input)
                     {
                         int difference = existingDepartments - input;
@@ -445,7 +445,7 @@ namespace StackingProgrammingTool
 
                             for (int j = this.stackingVisualization.Children.Count - 1; j > 0; j--)
                             {
-                                // Name of The Program Box
+                                // Name Of The Program Box
                                 string programBoxName = this.stackingVisualization.Children[j].GetName();
 
                                 // ProgramBoxes To Remove
@@ -489,19 +489,19 @@ namespace StackingProgrammingTool
                                         }
                                     }
 
-                                    // Calculating Raw Cost and GSF of Each Program
+                                    // Calculating Raw Cost And GSF Of Each Program
                                     ComboBox program = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "ComboBox")) as ComboBox;
                                     Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "Rooms")) as Slider;
                                     Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "DGSF")) as Slider;
 
-                                    // Subtracting From Total GSF and Total Raw Cost
+                                    // Subtracting From Total GSF And Total Raw Cost
                                     this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
                                     this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
                                     // Remove The Visualization Boxes
                                     this.stackingVisualization.Children.RemoveAt(j);
 
-                                    // Remove The Removed Box From The Dictionary of The Boxes
+                                    // Remove The Removed Box From The Dictionary Of The Boxes
                                     this.boxesOfTheProject.Remove(programBoxName);
 
                                     // Remove Visualization Labels
@@ -515,7 +515,7 @@ namespace StackingProgrammingTool
                             this.colorsOfDepartments.RemoveAt(lastIndex);
                         }
 
-                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        // All The Calculation, Prepration, And Visualization Of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
@@ -536,26 +536,26 @@ namespace StackingProgrammingTool
 
                             this.DepartmentsWrapper.Children.Add(department);
 
-                            // Generating a random color in the format of an array that contains three bytes
+                            // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                             byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                             this.colorsOfDepartments.Add(color);
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
-                                // Calculating Raw Cost and GSF of Each Program
+                                // Calculating Raw Cost And GSF Of Each Program
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                                 Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                                 this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text);
 
-                                // Adding To Total GSF and Total Raw Cost
+                                // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
                                 float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
                                 this.totalGSF += GSF;
                                 this.totalRawDepartmentCost += rawCost;
 
-                                // Add Program's Boxes for the added Departments
+                                // Add Program's Boxes For The Added Departments
                                 float stop = ((float)j) / ((float)initialNumberOfPrograms);
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
@@ -597,20 +597,20 @@ namespace StackingProgrammingTool
                             }
                         }
 
-                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        // All The Calculation, Prepration, And Visualization Of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
-                    // Input is equal to existing number of Departments
+                    // Input Is Equal To Existing Number Of Departments
                     if (existingDepartments == input)
                     {
                         return;
                     }
                 }
 
-                // If user input for Number of Departments is Equal to Zero
+                // If User Input For Number Of Departments Is Equal To Zero
                 else
                 {
                     MessageBox.Show("Please Enter A Number Larger Than Zero.");
@@ -619,10 +619,10 @@ namespace StackingProgrammingTool
             }
         }
 
-        /*---------------- Handeling Reset Departments button ----------------*/
+        /*---------------- Handeling Reset Departments Button ----------------*/
         private void ResetDepartments_Click(object sender, RoutedEventArgs e)
         {
-            // Clear all the lists
+            // Clear All The Lists
             this.DepartmentsWrapper.Children.Clear();
             this.stackingVisualization.Children.Clear();
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
@@ -642,7 +642,7 @@ namespace StackingProgrammingTool
             this.totalGSF = 0;
             this.totalRawDepartmentCost = 0;
 
-            // Setting up values of the initial dimensions of the Project Box
+            // Setting Up Values Of The Initial Dimensions Of The Project Box
             this.ProjectWidth.Text = initialProjectBoxDims[0].ToString();
             this.ProjectLength.Text = initialProjectBoxDims[1].ToString();
             this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
@@ -670,7 +670,7 @@ namespace StackingProgrammingTool
             this.boxesOfTheProject.Add(projectBox.name, projectBox);
             this.stackingVisualization.Children.Add(projectVisualizationBox);
 
-            // Generating initial Expanders and programs visualization
+            // Generating Initial Expanders And Programs Visualization
             for (int i = 0; i < initialNumberOfDepartments; i++)
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
@@ -679,27 +679,27 @@ namespace StackingProgrammingTool
 
                 this.DepartmentsWrapper.Children.Add(department);
 
-                /* Setting up initial Departments and Programs visualization */
-                // Generating a random color in the format of an array that contains three bytes
+                /* Setting Up Initial Departments And Programs Visualization */
+                // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                 this.colorsOfDepartments.Add(color);
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
-                    // Calculating Raw Cost and GSF of Each Program
+                    // Calculating Raw Cost And GSF Of Each Program
                     ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
                     Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                     Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                     Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                     this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
-                    // Adding To Total GSF and Total Raw Cost
+                    // Adding To Total GSF And Total Raw Cost
                     float GSF = ((float)(keyRooms.Value * DGSF.Value));
                     float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
                     this.totalGSF += GSF;
                     this.totalRawDepartmentCost += rawCost;
 
-                    // Generate gradient colors for programs of each department
+                    // Generate Gradient Colors For Programs Of Each Department
                     float stop = ((float)j) / ((float)initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
@@ -741,19 +741,19 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // All The Calculation, Prepration, and Visualization of The Output Data
+            // All The Calculation, Prepration, and Visualization Of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
             // Generate And Visualize Stacking Data To The Stacking Tab
             ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
         }
 
-        /* ----------------The Event for Setting Name of The Departments and The Number of Programs It Contains ---------------- */
+        /* ----------------The Event For Setting Name Of The Departments And The Number Of Programs It Contains ---------------- */
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
 
-            // Setting the Name of the Department (recognizing which button was pressed)
+            // Setting The Name Of The Department (Recognizing Which Button Was Pressed)
             if (btn.Name.Contains("SetNameButton"))
             {
                 Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
@@ -777,7 +777,7 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // Setting the Number of Programs in the Department (Number of Programs button was pressed) 
+            // Setting The Number Of Programs In The Department (Number Of Programs Button Was Pressed) 
             else
             {
                 Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
@@ -825,7 +825,7 @@ namespace StackingProgrammingTool
 
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(department);
 
-                        // Calculating total length of the exsiting programs
+                        // Calculating Total Length Of The Exsiting Programs
                         float totalExistingProgramsLength = new float();
 
                         for (int i = firstProgramBoxIndex; i < lastProgramBoxIndex; i++)
@@ -833,12 +833,12 @@ namespace StackingProgrammingTool
                             totalExistingProgramsLength += (float)this.stackingVisualization.Children[i].Bounds.SizeY;
                         }
 
-                        // Extracting Color of Department
+                        // Extracting Color Of Department
                         byte[] color = this.colorsOfDepartments[departmentIndex];
 
                         for (int i = 0; i < input; i++)
                         {
-                            // Generate gradient colors for programs of each department
+                            // Generate Gradient Colors For Programs Of Each Department
                             float stop = ((float)i) / ((float)(input));
 
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -854,19 +854,19 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                // Calculating Raw Cost and GSF of Each Program
+                                // Calculating Raw Cost And GSF Of Each Program
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + i.ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + i.ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + i.ToString()) as Slider;
                                 Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + i.ToString()) as Label;
 
-                                // Adding to Total GSF and Total Raw Cost
+                                // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
                                 float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
                                 this.totalGSF += GSF;
                                 this.totalRawDepartmentCost += rawCost;
 
-                                // Calculating Length of Each Program Based on Width of The Project Box
+                                // Calculating Length Of Each Program Based On Width Of The Project Box
                                 string newProgramBoxName = department.Name + "ProgramBox" + (i).ToString();
                                 float[] newProgramBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
                                 Point3D newProgramBoxCenter = new Point3D(0,
@@ -904,14 +904,14 @@ namespace StackingProgrammingTool
                             }
                         }
 
-                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        // All The Calculation, Prepration, And Visualization Of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
-                    // Decrease Number of Programs
+                    // Decrease Number Of Programs
                     if (input < existingPrograms)
                     {
                         int lastProgramBoxIndex = 0;
@@ -928,7 +928,7 @@ namespace StackingProgrammingTool
                             }
                         }
 
-                        // Extracting Color of Department
+                        // Extracting Color Of Department
                         byte[] color = this.colorsOfDepartments[departmentIndex];
 
                         int difference = existingPrograms - input;
@@ -936,10 +936,10 @@ namespace StackingProgrammingTool
 
                         for (int i = 0; i < existingPrograms; i++)
                         {
-                            // Change colors of the remaining programs
+                            // Change Colors Of The Remaining Programs
                             if (i < input)
                             {
-                                // Generate gradient colors for programs of each department
+                                // Generate Gradient Colors For Programs Of Each Department
                                 float stop = ((float)i) / ((float)(existingPrograms - difference));
 
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
@@ -952,17 +952,17 @@ namespace StackingProgrammingTool
                                 ((GeometryModel3D)(this.stackingVisualization.Children[firstProgramBoxIndex + i])).Material = programBoxMaterial;
 
                             }
-                            // Omit programs' properties and visualizations
+                            // Omit programs' properties And Visualizations
                             else
                             {
-                                // Calculating Raw Cost and GSF of Each Program
+                                // Calculating Raw Cost And GSF Of Each Program
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programs.RowDefinitions.Count - 1).ToString()) as ComboBox;
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
 
                                 string programBoxName = department.Name + "ProgramBox" + (i).ToString();
 
-                                // Subtracting From Total GSF and Total Raw Cost
+                                // Subtracting From Total GSF And Total Raw Cost
                                 this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
                                 this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
@@ -982,7 +982,7 @@ namespace StackingProgrammingTool
                                 programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
                                 elementsToRemove.Clear();
 
-                                // Remove The Removed Program From the Dictionary of Boxes
+                                // Remove The Removed Program From The Dictionary Of Boxes
                                 this.boxesOfTheProject.Remove(programBoxName);
 
                                 this.stackingVisualization.Children.RemoveAt(lastProgramBoxIndex);
@@ -990,7 +990,7 @@ namespace StackingProgrammingTool
                             }
                         }
 
-                        // All The Calculation, Prepration, and Visualization of The Output Data
+                        // All The Calculation, Prepration, And Visualization Of The Output Data
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
@@ -1124,7 +1124,7 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // Handeling Project Length changes events
+            // Handeling Project Length Changes Events
             if (btn.Name == "ProjectLengthButton")
             {
                 float projectLengthInput = new float();
@@ -1183,7 +1183,7 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // Handeling Program Height changes events
+            // Handeling Program Height Changes Events
             if (btn.Name == "FloorHeightButton")
             {
                 float floorHeightInput = 0;
@@ -1297,7 +1297,7 @@ namespace StackingProgrammingTool
         {
             ComboBox cbx = sender as ComboBox;
 
-            // Extracting The Department and The Program Indices of The Changed ComboBox
+            // Extracting The Department And The Program Indices Of The Changed ComboBox
             string programBoxName = cbx.Name.Replace("ComboBox", "ProgramBox");
             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
             int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
@@ -1309,7 +1309,7 @@ namespace StackingProgrammingTool
             String keyRoomsSliderName = cbx.Name.Replace("ComboBox", "Rooms");
             String DGSFSliderName = cbx.Name.Replace("ComboBox", "DGSF");
 
-            // Calculating Length of Each Program Based on Total Area of The Program and Width of The Project Box
+            // Calculating Length Of Each Program Based On Total Area Of The Program And Width Of The Project Box
             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, keyRoomsSliderName) as Slider;
             keyRooms.Minimum = this.functions[cbx.SelectedItem.ToString()]["keyMin"];
             keyRooms.Value = this.functions[cbx.SelectedItem.ToString()]["keyVal"];
@@ -1324,7 +1324,7 @@ namespace StackingProgrammingTool
             int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
             int programBoxVisualizationIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
 
-            // Calculating the Scale Factor of Each ProgramBox
+            // Calculating The Scale Factor Of Each ProgramBox
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
             // Calculating The Length Difference Of The ProgramBox 
             float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
@@ -1346,7 +1346,7 @@ namespace StackingProgrammingTool
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                        // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
+                        // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
                         float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
                         float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
                         float newGSF = (float)(keyRooms.Value * DGSF.Value);
@@ -1405,20 +1405,20 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // All The Calculation, Prepration, and Visualization of The Output Data
+            // All The Calculation, Prepration, And Visualization Of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /*---------------- Handeling Program Slider Change Event ----------------*/
         private void ProgramSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // ... Get Slider reference.
+            // ... Get Slider Reference.
             Slider slider = sender as Slider;
 
-            // Extracting Name Of The Program Box
+            // Extracting Name Of The ProgramBox
             string programBoxName = "";
 
-            // Extracting Department and Program Indices of The Changed Slider
+            // Extracting Department And Program Indices Of The Changed Slider
             int departmentIndex = new int();
             int programIndex = new int();
 
@@ -1430,13 +1430,13 @@ namespace StackingProgrammingTool
 
             if (slider.Name.Contains("Rooms"))
             {
-                // Extracting Name Of The Program Box
+                // Extracting Name Of The ProgramBox
                 programBoxName = slider.Name.Replace("Rooms", "ProgramBox");
 
                 departmentIndex = int.Parse(slider.Name.Replace("Room", "").Split('s')[0].Replace("D", "")) - 1;
                 programIndex = int.Parse(slider.Name.Replace("Room", "").Split('s')[1]);
 
-                // Extracting the Department That Changed
+                // Extracting The Department That Changed
                 department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
                 keyRooms = LogicalTreeHelper.FindLogicalNode(department, slider.Name) as Slider;
@@ -1445,13 +1445,13 @@ namespace StackingProgrammingTool
 
             if (slider.Name.Contains("DGSF"))
             {
-                // Extracting Name Of The Program Box
+                // Extracting Name Of The ProgramBox
                 programBoxName = slider.Name.Replace("DGSF", "ProgramBox");
 
                 departmentIndex = int.Parse(slider.Name.Replace("DGS", "").Split('F')[0].Replace("D", "")) - 1;
                 programIndex = int.Parse(slider.Name.Replace("DGS", "").Split('F')[1]);
 
-                // Extracting the Department That Changed
+                // Extracting The Department That Changed
                 department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
                 DGSF = LogicalTreeHelper.FindLogicalNode(department, slider.Name) as Slider;
@@ -1484,7 +1484,7 @@ namespace StackingProgrammingTool
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
                             ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                        // Calculating GSF and Cost Difference and Updating Values of The Boxes Dictionary
+                        // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
                         float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
                         float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
                         float newGSF = (float)(keyRooms.Value * DGSF.Value);
@@ -1549,11 +1549,11 @@ namespace StackingProgrammingTool
                 }
             }
 
-            // All The Calculation, Prepration, and Visualization of The Output Data
+            // All The Calculation, Prepration, And Visualization Of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
-        /* ########################################################### Handeling Events of The Cost Tab ########################################################### */
+        /* ########################################################### Handeling Events Of The Cost Tab ########################################################### */
 
         /* ----------------------------------- Handeling Total Budget Button Event ----------------------------------- */
         private void TotalBudgetButton_Click(object sender, RoutedEventArgs e)
@@ -1683,7 +1683,7 @@ namespace StackingProgrammingTool
             {
                 this.landCost = tempLandCost;
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
@@ -1716,7 +1716,7 @@ namespace StackingProgrammingTool
             {
                 this.generalCosts = tempGeneralCosts;
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
@@ -1749,7 +1749,7 @@ namespace StackingProgrammingTool
             {
                 this.designContingency = tempDesignContingency;
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
@@ -1782,7 +1782,7 @@ namespace StackingProgrammingTool
             {
                 this.buildContingency = tempBuildContingency;
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
@@ -1815,7 +1815,7 @@ namespace StackingProgrammingTool
             {
                 this.cCIP = tempCCIP;
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
@@ -1848,7 +1848,7 @@ namespace StackingProgrammingTool
             {
                 this.cMFee = tempCMFee;
 
-                // All The Calculation, Prepration, and Visualization of The Output Data
+                // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
@@ -1862,9 +1862,9 @@ namespace StackingProgrammingTool
         }
 
 
-        /* ########################################################### Stacking and Programs Events ########################################################### */
+        /* ########################################################### Stacking And Programs Events ########################################################### */
 
-        /* ----------------------------------- Handeling Programs CheckBox Event and Programs SubWindow ----------------------------------- */
+        /* ----------------------------------- Handeling Programs CheckBox Event And Programs SubWindow ----------------------------------- */
         private void Programs_Click(object sender, RoutedEventArgs e)
         {
             CheckBox checkBox = sender as CheckBox;
@@ -1999,7 +1999,6 @@ namespace StackingProgrammingTool
                                 this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter, this.boxesOfTheProject[newProgramBoxName].boxDims,
                                 this.boxesOfTheProject[newProgramBoxName].boxColor);
-
                         }
 
                         // Calculating Y Value Of The Center Of The New Box
@@ -2120,7 +2119,7 @@ namespace StackingProgrammingTool
                 this.TotalBGSF.Text = this.totalBGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
             }
 
-            // Calculating and Visualizing Cost/GSF
+            // Calculating And Visualizing Cost/GSF
             this.costPerGSF = this.constructionCost / this.totalBGSF;
             this.CostPerGSF.Text = this.costPerGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
         }
