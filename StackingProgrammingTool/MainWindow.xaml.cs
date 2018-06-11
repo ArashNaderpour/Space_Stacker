@@ -1008,6 +1008,12 @@ namespace StackingProgrammingTool
                                     this.stackingVisualization.Children.RemoveAt(i);
                                     this.stackingVisualization.Children.Insert(i, programBoxVisualization);
                                 }
+
+                                // Decrease Index Of The Programs In Higher Floors
+                                if (this.boxesOfTheProject[programBoxName].floor > programFloor)
+                                {
+                                    this.boxesOfTheProject[programBoxName].visualizationIndex = i;
+                                }
                             }
                         }
 
