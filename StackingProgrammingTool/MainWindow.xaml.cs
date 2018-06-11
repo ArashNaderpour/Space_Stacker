@@ -956,10 +956,11 @@ namespace StackingProgrammingTool
                                     // Move Programs Of The Other Departments That Exists In The Removed Department's Floor
                                     for (int j = i + 1; j < this.stackingVisualization.Children.Count; j++)
                                     {
+                                        string newProgramBoxName = this.stackingVisualization.Children[j].GetName();
+
                                         if (this.boxesOfTheProject[this.stackingVisualization.Children[j].GetName()].floor == programFloor &&
                                             department.Name != this.stackingVisualization.Children[j].GetName().Replace("ProgramBo", "").Split('x')[0])
                                         {
-                                            string newProgramBoxName = this.stackingVisualization.Children[j].GetName();
 
                                             float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                                                 (float)this.stackingVisualization.Children[j].Bounds.SizeY,
@@ -972,14 +973,14 @@ namespace StackingProgrammingTool
                                             GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                                 ((GeometryModel3D)this.stackingVisualization.Children[j]).Material,
                                                 ((GeometryModel3D)this.stackingVisualization.Children[j]).Material);
-
+                                    
                                             this.stackingVisualization.Children.RemoveAt(j);
                                             this.stackingVisualization.Children.Insert(j, programBoxVisualization);
                                             this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
                                             this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
                                             // Add Index Of The Box To The Dictionary
-                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = j - 1;
 
                                             // Visualizations Of The Labels Of The Boxes
                                             VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, j,
@@ -987,10 +988,10 @@ namespace StackingProgrammingTool
                                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
                                         }
                                         // Decrease Index Of The Programs In Higher Floors
-                                        if (this.boxesOfTheProject[programBoxName].floor > programFloor &&
+                                        if (this.boxesOfTheProject[this.stackingVisualization.Children[j].GetName()].floor > programFloor &&
                                             department.Name != this.stackingVisualization.Children[j].GetName().Replace("ProgramBo", "").Split('x')[0])
                                         {
-                                            this.boxesOfTheProject[programBoxName].visualizationIndex = i;
+                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = j - 1;
                                         }
                                     }
 
@@ -1044,6 +1045,12 @@ namespace StackingProgrammingTool
 
                         // Omit Stacking Data From The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+
+                        for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
+                        {
+                            MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" +
+                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
+                        }
                     }
 
                     if (input == existingPrograms)
