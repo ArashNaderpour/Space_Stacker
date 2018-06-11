@@ -951,6 +951,10 @@ namespace StackingProgrammingTool
                                     programFloor = this.boxesOfTheProject[programBoxName].floor;
                                     programLength = this.boxesOfTheProject[programBoxName].boxDims[1];
 
+                                    // Subtracting From Total GSF And Total Raw Cost
+                                    this.totalGSF -= this.boxesOfTheProject[programBoxName].boxTotalGSFValue;
+                                    this.totalRawDepartmentCost -= this.boxesOfTheProject[programBoxName].totalRawCostValue;
+
                                     // Remove Program's Data From The Dictionary
                                     this.boxesOfTheProject.Remove(programBoxName);
 
@@ -960,15 +964,6 @@ namespace StackingProgrammingTool
                                     // Remove Visualization Labels
                                     this.programVisualizationLabelsGroup.Children.RemoveAt((2 * i) - 1);
                                     this.programVisualizationLabelsGroup.Children.RemoveAt((2 * i) - 2);
-
-                                    // Calculating Raw Cost And GSF Of Each Program
-                                    ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programs.RowDefinitions.Count - 1).ToString()) as ComboBox;
-                                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
-                                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
-
-                                    // Subtracting From Total GSF And Total Raw Cost
-                                    this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
-                                    this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
 
                                     // Removing UI Elemets From The Controller Window
                                     foreach (UIElement element in programs.Children)
