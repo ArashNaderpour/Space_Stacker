@@ -2041,7 +2041,7 @@ namespace StackingProgrammingTool
                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i - 1;
                         }
                         // If Old Index Is Larger Than New Index
-                        if (oldVisualizationBoxIndex > i && i >= newVisualizationBoxIndex)
+                        if (oldVisualizationBoxIndex > i && i > newVisualizationBoxIndex)
                         {
                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i + 1;
                         }
