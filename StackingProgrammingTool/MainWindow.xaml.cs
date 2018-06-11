@@ -2008,7 +2008,7 @@ namespace StackingProgrammingTool
                         }
 
                         // If New Index Is Larger Than Old Index
-                        if (oldVisualizationBoxIndex < i && i < newVisualizationBoxIndex)
+                        if (oldVisualizationBoxIndex < i && i <= newVisualizationBoxIndex)
                         {
                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i - 1;
                         }
