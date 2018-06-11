@@ -914,79 +914,112 @@ namespace StackingProgrammingTool
                     // Decrease Number Of Programs
                     if (input < existingPrograms)
                     {
-                        int lastProgramBoxIndex = 0;
-                        int firstProgramBoxIndex = 1;
-                        for (int i = 0; i < departmentIndex + 1; i++)
-                        {
-                            Expander tempDepartment = this.DepartmentsWrapper.Children[i] as Expander;
-                            StackPanel expanderContent = tempDepartment.Content as StackPanel;
-                            Grid programsGrid = expanderContent.Children[2] as Grid;
-                            lastProgramBoxIndex += programsGrid.RowDefinitions.Count;
-                            if (i < departmentIndex)
-                            {
-                                firstProgramBoxIndex += programsGrid.RowDefinitions.Count;
-                            }
-                        }
-
-                        // Extracting Color Of Department
-                        byte[] color = this.colorsOfDepartments[departmentIndex];
+                        List<byte[]> newProgramColors = new List<byte[]>();
 
                         int difference = existingPrograms - input;
+
+                        // Extracting Color Of Department
+                        byte[] departmentColor = this.colorsOfDepartments[departmentIndex];
+
+                        // Generate New Gradient Color For Programs Of Each Department
+                        for (int i = 0; i < input; i++)
+                        {
+                            float stop = ((float)i) / ((float)(input));
+
+                            byte[] newColor = VisualizationMethods.GenerateGradientColor(departmentColor, stop);
+                            newProgramColors.Add(newColor);
+                        }
+
                         List<UIElement> elementsToRemove = new List<UIElement>();
 
-                        for (int i = 0; i < existingPrograms; i++)
+                        int programFloor = new int();
+                        float programLength = new float();
+
+                        for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
                         {
-                            // Change Colors Of The Remaining Programs
-                            if (i < input)
+                            string programBoxName = this.stackingVisualization.Children[i].GetName();
+                            string departmentName = programBoxName.Replace("ProgramBo", "").Split('x')[0];
+                            int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
+
+                            if (departmentName == department.Name)
                             {
-                                // Generate Gradient Colors For Programs Of Each Department
-                                float stop = ((float)i) / ((float)(existingPrograms - difference));
 
-                                byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                                // Omit Programs' Properties And Visualizations
+                                if (programIndex >= input)
+                                {
+                                    // Extracting Floor And Length Of The Removed Program
+                                    programFloor = this.boxesOfTheProject[programBoxName].floor;
+                                    programLength = this.boxesOfTheProject[programBoxName].boxDims[1];
 
-                                // Setting Program Label Background Color
-                                ExtraMethods.ChangeLabelColor(department, i, gradient);
+                                    // Remove Program's Data From The Dictionary
+                                    this.boxesOfTheProject.Remove(programBoxName);
 
-                                Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+                                    // Remove Program Visualization Box
+                                    this.stackingVisualization.Children.RemoveAt(i);
 
-                                ((GeometryModel3D)(this.stackingVisualization.Children[firstProgramBoxIndex + i])).Material = programBoxMaterial;
+                                    // Remove Visualization Labels
+                                    this.programVisualizationLabelsGroup.Children.RemoveAt((2 * i) - 1);
+                                    this.programVisualizationLabelsGroup.Children.RemoveAt((2 * i) - 2);
 
+                                    // Calculating Raw Cost And GSF Of Each Program
+                                    ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programs.RowDefinitions.Count - 1).ToString()) as ComboBox;
+                                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
+                                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
+
+                                    // Subtracting From Total GSF And Total Raw Cost
+                                    this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
+                                    this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
+
+                                    // Removing UI Elemets From The Controller Window
+                                    foreach (UIElement element in programs.Children)
+                                    {
+                                        if (Grid.GetRow(element) == programs.RowDefinitions.Count - 1)
+                                        {
+                                            elementsToRemove.Add(element);
+                                        }
+                                    }
+                                    foreach (UIElement element in elementsToRemove)
+                                    {
+                                        programs.Children.Remove(element);
+                                    }
+
+                                    programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
+                                    elementsToRemove.Clear();
+
+                                    // Decreaseing The Enumerator
+                                    i += -1;
+                                }
+                                else
+                                {
+                                    // Change Material Of The Existing ProgramBoxes Of The Department
+                                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material = MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
+                                        newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
+
+                                    // Change Color Of The Labels Of The Existing UIs Of The Department
+                                    ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
+                                }
                             }
-                            // Omit programs' properties And Visualizations
+
+                            // Move Other Programs That Exsits In The Floor Of The Department
                             else
                             {
-                                // Calculating Raw Cost And GSF Of Each Program
-                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programs.RowDefinitions.Count - 1).ToString()) as ComboBox;
-                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
-                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programs.RowDefinitions.Count - 1).ToString()) as Slider;
-
-                                string programBoxName = department.Name + "ProgramBox" + (i).ToString();
-
-                                // Subtracting From Total GSF And Total Raw Cost
-                                this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
-                                this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * this.functions[program.SelectedItem.ToString()]["cost"];
-
-                                // Removing UI Elemets From The Controller Window
-                                foreach (UIElement element in programs.Children)
+                                if (this.boxesOfTheProject[programBoxName].floor == programFloor)
                                 {
-                                    if (Grid.GetRow(element) == programs.RowDefinitions.Count - 1)
-                                    {
-                                        elementsToRemove.Add(element);
-                                    }
+                                    string newProgramBoxName = programBoxName;
+                                    float[] newProgramBoxDims = this.boxesOfTheProject[newProgramBoxName].boxDims;
+                                    Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y - programLength,
+                                        this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
+
+                                    GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
+                                        ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+                                        ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+
+                                    this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+                                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex = i;
+
+                                    this.stackingVisualization.Children.RemoveAt(i);
+                                    this.stackingVisualization.Children.Insert(i, programBoxVisualization);
                                 }
-                                foreach (UIElement element in elementsToRemove)
-                                {
-                                    programs.Children.Remove(element);
-                                }
-
-                                programs.RowDefinitions.RemoveAt(programs.RowDefinitions.Count - 1);
-                                elementsToRemove.Clear();
-
-                                // Remove The Removed Program From The Dictionary Of Boxes
-                                this.boxesOfTheProject.Remove(programBoxName);
-
-                                this.stackingVisualization.Children.RemoveAt(lastProgramBoxIndex);
-                                lastProgramBoxIndex += -1;
                             }
                         }
 
@@ -996,6 +1029,7 @@ namespace StackingProgrammingTool
                         // Omit Stacking Data From The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
+
                     if (input == existingPrograms)
                     {
                         return;
@@ -1993,7 +2027,7 @@ namespace StackingProgrammingTool
 
                             this.stackingVisualization.Children.RemoveAt(i);
                             this.stackingVisualization.Children.Insert(i, programBoxVisualization);
-                           
+
                             // Visualizations Of The Labels Of The Boxes
                             VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
                                 this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
@@ -2043,7 +2077,7 @@ namespace StackingProgrammingTool
 
                     // Add Index Of The Box To The Dictionary
                     this.boxesOfTheProject[programBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(newProgramBoxVisualization);
-                    
+
                     // Visualizations Of The Labels Of The Boxes
                     VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, oldVisualizationBoxIndex,
                         this.boxesOfTheProject[programBoxName].visualizationIndex, this.boxesOfTheProject[programBoxName].visualizationLabel,
