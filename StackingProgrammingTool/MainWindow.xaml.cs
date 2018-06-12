@@ -995,8 +995,7 @@ namespace StackingProgrammingTool
                                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
                                         }
                                         // Decrease Index Of The Programs In Higher Floors
-                                        if (this.boxesOfTheProject[this.stackingVisualization.Children[j].GetName()].floor > programFloor &&
-                                            department.Name != this.stackingVisualization.Children[j].GetName().Replace("ProgramBo", "").Split('x')[0])
+                                        if (this.boxesOfTheProject[this.stackingVisualization.Children[j].GetName()].floor > programFloor)
                                         {
                                             this.boxesOfTheProject[newProgramBoxName].visualizationIndex = j - 1;
                                         }
