@@ -980,11 +980,11 @@ namespace StackingProgrammingTool
                                             this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
                                             // Add Index Of The Box To The Dictionary
-                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = j - 1;
+                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = j - 1 ;
 
                                             // Visualizations Of The Labels Of The Boxes
                                             VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, j,
-                                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex + 1, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
                                         }
                                         // Decrease Index Of The Programs In Higher Floors
@@ -1001,7 +1001,7 @@ namespace StackingProgrammingTool
 
                                     // Remove Program's Data From The Dictionary
                                     this.boxesOfTheProject.Remove(programBoxName);
-
+                                    MessageBox.Show(i.ToString());
                                     // Remove Program Visualization Box
                                     this.stackingVisualization.Children.RemoveAt(i);
 
@@ -1045,12 +1045,6 @@ namespace StackingProgrammingTool
 
                         // Omit Stacking Data From The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
-
-                        for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
-                        {
-                            MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" +
-                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
-                        }
                     }
 
                     if (input == existingPrograms)
