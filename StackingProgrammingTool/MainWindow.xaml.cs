@@ -457,11 +457,11 @@ namespace StackingProgrammingTool
                                     // Move Programs Of The Other Departments That Exists In The Removed Department's Floor
                                     for (int k = 1; k < this.stackingVisualization.Children.Count; k++)
                                     {
+                                        string newProgramBoxName = this.stackingVisualization.Children[k].GetName();
+
                                         if (this.boxesOfTheProject[this.stackingVisualization.Children[k].GetName()].floor == programFloor && j < k &&
                                             department.Name != this.stackingVisualization.Children[k].GetName().Replace("ProgramBo", "").Split('x')[0])
                                         {
-                                            string newProgramBoxName = this.stackingVisualization.Children[k].GetName();
-
                                             float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
                                                 (float)this.stackingVisualization.Children[k].Bounds.SizeY,
                                                 (float)this.stackingVisualization.Children[k].Bounds.SizeZ };
@@ -480,12 +480,19 @@ namespace StackingProgrammingTool
                                             this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
                                             // Add Index Of The Box To The Dictionary
-                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = k - 1;
 
                                             // Visualizations Of The Labels Of The Boxes
                                             VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, k,
-                                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex + 1, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                                 newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+                                        }
+
+                                        // Decrease Index Of The Programs In Higher Floors
+                                        if (this.boxesOfTheProject[this.stackingVisualization.Children[k].GetName()].floor > programFloor &&
+                                            department.Name != this.stackingVisualization.Children[k].GetName().Replace("ProgramBo", "").Split('x')[0])
+                                        {
+                                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex = k - 1;
                                         }
                                     }
 
@@ -1001,7 +1008,7 @@ namespace StackingProgrammingTool
 
                                     // Remove Program's Data From The Dictionary
                                     this.boxesOfTheProject.Remove(programBoxName);
-                                    MessageBox.Show(i.ToString());
+                             
                                     // Remove Program Visualization Box
                                     this.stackingVisualization.Children.RemoveAt(i);
 
