@@ -376,160 +376,153 @@ namespace StackingProgrammingTool
         }
 
         /* --------------------- Method For Adding Data Of The Programs To The Program Window --------------------- */
-        public static void DisplayProgramData(Dictionary<String, Box> boxes, Model3DGroup stackingVisualization,
+        public static void DisplayProgramData(Dictionary<String, Box> boxes, StackPanel departmentsWrapper,
             ProgramsSubWindow subWindow)
         {
-            char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+            // Index Of The Row For each new Program
+            int rowIndex = 0;
 
-            for (int i = 0; i < stackingVisualization.Children.Count; i++)
+            for (int i = 0; i < departmentsWrapper.Children.Count; i++)
             {
-                RowDefinition gridRow = new RowDefinition();
-                gridRow.Height = new GridLength(40);
-                subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
+                Expander department = departmentsWrapper.Children[i] as Expander;
+                //StackPanel programs = department.Content as StackPanel;
+                Grid programs = LogicalTreeHelper.FindLogicalNode(departmentsWrapper, department.Name + "Programs") as Grid;
 
-                // Project Box Is Not Included
-                if (i > 0)
+                foreach (DockPanel element in programs.Children)
                 {
-                    string boxName = ((GeometryModel3D)stackingVisualization.Children[i]).GetName();
-                    int index = int.Parse(boxName.Split('x')[1]);
-
-                    SolidColorBrush backgroundColor = new SolidColorBrush(boxes[boxName].boxColor);
-                    SolidColorBrush foregroundColor = new SolidColorBrush();
-
-                    if ((boxes[boxName].boxColor.R + boxes[boxName].boxColor.G + boxes[boxName].boxColor.B) / 3 < 120)
+                    if (Grid.GetColumn(element) == 0)
                     {
-                        foregroundColor = Brushes.White;
+                        RowDefinition gridRow = new RowDefinition();
+                        gridRow.Height = new GridLength(40);
+                        subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
+
+                        // The Label Of The Program From The Controller Window
+                        Label original = element.Children[0] as Label;
+
+                        // Name Of The ProgramBox
+                        string boxName = original.Name.Replace("Label", "ProgramBox");
+
+                        // Generate And Display Label Of Each Program
+                        Label programLabel = new Label();
+                        programLabel.Content = original.Content;
+                        programLabel.Height = 30;
+                        programLabel.FontSize = 14;
+                        programLabel.FontWeight = FontWeights.DemiBold;
+                        programLabel.Foreground = original.Foreground;
+                        programLabel.Background = original.Background;
+                        programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        programLabel.VerticalContentAlignment = VerticalAlignment.Center;
+                        programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        programLabel.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(programLabel, 0);
+                        Grid.SetRow(programLabel, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(programLabel);
+
+                        // Generate And Display Department Of Each Program
+                        Label programDepartment = new Label();
+                        programDepartment.Content = boxes[boxName].departmentName;
+                        programDepartment.Height = 30;
+                        programDepartment.FontSize = 14;
+                        programDepartment.FontWeight = FontWeights.DemiBold;
+                        programDepartment.Foreground = original.Foreground;
+                        programDepartment.Background = original.Background;
+                        programDepartment.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        programDepartment.VerticalContentAlignment = VerticalAlignment.Center;
+                        programDepartment.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        programDepartment.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(programDepartment, 1);
+                        Grid.SetRow(programDepartment, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(programDepartment);
+
+                        // Generate And Display Function Of Each Program
+                        Label programFunction = new Label();
+                        programFunction.Content = boxes[boxName].function;
+                        programFunction.Height = 30;
+                        programFunction.FontSize = 14;
+                        programFunction.FontWeight = FontWeights.DemiBold;
+                        programFunction.Foreground = original.Foreground;
+                        programFunction.Background = original.Background;
+                        programFunction.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        programFunction.VerticalContentAlignment = VerticalAlignment.Center;
+                        programFunction.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        programFunction.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(programFunction, 2);
+                        Grid.SetRow(programFunction, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(programFunction);
+
+                        // Generate And Display Floor Of Each Program
+                        Label programFloor = new Label();
+                        programFloor.Content = boxes[boxName].floor;
+                        programFloor.Height = 30;
+                        programFloor.FontSize = 14;
+                        programFloor.FontWeight = FontWeights.DemiBold;
+                        programFloor.Foreground = original.Foreground;
+                        programFloor.Background = original.Background;
+                        programFloor.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        programFloor.VerticalContentAlignment = VerticalAlignment.Center;
+                        programFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        programFloor.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(programFloor, 3);
+                        Grid.SetRow(programFloor, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(programFloor);
+
+                        // Generate And Display Total Program GSF Of Each Program
+                        Label programTotalGSF = new Label();
+                        programTotalGSF.Content = boxes[boxName].boxTotalGSFValue.ToString("C0",
+                            System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
+                        programTotalGSF.Height = 30;
+                        programTotalGSF.FontSize = 14;
+                        programTotalGSF.FontWeight = FontWeights.DemiBold;
+                        programTotalGSF.Foreground = original.Foreground;
+                        programTotalGSF.Background = original.Background;
+                        programTotalGSF.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        programTotalGSF.VerticalContentAlignment = VerticalAlignment.Center;
+                        programTotalGSF.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        programTotalGSF.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(programTotalGSF, 4);
+                        Grid.SetRow(programTotalGSF, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(programTotalGSF);
+
+                        // Generate And Display Cost Per GSF Of Each Program
+                        Label costPerGSF = new Label();
+                        costPerGSF.Content = ExtraMethods.CastDollar(boxes[boxName].cost);
+                        costPerGSF.Height = 30;
+                        costPerGSF.FontSize = 14;
+                        costPerGSF.FontWeight = FontWeights.DemiBold;
+                        costPerGSF.Foreground = original.Foreground;
+                        costPerGSF.Background = original.Background;
+                        costPerGSF.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        costPerGSF.VerticalContentAlignment = VerticalAlignment.Center;
+                        costPerGSF.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        costPerGSF.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(costPerGSF, 5);
+                        Grid.SetRow(costPerGSF, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(costPerGSF);
+
+                        // Generate And Display Total Raw Cost Program
+                        Label programRawCost = new Label();
+                        programRawCost.Content = ExtraMethods.CastDollar(boxes[boxName].totalRawCostValue);
+                        programRawCost.Height = 30;
+                        programRawCost.FontSize = 14;
+                        programRawCost.FontWeight = FontWeights.DemiBold;
+                        programRawCost.Foreground = original.Foreground;
+                        programRawCost.Background = original.Background;
+                        programRawCost.HorizontalContentAlignment = HorizontalAlignment.Center;
+                        programRawCost.VerticalContentAlignment = VerticalAlignment.Center;
+                        programRawCost.HorizontalAlignment = HorizontalAlignment.Stretch;
+                        programRawCost.VerticalAlignment = VerticalAlignment.Center;
+                        Grid.SetColumn(programRawCost, 6);
+                        Grid.SetRow(programRawCost, rowIndex);
+                        subWindow.ProgramsDataChart.Children.Add(programRawCost);
+
+                        rowIndex += 1;
                     }
-                    else
-                    {
-                        foregroundColor = Brushes.Black;
-                    }
-
-                    // Generate And Display Label Of Each Program
-                    Label programLabel = new Label();
-                    if (index < alphabet.Length)
-                    {
-                        programLabel.Content = alphabet[index].ToString();
-                    }
-                    else
-                    {
-                        programLabel.Content = (index - alphabet.Length).ToString();
-                    }
-                    programLabel.Height = 30;
-                    programLabel.FontSize = 14;
-                    programLabel.FontWeight = FontWeights.DemiBold;
-                    programLabel.Foreground = foregroundColor;
-                    programLabel.Background = backgroundColor;
-                    programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    programLabel.VerticalContentAlignment = VerticalAlignment.Center;
-                    programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    programLabel.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(programLabel, 0);
-                    Grid.SetRow(programLabel, i);
-                    subWindow.ProgramsDataChart.Children.Add(programLabel);
-
-                    // Generate And Display Department Of Each Program
-                    Label programDepartment = new Label();
-                    programDepartment.Content = boxes[boxName].departmentName;
-                    programDepartment.Height = 30;
-                    programDepartment.FontSize = 14;
-                    programDepartment.FontWeight = FontWeights.DemiBold;
-                    programDepartment.Foreground = foregroundColor;
-                    programDepartment.Background = backgroundColor;
-                    programDepartment.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    programDepartment.VerticalContentAlignment = VerticalAlignment.Center;
-                    programDepartment.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    programDepartment.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(programDepartment, 1);
-                    Grid.SetRow(programDepartment, i);
-                    subWindow.ProgramsDataChart.Children.Add(programDepartment);
-
-                    // Generate And Display Function Of Each Program
-                    Label programFunction = new Label();
-                    programFunction.Content = boxes[boxName].function;
-                    programFunction.Height = 30;
-                    programFunction.FontSize = 14;
-                    programFunction.FontWeight = FontWeights.DemiBold;
-                    programFunction.Foreground = foregroundColor;
-                    programFunction.Background = backgroundColor;
-                    programFunction.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    programFunction.VerticalContentAlignment = VerticalAlignment.Center;
-                    programFunction.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    programFunction.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(programFunction, 2);
-                    Grid.SetRow(programFunction, i);
-                    subWindow.ProgramsDataChart.Children.Add(programFunction);
-
-                    // Generate And Display Floor Of Each Program
-                    Label programFloor = new Label();
-                    programFloor.Content = boxes[boxName].floor;
-                    programFloor.Height = 30;
-                    programFloor.FontSize = 14;
-                    programFloor.FontWeight = FontWeights.DemiBold;
-                    programFloor.Foreground = foregroundColor;
-                    programFloor.Background = backgroundColor;
-                    programFloor.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    programFloor.VerticalContentAlignment = VerticalAlignment.Center;
-                    programFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    programFloor.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(programFloor, 3);
-                    Grid.SetRow(programFloor, i);
-                    subWindow.ProgramsDataChart.Children.Add(programFloor);
-
-                    // Generate And Display Total Program GSF Of Each Program
-                    Label programTotalGSF = new Label();
-                    programTotalGSF.Content = boxes[boxName].boxTotalGSFValue.ToString("C0",
-                        System.Globalization.CultureInfo.CurrentCulture).Remove(0, 1);
-                    programTotalGSF.Height = 30;
-                    programTotalGSF.FontSize = 14;
-                    programTotalGSF.FontWeight = FontWeights.DemiBold;
-                    programTotalGSF.Foreground = foregroundColor;
-                    programTotalGSF.Background = backgroundColor;
-                    programTotalGSF.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    programTotalGSF.VerticalContentAlignment = VerticalAlignment.Center;
-                    programTotalGSF.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    programTotalGSF.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(programTotalGSF, 4);
-                    Grid.SetRow(programTotalGSF, i);
-                    subWindow.ProgramsDataChart.Children.Add(programTotalGSF);
-
-                    // Generate And Display Cost Per GSF Of Each Program
-                    Label costPerGSF = new Label();
-                    costPerGSF.Content = ExtraMethods.CastDollar(boxes[boxName].cost);
-                    costPerGSF.Height = 30;
-                    costPerGSF.FontSize = 14;
-                    costPerGSF.FontWeight = FontWeights.DemiBold;
-                    costPerGSF.Foreground = foregroundColor;
-                    costPerGSF.Background = backgroundColor;
-                    costPerGSF.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    costPerGSF.VerticalContentAlignment = VerticalAlignment.Center;
-                    costPerGSF.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    costPerGSF.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(costPerGSF, 5);
-                    Grid.SetRow(costPerGSF, i);
-                    subWindow.ProgramsDataChart.Children.Add(costPerGSF);
-
-                    // Generate And Display Total Raw Cost Program
-                    Label programRawCost = new Label();
-                    programRawCost.Content = ExtraMethods.CastDollar(boxes[boxName].totalRawCostValue);
-                    programRawCost.Height = 30;
-                    programRawCost.FontSize = 14;
-                    programRawCost.FontWeight = FontWeights.DemiBold;
-                    programRawCost.Foreground = foregroundColor;
-                    programRawCost.Background = backgroundColor;
-                    programRawCost.HorizontalContentAlignment = HorizontalAlignment.Center;
-                    programRawCost.VerticalContentAlignment = VerticalAlignment.Center;
-                    programRawCost.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    programRawCost.VerticalAlignment = VerticalAlignment.Center;
-                    Grid.SetColumn(programRawCost, 6);
-                    Grid.SetRow(programRawCost, i);
-                    subWindow.ProgramsDataChart.Children.Add(programRawCost);
                 }
             }
         }
 
         /* --------------------- Method For Generating And Displaying Stacking Controllers --------------------- */
-        public static void GenerateProgramsStacking(Dictionary<String, Box> boxes, StackPanel departmentsWrapper, Model3DGroup stackingVisualization,
+        public static void GenerateProgramsStacking(Dictionary<String, Box> boxes, StackPanel departmentsWrapper,
             Grid programsStackingGrid, RoutedEventHandler Button_Clicked)
         {
             // Clear Rows Of The Grid
@@ -538,8 +531,8 @@ namespace StackingProgrammingTool
 
             // Index Of The Row For each new Program
             int rowIndex = 0;
-            
-            for(int i = 0; i < departmentsWrapper.Children.Count; i++)
+
+            for (int i = 0; i < departmentsWrapper.Children.Count; i++)
             {
                 Expander department = departmentsWrapper.Children[i] as Expander;
                 //StackPanel programs = department.Content as StackPanel;
@@ -614,4 +607,7 @@ namespace StackingProgrammingTool
         }
     }
 }
+
+
+
 
