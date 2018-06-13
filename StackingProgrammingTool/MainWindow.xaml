@@ -33,16 +33,43 @@
                                        Background="#ced6e2" TextAlignment="Center"/>
                             <!--==============-->
                             <!-- Welcome Note-->
-                            <TextBlock HorizontalAlignment="Left" FontSize="14" Margin="0 10 0 0">
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping="Wrap" TextAlignment="Justify">
                                 Thank you for choosing this software.<LineBreak/>
                                 For more information please visit: 
                             </TextBlock>
-                            
+                            <!--=============-->
                             <!--Description Header-->
                             <TextBlock Text="Description" HorizontalAlignment="Stretch"
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
                             <!--==============-->
+                            <!-- Description Note-->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                The "Stacking Programming Tool" was designed to provide assistance for 
+                                architects and project managers during programming phase of the project.<LineBreak/>
+                                The tool generates a simple visualization of project's building that contains
+                                various function in each floor based on the inputs of the user. This schematic illustration
+                                provides information about occupied and unoccupied space in each floor of the building based
+                                on the area of each funtionality. It also possible to change the floor of various functions
+                                of the project to fit them properly in the boundary limits of the building.<LineBreak/>
+                                Apart from that, the tool generates vaious information about project costs, like 
+                                "Construction Cost", "Project Cost", "Budget Difference", and "Cost per Square Feet"
+                                based on user inputs. 
+                            </TextBlock>
+                            <!--=============-->
+                            <!--Instruction Header-->
+                            <TextBlock Text="Instruction" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <!--==============-->
+                            <!-- Instruction Note-->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                
+                            </TextBlock>
+                            <!--=============-->
                             <!--=============-->
                         </StackPanel>
                     </ScrollViewer>
