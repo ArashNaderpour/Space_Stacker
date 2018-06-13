@@ -300,7 +300,7 @@ namespace StackingProgrammingTool
                 programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
                 programLabel.Margin = new Thickness(2, 5, 2, 0);
                 programLabel.Width = 25;
-
+        
                 if (i < alphabet.Length)
                 {
                     programLabel.Content = alphabet[i];
