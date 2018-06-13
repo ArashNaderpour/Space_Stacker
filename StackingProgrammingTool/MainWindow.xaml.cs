@@ -345,7 +345,7 @@ namespace StackingProgrammingTool
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Generate And Visualize Stacking Data Of The Stacking Tab
-                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject,
+                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper,
                     this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
 
                 // Enabling The Disabled Controllers
@@ -526,7 +526,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
                     // Increase Number Of Departments
@@ -608,7 +608,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
                     // Input Is Equal To Existing Number Of Departments
                     if (existingDepartments == input)
@@ -752,7 +752,7 @@ namespace StackingProgrammingTool
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
             // Generate And Visualize Stacking Data To The Stacking Tab
-            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
         }
 
         /* ----------------The Event For Setting Name Of The Departments And The Number Of Programs It Contains ---------------- */
@@ -915,7 +915,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
                     // Decrease Number Of Programs
@@ -1050,7 +1050,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.stackingVisualization, this.ProgramsStackingGrid, StackingButton_Click);
                     }
 
                     if (input == existingPrograms)
