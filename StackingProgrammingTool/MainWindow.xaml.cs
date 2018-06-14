@@ -832,11 +832,12 @@ namespace StackingProgrammingTool
                             byte[] newColor = VisualizationMethods.GenerateGradientColor(departmentColor, stop);
                             newProgramColors.Add(newColor);
                         }
-
+                     
                         // Calculating Total Length Of The Exsiting Programs
                         int newProgramIndex = 0;
                         int newVisualizationIndex = new int();
 
+                        // Index Of First Program In The Department
                         int firstProgramIndex = 1;
 
                         for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
@@ -860,7 +861,8 @@ namespace StackingProgrammingTool
 
                                     // Update ProgramBox Color
                                     ((GeometryModel3D)(this.stackingVisualization.Children[i])).Material =
-                                        MaterialHelper.CreateMaterial(this.boxesOfTheProject[programBoxName].boxColor);
+                                        MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
+                                        newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
 
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
@@ -874,6 +876,14 @@ namespace StackingProgrammingTool
                                 {
                                     if (programIndex >= newProgramIndex)
                                     {
+                                        // Update ProgramBox Color
+                                        ((GeometryModel3D)(this.stackingVisualization.Children[i])).Material =
+                                            MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
+                                            newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
+
+                                        // Change Color Of The Labels Of The Existing UIs Of The Department
+                                        ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
+
                                         newProgramIndex = programIndex + 1;
                                         newVisualizationIndex = i + 1;
                                     }
@@ -892,7 +902,8 @@ namespace StackingProgrammingTool
 
                                     // Update ProgramBox Color
                                     ((GeometryModel3D)(this.stackingVisualization.Children[i])).Material =
-                                        MaterialHelper.CreateMaterial(this.boxesOfTheProject[programBoxName].boxColor);
+                                        MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0], 
+                                        newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
 
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
@@ -903,13 +914,13 @@ namespace StackingProgrammingTool
                         }
 
                         // Add New Programs
-                        for (int j = firstProgramIndex; j < firstProgramIndex + input; j++)
+                        for (int i = firstProgramIndex; i < firstProgramIndex + input; i++)
                         {
                             float newProgramLength = new float();
 
-                            if (j == newVisualizationIndex)
+                            if (i == newVisualizationIndex)
                             {
-                                string programBoxName = this.stackingVisualization.Children[j - 1].GetName();
+                                string programBoxName = this.stackingVisualization.Children[i - 1].GetName();
                                 string departmentName = programBoxName.Replace("ProgramBo", "").Split('x')[0];
                                 int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
                                 
@@ -942,13 +953,13 @@ namespace StackingProgrammingTool
                                 else
                                 {
 
-                                    float newCenterY = ((float)this.boxesOfTheProject[this.stackingVisualization.Children[j - 1].GetName()].boxCenter.Y) +
-                                        (this.boxesOfTheProject[this.stackingVisualization.Children[j - 1].GetName()].boxDims[1] / 2) + (newProgramBoxDims[1] / 2);
+                                    float newCenterY = ((float)this.boxesOfTheProject[this.stackingVisualization.Children[i - 1].GetName()].boxCenter.Y) +
+                                        (this.boxesOfTheProject[this.stackingVisualization.Children[i - 1].GetName()].boxDims[1] / 2) + (newProgramBoxDims[1] / 2);
 
                                     newProgramBoxCenter = new Point3D(0, newCenterY,
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
                                 }
-
+                             
                                 Material newProgramBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[newProgramIndex][0],
                                     newProgramColors[newProgramIndex][1], newProgramColors[newProgramIndex][2]));
 
@@ -980,24 +991,29 @@ namespace StackingProgrammingTool
                                     this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
                                     newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
+                                // Change Color Of The Labels Of The Existing UIs Of The Department
+                                ExtraMethods.ChangeLabelColor(department, newProgramIndex, newProgramColors[programIndex]);
+
                                 newVisualizationIndex += 1;
+                                newProgramIndex += 1;
+                              
                             }
 
                             // Move The Programs After The Inserted One
-                            if (j > newVisualizationIndex)
+                            if (i > newVisualizationIndex)
                             {
                                 // Calculating Length Of Each Program Based On Width Of The Project Box
-                                string newProgramBoxName = this.stackingVisualization.Children[j].GetName();
+                                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
                                 float[] newProgramBoxDims = this.boxesOfTheProject[newProgramBoxName].boxDims;
                                 Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + newProgramLength,
                                     this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
-                                Material newProgramBoxMaterial = ((GeometryModel3D)this.stackingVisualization.Children[j]).Material;
+                                Material newProgramBoxMaterial = ((GeometryModel3D)this.stackingVisualization.Children[i]).Material;
 
                                 GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
                                     newProgramBoxMaterial, newProgramBoxMaterial);
 
-                                this.stackingVisualization.Children.RemoveAt(j);
-                                this.stackingVisualization.Children.Insert(j, newProgramBox);
+                                this.stackingVisualization.Children.RemoveAt(i);
+                                this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
                                 this.boxesOfTheProject[newProgramBoxName].visualizationIndex += 1;
