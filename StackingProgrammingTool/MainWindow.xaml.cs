@@ -959,7 +959,7 @@ namespace StackingProgrammingTool
                                     newProgramBoxCenter = new Point3D(0, newCenterY,
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
                                 }
-                             
+                              
                                 Material newProgramBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[newProgramIndex][0],
                                     newProgramColors[newProgramIndex][1], newProgramColors[newProgramIndex][2]));
 
@@ -992,7 +992,7 @@ namespace StackingProgrammingTool
                                     newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
 
                                 // Change Color Of The Labels Of The Existing UIs Of The Department
-                                ExtraMethods.ChangeLabelColor(department, newProgramIndex, newProgramColors[programIndex]);
+                                ExtraMethods.ChangeLabelColor(department, newProgramIndex, newProgramColors[newProgramIndex]);
 
                                 newVisualizationIndex += 1;
                                 newProgramIndex += 1;

@@ -56,9 +56,8 @@ namespace StackingProgrammingTool
             {
                 programLabel.Foreground = Brushes.White;
             }
-
+           
             programLabel.Background = new SolidColorBrush(Color.FromRgb(color[0], color[1], color[2]));
-
         }
 
         /* ------------------------ Method For Generating Elements Inisde Each Department's Expander ------------------------ */
