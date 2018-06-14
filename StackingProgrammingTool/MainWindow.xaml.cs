@@ -837,6 +837,9 @@ namespace StackingProgrammingTool
                         int newProgramIndex = 0;
                         int newVisualizationIndex = new int();
 
+                        // Extract Number Of Programs In The Floor Of The Department
+                        int programCount = 0;
+
                         // Index Of First Program In The Department
                         int firstProgramIndex = 1;
 
@@ -866,6 +869,12 @@ namespace StackingProgrammingTool
 
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
+
+                                    // Extract Largest ProgramIndex In The Department
+                                    if (programIndex > newProgramIndex)
+                                    {
+                                        newProgramIndex = programIndex + 1;
+                                    }
                                 }
                             }
 
@@ -884,15 +893,19 @@ namespace StackingProgrammingTool
                                         // Change Color Of The Labels Of The Existing UIs Of The Department
                                         ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
 
+                                        // Extract Largest ProgramIndex In The Department
                                         newProgramIndex = programIndex + 1;
                                         newVisualizationIndex = i + 1;
                                     }
                                 }
+
+                                programCount += 1;
                             }
 
                             // Programs Of The Department In The Upper Floors
                             if (this.boxesOfTheProject[programBoxName].floor > indexOfDepartment)
                             {
+                                
                                 // Update Color Of The Programs In Lower Floors
                                 if (departmentName == department.Name)
                                 {
@@ -907,6 +920,12 @@ namespace StackingProgrammingTool
 
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
+                         
+                                    // Extract Largest ProgramIndex In The Department
+                                    if (programIndex >= newProgramIndex)
+                                    {
+                                        newProgramIndex = programIndex + 1;
+                                    }
                                 }
 
                                 this.boxesOfTheProject[programBoxName].visualizationIndex += difference;
@@ -914,22 +933,18 @@ namespace StackingProgrammingTool
                         }
 
                         // Add New Programs
-                        for (int i = firstProgramIndex; i < firstProgramIndex + input; i++)
+                        for (int i = firstProgramIndex; i < firstProgramIndex + difference + programCount; i++)
                         {
                             float newProgramLength = new float();
-
+                            
                             if (i == newVisualizationIndex)
                             {
-                                string programBoxName = this.stackingVisualization.Children[i - 1].GetName();
-                                string departmentName = programBoxName.Replace("ProgramBo", "").Split('x')[0];
-                                int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
-                                
                                 // Calculating Raw Cost And GSF Of Each Program
-                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (programIndex + 1).ToString()) as ComboBox;
-                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (programIndex + 1).ToString()) as Slider;
-                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (programIndex + 1).ToString()) as Slider;
-                                Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + (programIndex + 1).ToString()) as Label;
-
+                                ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + (newProgramIndex).ToString()) as ComboBox;
+                                Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (newProgramIndex).ToString()) as Slider;
+                                Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (newProgramIndex).ToString()) as Slider;
+                                Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + (newProgramIndex).ToString()) as Label;
+                                MessageBox.Show(department.Name + "ComboBox" + (newProgramIndex).ToString());
                                 // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
                                 float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
@@ -939,10 +954,10 @@ namespace StackingProgrammingTool
                                 newProgramLength = GSF / ((float)this.stackingVisualization.Children[0].Bounds.SizeX);
 
                                 // Calculating Length Of Each Program Based On Width Of The Project Box
-                                string newProgramBoxName = department.Name + "ProgramBox" + (programIndex + 1).ToString();
+                                string newProgramBoxName = department.Name + "ProgramBox" + (newProgramIndex).ToString();
                                 float[] newProgramBoxDims = { float.Parse(this.ProjectWidth.Text), newProgramLength,
                                     float.Parse(this.FloorHeight.Text) };
-
+                                //MessageBox.Show(newProgramBoxName);
                                 Point3D newProgramBoxCenter = new Point3D();
 
                                 if (newProgramIndex == 0)
@@ -952,7 +967,6 @@ namespace StackingProgrammingTool
                                 }
                                 else
                                 {
-
                                     float newCenterY = ((float)this.boxesOfTheProject[this.stackingVisualization.Children[i - 1].GetName()].boxCenter.Y) +
                                         (this.boxesOfTheProject[this.stackingVisualization.Children[i - 1].GetName()].boxDims[1] / 2) + (newProgramBoxDims[1] / 2);
 
@@ -996,7 +1010,6 @@ namespace StackingProgrammingTool
 
                                 newVisualizationIndex += 1;
                                 newProgramIndex += 1;
-                              
                             }
 
                             // Move The Programs After The Inserted One
@@ -1026,11 +1039,11 @@ namespace StackingProgrammingTool
                         // Add Stacking Data To The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
 
-                        //for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
-                        //{
-                        //    MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" + 
-                        //        this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
-                        //}
+                        for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
+                        {
+                            MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" +
+                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
+                        }
                     }
 
                     // Decrease Number Of Programs

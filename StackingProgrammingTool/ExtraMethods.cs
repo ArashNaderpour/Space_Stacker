@@ -343,7 +343,7 @@ namespace StackingProgrammingTool
                 keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
                 keyRooms.Margin = new Thickness(0, 5, 0, 0);
                 keyRooms.ValueChanged += Slider_ValueChanged;
-
+            
                 k.Children.Add(keyLabel);
                 k.Children.Add(keyRooms);
 
@@ -365,7 +365,7 @@ namespace StackingProgrammingTool
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
                 DGSF.Margin = new Thickness(0, 5, 0, 0);
                 DGSF.ValueChanged += Slider_ValueChanged;
-
+               
                 r.Children.Add(DGSFLabel);
                 r.Children.Add(DGSF);
                 ppt.Children.Add(r);
