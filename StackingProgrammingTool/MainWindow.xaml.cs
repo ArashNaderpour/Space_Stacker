@@ -994,7 +994,7 @@ namespace StackingProgrammingTool
                                 programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / newProgramBoxDims[2]));
                                 programBox.visualizationLabel = labelElement.Content.ToString();
-
+                              
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter,
                                     newProgramBoxDims, newProgramBoxMaterial, newProgramBoxMaterial);
 
@@ -1039,8 +1039,8 @@ namespace StackingProgrammingTool
                                 this.stackingVisualization.Children.Insert(i, newProgramBox);
 
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
-                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex += 1;
-
+                                this.boxesOfTheProject[newProgramBoxName].visualizationIndex += difference;
+                    
                                 // Visualizations Of The Labels Of The Boxes
                                 VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
                                     this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
