@@ -932,11 +932,15 @@ namespace StackingProgrammingTool
                             }
                         }
 
+                        // Counter For Number Of Programs That Were Added
+                        int counter = 0;
+
+                        // Length Of The Added Program
+                        float newProgramLength = new float();
+
                         // Add New Programs
                         for (int i = firstProgramIndex; i < firstProgramIndex + difference + programCount; i++)
-                        {
-                            float newProgramLength = new float();
-                            
+                        {   
                             if (i == newVisualizationIndex)
                             {
                                 // Calculating Raw Cost And GSF Of Each Program
@@ -944,7 +948,7 @@ namespace StackingProgrammingTool
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (newProgramIndex).ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (newProgramIndex).ToString()) as Slider;
                                 Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + (newProgramIndex).ToString()) as Label;
-                                MessageBox.Show(department.Name + "ComboBox" + (newProgramIndex).ToString());
+                                
                                 // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
                                 float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
@@ -957,7 +961,7 @@ namespace StackingProgrammingTool
                                 string newProgramBoxName = department.Name + "ProgramBox" + (newProgramIndex).ToString();
                                 float[] newProgramBoxDims = { float.Parse(this.ProjectWidth.Text), newProgramLength,
                                     float.Parse(this.FloorHeight.Text) };
-                                //MessageBox.Show(newProgramBoxName);
+                          
                                 Point3D newProgramBoxCenter = new Point3D();
 
                                 if (newProgramIndex == 0)
@@ -1008,17 +1012,23 @@ namespace StackingProgrammingTool
                                 // Change Color Of The Labels Of The Existing UIs Of The Department
                                 ExtraMethods.ChangeLabelColor(department, newProgramIndex, newProgramColors[newProgramIndex]);
 
-                                newVisualizationIndex += 1;
-                                newProgramIndex += 1;
-                            }
+                                counter += 1;
 
+                                // Increase Indexes After Addign Program
+                                if (counter < difference) {
+                                    newVisualizationIndex += 1;
+                                    newProgramIndex += 1;
+                                }
+                            }
+                           
                             // Move The Programs After The Inserted One
                             if (i > newVisualizationIndex)
                             {
                                 // Calculating Length Of Each Program Based On Width Of The Project Box
                                 string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
+                            
                                 float[] newProgramBoxDims = this.boxesOfTheProject[newProgramBoxName].boxDims;
-                                Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + newProgramLength,
+                                Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + difference * newProgramLength,
                                     this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
                                 Material newProgramBoxMaterial = ((GeometryModel3D)this.stackingVisualization.Children[i]).Material;
 
@@ -1030,6 +1040,11 @@ namespace StackingProgrammingTool
 
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
                                 this.boxesOfTheProject[newProgramBoxName].visualizationIndex += 1;
+
+                                // Visualizations Of The Labels Of The Boxes
+                                VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
+                                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+                                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
                             }
                         }
 
@@ -1039,11 +1054,11 @@ namespace StackingProgrammingTool
                         // Add Stacking Data To The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
 
-                        for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
-                        {
-                            MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" +
-                                this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
-                        }
+                        //for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
+                        //{
+                        //    MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" +
+                        //        this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
+                        //}
                     }
 
                     // Decrease Number Of Programs
@@ -1102,7 +1117,7 @@ namespace StackingProgrammingTool
                                                 (float)this.stackingVisualization.Children[j].Bounds.SizeZ };
 
                                             Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y -
-                                                this.stackingVisualization.Children[j].Bounds.SizeY,
+                                                this.stackingVisualization.Children[i].Bounds.SizeY,
                                                 this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
 
                                             GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
