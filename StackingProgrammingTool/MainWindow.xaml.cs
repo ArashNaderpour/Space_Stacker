@@ -1218,10 +1218,6 @@ namespace StackingProgrammingTool
         {
             Button btn = sender as Button;
 
-
-            // Clear Visualization Labels
-            this.programVisualizationLabelsGroup.Children.Clear();
-
             // Handeling Project Width Changes Events
             if (btn.Name == "ProjectWidthButton")
             {
@@ -1239,6 +1235,8 @@ namespace StackingProgrammingTool
                 }
                 if (projectWidthInput > 0)
                 {
+                    // Clear Visualization Labels
+                    this.programVisualizationLabelsGroup.Children.Clear();
 
                     double totalDepartmentLength = this.initialProjectBoxDims[1] * -0.5;
 
