@@ -100,7 +100,8 @@
                                 that contains lowest number of each functionality that might appear in each floor, or 
                                 each department of the project, which also defines the lower bound of the "KeyRooms" 
                                 slider in the "Scenario" tab of the tool.
-                                <Run Foreground="Red">Name: </Run>
+                                <Run Foreground="Red">Key Rooms Slider Value: </Run> It is the header of the column 
+                                that contains initial value
                             </TextBlock>
                             <!--=============-->
                         </StackPanel>
