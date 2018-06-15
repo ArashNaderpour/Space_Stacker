@@ -66,7 +66,7 @@
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
                             <!--==============-->
-                            <!-- Instruction Note-->
+                            <!-- Instruction Note -->
                             <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
                                        TextWrapping ="Wrap" TextAlignment="Justify">
                                 The only prerequisite of using the Stacking Programming Tool is having access to an
@@ -75,6 +75,7 @@
                                 that contains data in a certain format. Image below illustrates the required format 
                                 of data in the Excel file. <LineBreak/>
                             </TextBlock>
+                            <!--=============-->
                             <!-- ExcelImage -->
                             <Border BorderThickness="1" BorderBrush="Black">
                                 <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
@@ -85,7 +86,22 @@
                                 </Image>
                             </Border>
                             <!--============-->
-                            <!--=============-->
+                            <!-- Instruction Note Continue -->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                The red in the Excel file are the required cells that have to be peresent in the
+                                Excel file with the excat similar format that is illustrated in the image. <LineBreak/>
+                                <Run Foreground="Red">Name: </Run> It is the header for the column that contains
+                                name of the functions that might exsit in the project. <LineBreak/>
+                                <Run Foreground="Red">Cost: </Run> It is the header for the column that contains
+                                construction cost per square foor for each function that might appear in the 
+                                project.<LineBreak/>
+                                <Run Foreground="Red">Key Rooms Slider Minimum: </Run> It is the header of the column 
+                                that contains lowest number of each functionality that might appear in each floor, or 
+                                each department of the project, which also defines the lower bound of the "KeyRooms" 
+                                slider in the "Scenario" tab of the tool.
+                                <Run Foreground="Red">Name: </Run>
+                            </TextBlock>
                             <!--=============-->
                         </StackPanel>
                     </ScrollViewer>
