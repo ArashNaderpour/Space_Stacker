@@ -91,17 +91,47 @@
                                        TextWrapping ="Wrap" TextAlignment="Justify">
                                 The red in the Excel file are the required cells that have to be peresent in the
                                 Excel file with the excat similar format that is illustrated in the image. <LineBreak/>
-                                <Run Foreground="Red">Name: </Run> It is the header for the column that contains
-                                name of the functions that might exsit in the project. <LineBreak/>
-                                <Run Foreground="Red">Cost: </Run> It is the header for the column that contains
-                                construction cost per square foor for each function that might appear in the 
+                                <Run Foreground="Red" FontWeight="Bold">Name: </Run> The header for the column that
+                                contains names of the functions that might exsit in the project. <LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Cost: </Run> The header for the column that 
+                                contains construction cost per square foor for each function that might appear in the 
                                 project.<LineBreak/>
-                                <Run Foreground="Red">Key Rooms Slider Minimum: </Run> It is the header of the column 
-                                that contains lowest number of each functionality that might appear in each floor, or 
-                                each department of the project, which also defines the lower bound of the "KeyRooms" 
-                                slider in the "Scenario" tab of the tool.
-                                <Run Foreground="Red">Key Rooms Slider Value: </Run> It is the header of the column 
-                                that contains initial value
+                                <Run Foreground="Red" FontWeight="Bold">Key Rooms Slider Minimum: </Run> The header of 
+                                the column that contains lowest number of each functionality that might appear in each 
+                                floor, or each department of the project, which also defines the lower bounds of the 
+                                "KeyRooms" sliders in the "Scenario" tab of the tool.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Key Rooms Slider Value: </Run> The header of 
+                                the column that contains the initial values of the "KeyRooms" sliders in the "Scenario" 
+                                tab of the tool. This values have to be between Key Rooms Sliders' Minimum and 
+                                Key Rooms Sliders' Maximum.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Key Rooms Slider Maximum: </Run> The header of 
+                                the column that contains highest number of each functionality that might appear in each 
+                                floor, or each department of the project, which also defines the upper bounds of the 
+                                "KeyRooms" sliders in the "Scenario" tab of the tool.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">DGSF Slider Minimum: </Run> The header of 
+                                the column that contains lowest ground square feet of each functionality that might 
+                                appear in each floor, or each department of the project, which also defines the lower 
+                                bounds of the "DGSF" sliders in the "Scenario" tab of the tool.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">DGSF Slider Value: </Run> The header of the column 
+                                that contains the initial values of the "DGSF" sliders in the "Scenario" tab of 
+                                the tool. This values have to be between DGSF Slider Minimum and DGSF Maximum.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">MEP: </Run> The header of the Row that contains 
+                                the cost per square foot for mechanical, electrical, and plumbing of the project. Required 
+                                area for MEP will be defined by the user from the "Cost Information" tab of the tool
+                                based on percentage of the total occupied area of the project.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Circulation: </Run> The header of the Row that 
+                                contains the cost per square foot for circulation areas of the project, like stairs and 
+                                corridors. Required area for MEP will be defined by the user from the "Cost Information"
+                                tab of the tool based on percentage of the total occupied area of the project.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">BES: </Run> The header of the Row that 
+                                contains the cost per square foot for "Building Exterior Skin" areas of the project.
+                                Required area for MEP will be defined by the user from the "Cost Information" tab of 
+                                the tool based on percentage of the total occupied area of the project.<LineBreak/>
+                                <Run Foreground="Orange" FontWeight="Bold">Orange Cells: </Run> Names of all of the 
+                                functionalities that project might contains. These names will appear in the programs' 
+                                rollouts of each departmnet in the "Scenario" tab.<LineBreak/>
+                                <Run Foreground="Green" FontWeight="Bold">Green Cells: </Run> All the information related
+                                to each functionality that might occupy space in each department of the project.<LineBreak/>
                             </TextBlock>
                             <!--=============-->
                         </StackPanel>
