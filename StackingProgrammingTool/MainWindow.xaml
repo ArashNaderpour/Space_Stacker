@@ -118,15 +118,15 @@
                                 the tool. This values have to be between DGSF Slider Minimum and DGSF Maximum.<LineBreak/>
                                 <Run Foreground="Red" FontWeight="Bold">MEP:</Run> The header of the Row that contains 
                                 the cost per square foot for mechanical, electrical, and plumbing of the project. Required 
-                                area for MEP will be defined by the user from the "Cost Information" tab of the tool
+                                area for "MEP" will be defined by the user from the "Cost Information" tab of the tool
                                 based on percentage of the total occupied area of the project.<LineBreak/>
                                 <Run Foreground="Red" FontWeight="Bold">Circulation:</Run> The header of the Row that 
-                                contains the cost per square foot for circulation areas of the project, like stairs and 
-                                corridors. Required area for MEP will be defined by the user from the "Cost Information"
+                                contains the cost per square foot for "Circulation" areas of the project, like stairs and 
+                                corridors. Required area for Circulatio will be defined by the user from the "Cost Information"
                                 tab of the tool based on percentage of the total occupied area of the project.<LineBreak/>
                                 <Run Foreground="Red" FontWeight="Bold">BES:</Run> The header of the Row that 
                                 contains the cost per square foot for "Building Exterior Skin" areas of the project.
-                                Required area for MEP will be defined by the user from the "Cost Information" tab of 
+                                Required area for "BES" will be defined by the user from the "Cost Information" tab of 
                                 the tool based on percentage of the total occupied area of the project.<LineBreak/>
                                 <Run Foreground="Orange" FontWeight="Bold">Orange Cells:</Run> Names of all of the 
                                 functionalities that project might contains. These names will appear in the programs' 
@@ -134,20 +134,46 @@
                                 <Run Foreground="Green" FontWeight="Bold">Green Cells:</Run> All the information related
                                 to each functionality that might occupy space in each department of the project.<LineBreak/>
                                 <LineBreak/>
-                                <Run FontSize="16" FontWeight="Bold"> UTILIZATION</Run> <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold">SCENARIO TAB</Run> <LineBreak/>
                                 From the "Scenario" tab of the tool, open the Excel file that contains the required data of 
                                 the project by pressing the <Run Foreground="Green" FontWeight="DemiBold">Spread Sheet</Run>
                                 button. "Scenario" tab also provides control over the dimenstions of the project's building, 
                                 plus name and number of departments of the project. The Expanders of each department contains
                                 controllers that modify information about the programs of that department.<LineBreak/>
-                                <Run FontWeight="Bold">Rollout:</Run> The element that allows the user to select, or
-                                chang the functionality of the program based on the data provided in the spread sheet.<LineBreak/>
+                                <Run FontWeight="Bold">Function Rollout:</Run> The element that allows the user to 
+                                select, or change the functionality of the program based on the data provided in the 
+                                spread sheet.<LineBreak/>
                                 <Run FontWeight="Bold">Rooms:</Run> The slider allows the user to define, or modify 
                                 the number of rooms of the program based on the data provided in the spread sheet.<LineBreak/>
                                <Run FontWeight="Bold"> DGSF:</Run> The slider allows the user to define, or modify the 
                                 ground square feet of each room of the program based on the data provided in the 
                                 spread sheet.<LineBreak/>
-
+                                <Run FontWeight="Bold">Programs CheckBox:</Run> Filling the CheckBox generates a chart that 
+                                contains all the information related to each program of the project in the sequence of their 
+                                departments.<LineBreak/>
+                                <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold">COST INFORMATION TAB</Run> <LineBreak/>
+                                This tab contains information and setting about budget and costs of the
+                                project.<LineBreak/>
+                                <Run FontWeight="Bold">Gross Multiplier:</Run> This section carries three sliders that 
+                                modifies required area of MEP, Circulatio, and Buildings Exterior Stacking (skin) of the 
+                                project based on a percentage of the total occupied area of the building. Designated area 
+                                and construction cost for each of these parameters will be calculated and added to the 
+                                building's total occupied area (BGSF) and costs (Construction/Total) of the project.<LineBreak/>
+                                <Run FontWeight="Bold">Indirect Multiplier:</Run> The "Construction Cost" will be 
+                                multiplied by this value and the result will be added to the "Project Cost".<LineBreak/>
+                                <Run FontWeight="Bold">Method:</Run> Allows the user to change the method for entering 
+                                "Other Costs" information of the project. "Percentage" method allows the user to enter 
+                                the cost as a percentage of the total costs, while "Amount" method allows the user to enter
+                                the exact amount of the costs. <LineBreak/>
+                                <Run FontWeight="Bold">User Inputs:</Run> This section carries elements for entering additional 
+                                costs of the project. These inputs will be added to the construction and directly affect total 
+                                project cost. Parameters like "CM Fee" (Construction Management Fee) and CCIP 
+                                (Contractor Controlled Insurance Program) exist in this section. <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold">STACKING TAB</Run>This tab allows the user to change the 
+                                floor of the programs of the project to fit them better in the building's bounds or based on 
+                                their relation togther. Changing the floor of the programs does not change the department of 
+                                them, therefor their controllers will stay in the expande of their department.<LineBreak/>
                             </TextBlock>
                             <!--=============-->
                         </StackPanel>
