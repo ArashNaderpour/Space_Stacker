@@ -80,7 +80,7 @@
                             <!-- ExcelImage -->
                             <Border BorderThickness="1" BorderBrush="Black">
                                 <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
-                                   Cursor="Hand">
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeImage">
                                     <Image.Source>
                                         <BitmapImage UriSource="Images/ExcelFile.JPG"/>
                                     </Image.Source>

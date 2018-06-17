@@ -23,3 +23,5 @@ C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.exe
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.pdb
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojResolveAssemblyReference.cache
+C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ExcelImageSubWindow.g.cs
+C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ExcelImageSubWindow.baml

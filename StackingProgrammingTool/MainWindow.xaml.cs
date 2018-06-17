@@ -58,6 +58,9 @@ namespace StackingProgrammingTool
         // SubWindows: Programs Window
         ProgramsSubWindow programsWindow = new ProgramsSubWindow();
 
+        // SubWindows: Excel Image Window
+        ExcelImageSubWindow excelImageWindow = new ExcelImageSubWindow();
+
         // Random Object
         Random random = new Random(20);
 
@@ -663,6 +666,12 @@ namespace StackingProgrammingTool
                 this.programsWindow.Close();
             }
 
+            // SubWindows: Excel Image Window
+            if (this.excelImageWindow != null)
+            {
+                this.excelImageWindow.Close();
+            }
+
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -832,7 +841,7 @@ namespace StackingProgrammingTool
                             byte[] newColor = VisualizationMethods.GenerateGradientColor(departmentColor, stop);
                             newProgramColors.Add(newColor);
                         }
-                     
+
                         // Calculating Total Length Of The Exsiting Programs
                         int newProgramIndex = 0;
                         int newVisualizationIndex = new int();
@@ -905,7 +914,7 @@ namespace StackingProgrammingTool
                             // Programs Of The Department In The Upper Floors
                             if (this.boxesOfTheProject[programBoxName].floor > indexOfDepartment)
                             {
-                                
+
                                 // Update Color Of The Programs In Lower Floors
                                 if (departmentName == department.Name)
                                 {
@@ -915,12 +924,12 @@ namespace StackingProgrammingTool
 
                                     // Update ProgramBox Color
                                     ((GeometryModel3D)(this.stackingVisualization.Children[i])).Material =
-                                        MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0], 
+                                        MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
                                         newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
 
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
-                         
+
                                     // Extract Largest ProgramIndex In The Department
                                     if (programIndex >= newProgramIndex)
                                     {
@@ -940,7 +949,7 @@ namespace StackingProgrammingTool
 
                         // Add New Programs
                         for (int i = firstProgramIndex; i < firstProgramIndex + difference + programCount; i++)
-                        {   
+                        {
                             if (i == newVisualizationIndex)
                             {
                                 // Calculating Raw Cost And GSF Of Each Program
@@ -948,7 +957,7 @@ namespace StackingProgrammingTool
                                 Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + (newProgramIndex).ToString()) as Slider;
                                 Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + (newProgramIndex).ToString()) as Slider;
                                 Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + (newProgramIndex).ToString()) as Label;
-                                
+
                                 // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
                                 float rawCost = GSF * this.functions[program.SelectedItem.ToString()]["cost"];
@@ -961,7 +970,7 @@ namespace StackingProgrammingTool
                                 string newProgramBoxName = department.Name + "ProgramBox" + (newProgramIndex).ToString();
                                 float[] newProgramBoxDims = { float.Parse(this.ProjectWidth.Text), newProgramLength,
                                     float.Parse(this.FloorHeight.Text) };
-                          
+
                                 Point3D newProgramBoxCenter = new Point3D();
 
                                 if (newProgramIndex == 0)
@@ -977,7 +986,7 @@ namespace StackingProgrammingTool
                                     newProgramBoxCenter = new Point3D(0, newCenterY,
                                     float.Parse(this.FloorHeight.Text) * 0.5 + (indexOfDepartment * int.Parse(this.FloorHeight.Text)));
                                 }
-                              
+
                                 Material newProgramBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[newProgramIndex][0],
                                     newProgramColors[newProgramIndex][1], newProgramColors[newProgramIndex][2]));
 
@@ -994,7 +1003,7 @@ namespace StackingProgrammingTool
                                 programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / newProgramBoxDims[2]));
                                 programBox.visualizationLabel = labelElement.Content.ToString();
-                              
+
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter,
                                     newProgramBoxDims, newProgramBoxMaterial, newProgramBoxMaterial);
 
@@ -1015,18 +1024,19 @@ namespace StackingProgrammingTool
                                 counter += 1;
 
                                 // Increase Indexes After Addign Program
-                                if (counter < difference) {
+                                if (counter < difference)
+                                {
                                     newVisualizationIndex += 1;
                                     newProgramIndex += 1;
                                 }
                             }
-                           
+
                             // Move The Programs After The Inserted One
                             if (i > newVisualizationIndex)
                             {
                                 // Calculating Length Of Each Program Based On Width Of The Project Box
                                 string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
-                            
+
                                 float[] newProgramBoxDims = this.boxesOfTheProject[newProgramBoxName].boxDims;
                                 Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + difference * newProgramLength,
                                     this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
@@ -1040,7 +1050,7 @@ namespace StackingProgrammingTool
 
                                 this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
                                 this.boxesOfTheProject[newProgramBoxName].visualizationIndex += difference;
-                    
+
                                 // Visualizations Of The Labels Of The Boxes
                                 VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
                                     this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
@@ -2324,6 +2334,45 @@ namespace StackingProgrammingTool
             // Calculating And Visualizing Cost/GSF
             this.costPerGSF = this.constructionCost / this.totalBGSF;
             this.CostPerGSF.Text = this.costPerGSF.ToString("C0", System.Globalization.CultureInfo.CurrentCulture);
+        }
+
+        /* ########################################################### Introduction Tab Events ########################################################### */
+
+        /* ----------------------------------- Handeling Programs Excel Image Maximize Image Event ----------------------------------- */
+        private void MaximizeImage(object sender, RoutedEventArgs e)
+        {
+            bool isOpen = false;
+
+            foreach (Window objWindow in Application.Current.Windows)
+            {
+                string[] splitedNamespace = (objWindow.ToString()).Split('.');
+                string aClassNameFromCollection = splitedNamespace[splitedNamespace.Length - 1];
+
+                if (aClassNameFromCollection == "ExcelImageSubWindow")
+                {
+                    if (objWindow.Visibility == Visibility.Visible)
+                    {
+                        isOpen = true;
+                        break;
+                    }
+                }
+            }
+
+            // Window Is Already Open
+            if (isOpen)
+            {
+                this.excelImageWindow.Close();
+            }
+
+            // Window Is Not Already Open
+            else
+            {
+                // Initiate A New Program Window
+                this.excelImageWindow = new ExcelImageSubWindow();
+                this.excelImageWindow.Owner = this;
+
+                this.excelImageWindow.Show();
+            }
         }
     }
 }
