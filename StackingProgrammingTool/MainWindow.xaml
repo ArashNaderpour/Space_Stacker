@@ -170,10 +170,11 @@
                                 costs of the project. These inputs will be added to the construction and directly affect total 
                                 project cost. Parameters like "CM Fee" (Construction Management Fee) and CCIP 
                                 (Contractor Controlled Insurance Program) exist in this section. <LineBreak/>
-                                <Run FontSize="16" FontWeight="Bold">STACKING TAB</Run>This tab allows the user to change the 
-                                floor of the programs of the project to fit them better in the building's bounds or based on 
-                                their relation togther. Changing the floor of the programs does not change the department of 
-                                them, therefor their controllers will stay in the expande of their department.<LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold">STACKING TAB</Run><LineBreak/>
+                                This tab allows the user to change the floor of the programs of the project to fit them better 
+                                in the building's bounds or based on their relation togther. Changing the floor of the programs 
+                                does not change the department of them, therefor their controllers will stay in the expande of 
+                                their department.<LineBreak/>
                             </TextBlock>
                             <!--=============-->
                         </StackPanel>
