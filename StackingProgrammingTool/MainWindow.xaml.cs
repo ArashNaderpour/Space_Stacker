@@ -1399,6 +1399,7 @@ namespace StackingProgrammingTool
             if (btn.Name == "FloorHeightButton")
             {
                 float floorHeightInput = 0;
+
                 try
                 {
                     floorHeightInput = float.Parse(this.FloorHeight.Text);
@@ -1411,6 +1412,8 @@ namespace StackingProgrammingTool
                 }
                 if (floorHeightInput > 0)
                 {
+                    // Clear Visualization Labels
+                    this.programVisualizationLabelsGroup.Children.Clear();
 
                     double newProgramCenterY = this.initialProjectBoxDims[1] * -0.5;
 
