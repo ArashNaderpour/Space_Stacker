@@ -281,6 +281,9 @@ namespace StackingProgrammingTool
                     byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                     this.colorsOfDepartments.Add(color);
 
+                    // Adding A Color Picker For Each Department
+                    VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color);
+
                     for (int j = 0; j < initialNumberOfPrograms; j++)
                     {
                         // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
+using Xceed.Wpf.Toolkit;
 
 
 namespace StackingProgrammingTool
@@ -63,8 +66,8 @@ namespace StackingProgrammingTool
             labelLeft.TextDirection = new Vector3D(0, 1, 0);
             labelRight.TextDirection = new Vector3D(0, 1, 0);
 
-            labelLeft.Padding = new System.Windows.Thickness(2);
-            labelRight.Padding = new System.Windows.Thickness(2);
+            labelLeft.Padding = new Thickness(2);
+            labelRight.Padding = new Thickness(2);
 
             labelLeft.Background = Brushes.Transparent;
             labelRight.Background = Brushes.Transparent;
@@ -108,8 +111,8 @@ namespace StackingProgrammingTool
             labelLeft.TextDirection = new Vector3D(0, 1, 0);
             labelRight.TextDirection = new Vector3D(0, 1, 0);
 
-            labelLeft.Padding = new System.Windows.Thickness(2);
-            labelRight.Padding = new System.Windows.Thickness(2);
+            labelLeft.Padding = new Thickness(2);
+            labelRight.Padding = new Thickness(2);
 
             labelLeft.Background = Brushes.Transparent;
             labelRight.Background = Brushes.Transparent;
@@ -157,8 +160,8 @@ namespace StackingProgrammingTool
             labelLeft.TextDirection = new Vector3D(0, 1, 0);
             labelRight.TextDirection = new Vector3D(0, 1, 0);
 
-            labelLeft.Padding = new System.Windows.Thickness(2);
-            labelRight.Padding = new System.Windows.Thickness(2);
+            labelLeft.Padding = new Thickness(2);
+            labelRight.Padding = new Thickness(2);
 
             labelLeft.Background = Brushes.Transparent;
             labelRight.Background = Brushes.Transparent;
@@ -178,6 +181,43 @@ namespace StackingProgrammingTool
             
             textGroup.Children.Insert((2 * visBoxIndex) - 2, labelLeft);
             textGroup.Children.Insert((2 * visBoxIndex) - 1, labelRight);
+        }
+
+        /*------------ Replace Visualization Boxes' Labels ------------*/
+        public static void GenerateColorPicker(Grid grid, string name, byte[] color)
+        {
+            int rowIndex = grid.RowDefinitions.Count;
+
+            // Add Row For Each Program
+            RowDefinition gridRow = new RowDefinition();
+            gridRow.Height = new GridLength(40);
+            grid.RowDefinitions.Add(gridRow);
+
+            // Generate And Display Label Of Each Department
+            Label departmentName = new Label();
+            departmentName.Content = name;
+            departmentName.Height = 30;
+            departmentName.FontSize = 14;
+            departmentName.BorderBrush = Brushes.Black;
+            departmentName.BorderThickness = new Thickness(0.3);
+            departmentName.FontWeight = FontWeights.DemiBold;
+            departmentName.HorizontalContentAlignment = HorizontalAlignment.Left;
+            departmentName.VerticalContentAlignment = VerticalAlignment.Center;
+            departmentName.HorizontalAlignment = HorizontalAlignment.Stretch;
+            departmentName.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(departmentName, 0);
+            Grid.SetRow(departmentName, rowIndex);
+            grid.Children.Add(departmentName);
+
+            // Generate And Display ColorPicker Of Each Department
+            ColorPicker colorPicker = new ColorPicker();
+            colorPicker.SelectedColor = Color.FromRgb(color[0], color[1], color[2]);
+            colorPicker.Height = 30;
+            colorPicker.HorizontalAlignment = HorizontalAlignment.Stretch;
+            colorPicker.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(colorPicker, 1);
+            Grid.SetRow(colorPicker, rowIndex);
+            grid.Children.Add(colorPicker);
         }
     }
 }
