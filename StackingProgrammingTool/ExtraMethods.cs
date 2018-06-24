@@ -379,28 +379,33 @@ namespace StackingProgrammingTool
             ProgramsSubWindow subWindow)
         {
             // Index Of The Row For each new Program
-            int rowIndex = 0;
+            int rowIndex = 1;
 
             for (int i = 0; i < departmentsWrapper.Children.Count; i++)
             {
                 Expander department = departmentsWrapper.Children[i] as Expander;
-                //StackPanel programs = department.Content as StackPanel;
+             
                 Grid programs = LogicalTreeHelper.FindLogicalNode(departmentsWrapper, department.Name + "Programs") as Grid;
+
+                // Add A New Row For The Headers
+                RowDefinition gridRow = new RowDefinition();
+                subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
 
                 foreach (DockPanel element in programs.Children)
                 {
                     if (Grid.GetColumn(element) == 0)
                     {
-                        RowDefinition gridRow = new RowDefinition();
+                        // Add Row For Each Program
+                        gridRow = new RowDefinition();
                         gridRow.Height = new GridLength(40);
                         subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
-
+               
                         // The Label Of The Program From The Controller Window
                         Label original = element.Children[0] as Label;
-
+ 
                         // Name Of The ProgramBox
                         string boxName = original.Name.Replace("Label", "ProgramBox");
-
+                  
                         // Generate And Display Label Of Each Program
                         Label programLabel = new Label();
                         programLabel.Content = original.Content;
