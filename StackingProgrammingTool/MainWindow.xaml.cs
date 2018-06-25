@@ -641,6 +641,8 @@ namespace StackingProgrammingTool
             this.colorsOfDepartments.Clear();
             this.boxesOfTheProject.Clear();
             this.programVisualizationLabelsGroup.Children.Clear();
+            this.DepartmentsColorPicker.Children.Clear();
+            this.DepartmentsColorPicker.RowDefinitions.Clear();
 
             // Output Variables
             this.constructionCost = 0;
@@ -701,6 +703,9 @@ namespace StackingProgrammingTool
                 // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                 this.colorsOfDepartments.Add(color);
+
+                // Adding A Color Picker For Each Department
+                VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color);
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {

@@ -183,7 +183,7 @@ namespace StackingProgrammingTool
             textGroup.Children.Insert((2 * visBoxIndex) - 1, labelRight);
         }
 
-        /*------------ Replace Visualization Boxes' Labels ------------*/
+        /*------------ Generate Color Picker For Each Department ------------*/
         public static void GenerateColorPicker(Grid grid, string name, byte[] color)
         {
             int rowIndex = grid.RowDefinitions.Count;
