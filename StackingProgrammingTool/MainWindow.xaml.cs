@@ -782,9 +782,16 @@ namespace StackingProgrammingTool
                 Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
                 TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
 
+                int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(department);
+
                 if (nameTextBox.Text != "")
                 {
+                    // Change Department's Expander's Header
                     department.Header = nameTextBox.Text;
+
+                    // Change Department's ColorPicker's Label
+                    ((Label)this.DepartmentsColorPicker.Children[departmentIndex * 2]).Content = nameTextBox.Text;
+
                     for (int i = 0; i < this.stackingVisualization.Children.Count; i++)
                     {
                         if (this.stackingVisualization.Children[i].GetName().Contains(department.Name))
