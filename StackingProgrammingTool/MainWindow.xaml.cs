@@ -282,7 +282,7 @@ namespace StackingProgrammingTool
                     this.colorsOfDepartments.Add(color);
 
                     // Adding A Color Picker For Each Department
-                    VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color);
+                    VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color, ColorPicker_Changed);
 
                     for (int j = 0; j < initialNumberOfPrograms; j++)
                     {
@@ -705,7 +705,7 @@ namespace StackingProgrammingTool
                 this.colorsOfDepartments.Add(color);
 
                 // Adding A Color Picker For Each Department
-                VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color);
+                VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color, ColorPicker_Changed);
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
@@ -2391,6 +2391,14 @@ namespace StackingProgrammingTool
 
                 this.excelImageWindow.Show();
             }
+        }
+
+        /* ########################################################### Visualization Tab Events ########################################################### */
+
+        /* ----------------------------------- Handeling Programs Excel Image Maximize Image Event ----------------------------------- */
+        private void ColorPicker_Changed(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            MessageBox.Show("Yo");
         }
     }
 }

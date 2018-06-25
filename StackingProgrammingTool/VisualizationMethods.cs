@@ -184,7 +184,7 @@ namespace StackingProgrammingTool
         }
 
         /*------------ Generate Color Picker For Each Department ------------*/
-        public static void GenerateColorPicker(Grid grid, string name, byte[] color)
+        public static void GenerateColorPicker(Grid grid, string name, byte[] color, RoutedPropertyChangedEventHandler<Color?> Color_Changed)
         {
             int rowIndex = grid.RowDefinitions.Count;
 
@@ -218,6 +218,7 @@ namespace StackingProgrammingTool
             Grid.SetColumn(colorPicker, 1);
             Grid.SetRow(colorPicker, rowIndex);
             grid.Children.Add(colorPicker);
+            colorPicker.SelectedColorChanged += Color_Changed;
         }
     }
 }
