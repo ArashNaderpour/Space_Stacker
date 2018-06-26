@@ -49,7 +49,7 @@ namespace StackingProgrammingTool
         float totalRawDepartmentCost = new float();
 
         // Essential Data
-        List<byte[]> colorsOfDepartments = new List<byte[]>();
+        Dictionary<string, byte[]> colorsOfBoxes = new Dictionary<string, byte[]>();
         Dictionary<String, Box> boxesOfTheProject = new Dictionary<string, Box>();
 
         // Spread-Sheet Data
@@ -86,9 +86,11 @@ namespace StackingProgrammingTool
 
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
+            byte[] projectBoxColor = { 100, 100, 100 };
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
-            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Colors.Gray);
+            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(projectBoxColor[0], 
+                projectBoxColor[1], projectBoxColor[2]));
             GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter,
                 new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
                 projectBoxMaterial, projectBoxInsideMaterial);
@@ -99,6 +101,9 @@ namespace StackingProgrammingTool
 
             // Visualization Labels In The Viewport3D
             this.Visualization.Children.Add(this.programVisualizationLabelsGroup);
+
+            // Add Project Color To The Color Dictionary
+            this.colorsOfBoxes.Add(projectBoxName, projectBoxColor);
 
             // Terminating The Thread After Closing The Window
             this.Closed += (sender, e) => this.Dispatcher.InvokeShutdown();
@@ -129,7 +134,7 @@ namespace StackingProgrammingTool
                     this.DepartmentsWrapper.Children.Clear();
                     this.stackingVisualization.Children.Clear();
                     this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
-                    this.colorsOfDepartments.Clear();
+                    this.colorsOfBoxes.Clear();
 
                     // ProjectBox Visualization
                     string projectBoxName = "ProjectBox";
@@ -279,10 +284,11 @@ namespace StackingProgrammingTool
                     /*--- Setting Up Initial Departments And Programs Visualization ---*/
                     // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                     byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                    this.colorsOfDepartments.Add(color);
+                    this.colorsOfBoxes.Add(department.Name, color);
 
                     // Adding A Color Picker For Each Department
-                    VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color, ColorPicker_Changed);
+                    VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
+                        ColorPicker_Changed);
 
                     for (int j = 0; j < initialNumberOfPrograms; j++)
                     {
@@ -524,7 +530,7 @@ namespace StackingProgrammingTool
 
                             // Removing Departments' Expanders' Properties
                             this.DepartmentsWrapper.Children.RemoveAt(lastIndex);
-                            this.colorsOfDepartments.RemoveAt(lastIndex);
+                            this.colorsOfBoxes.Remove(department.Name);
                         }
 
                         // All The Calculation, Prepration, And Visualization Of The Output Data
@@ -550,10 +556,11 @@ namespace StackingProgrammingTool
 
                             // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                             byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                            this.colorsOfDepartments.Add(color);
+                            this.colorsOfBoxes.Add(department.Name, color);
 
                             // Adding A Color Picker For Each Department
-                            VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color, ColorPicker_Changed);
+                            VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
+                                ColorPicker_Changed);
 
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
@@ -641,7 +648,7 @@ namespace StackingProgrammingTool
             this.DepartmentsWrapper.Children.Clear();
             this.stackingVisualization.Children.Clear();
             this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
-            this.colorsOfDepartments.Clear();
+            this.colorsOfBoxes.Clear();
             this.boxesOfTheProject.Clear();
             this.programVisualizationLabelsGroup.Children.Clear();
             this.DepartmentsColorPicker.Children.Clear();
@@ -705,10 +712,11 @@ namespace StackingProgrammingTool
                 /* Setting Up Initial Departments And Programs Visualization */
                 // Generating A Random Color In The Format Of An Array That Contains Three Bytes
                 byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                this.colorsOfDepartments.Add(color);
+                this.colorsOfBoxes.Add(department.Name, color);
 
                 // Adding A Color Picker For Each Department
-                VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color, ColorPicker_Changed);
+                VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
+                    ColorPicker_Changed);
 
                 for (int j = 0; j < initialNumberOfPrograms; j++)
                 {
@@ -849,7 +857,7 @@ namespace StackingProgrammingTool
                         int indexOfDepartment = this.DepartmentsWrapper.Children.IndexOf(department);
 
                         // Extracting Color Of Department
-                        byte[] departmentColor = this.colorsOfDepartments[departmentIndex];
+                        byte[] departmentColor = this.colorsOfBoxes[department.Name];
 
                         // Generate New Gradient Color For Programs Of Each Department
                         for (int i = 0; i < input; i++)
@@ -1081,12 +1089,6 @@ namespace StackingProgrammingTool
 
                         // Add Stacking Data To The Stacking Tab
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
-
-                        //for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
-                        //{
-                        //    MessageBox.Show(this.stackingVisualization.Children[i].GetName() + "---" +
-                        //        this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].visualizationIndex.ToString());
-                        //}
                     }
 
                     // Decrease Number Of Programs
@@ -1101,7 +1103,7 @@ namespace StackingProgrammingTool
                         int difference = existingPrograms - input;
 
                         // Extracting Color Of Department
-                        byte[] departmentColor = this.colorsOfDepartments[departmentIndex];
+                        byte[] departmentColor = this.colorsOfBoxes[department.Name];
 
                         // Generate New Gradient Color For Programs Of Each Department
                         for (int i = 0; i < input; i++)
@@ -2398,10 +2400,29 @@ namespace StackingProgrammingTool
 
         /* ########################################################### Visualization Tab Events ########################################################### */
 
-        /* ----------------------------------- Handeling Programs Excel Image Maximize Image Event ----------------------------------- */
+        /* ----------------------------------- Handeling ColorPicker Change Event ----------------------------------- */
         private void ColorPicker_Changed(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            MessageBox.Show("Yo");
+            Xceed.Wpf.Toolkit.ColorPicker colorPicker = sender as Xceed.Wpf.Toolkit.ColorPicker;
+
+            if (colorPicker.Name == "ProjectBoxColorPicker")
+            {
+                if (this.colorsOfBoxes.Count == 0)
+                {
+                    return;
+                }
+                else
+                {
+                    ((GeometryModel3D)this.stackingVisualization.Children[0]).BackMaterial = 
+                        MaterialHelper.CreateMaterial(this.ProjectBoxColorPicker.SelectedColor.Value);
+                }
+            }
+            else
+            {
+                int departmentIndex = (this.DepartmentsColorPicker.Children.IndexOf(colorPicker) - 1) / 2;
+                string departmentName = this.DepartmentsWrapper.Children[departmentIndex].GetName();
+                MessageBox.Show(departmentName);
+            }
         }
     }
 }

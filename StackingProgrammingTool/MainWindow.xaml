@@ -575,15 +575,29 @@
                 <!--=========================-->
                 <!--Visualization Settings Tab-->
                 <TabItem Header="Visualization" Padding="5">
-                    <ScrollViewer x:Name="VisualizationTab">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
+                                      CanContentScroll="False">
                         <StackPanel>
-                        <!--Programm Information-->
-                        <TextBlock Text="Departments' Colors" HorizontalAlignment="Stretch"
+                        <!--Departments' Colors-->
+                        <TextBlock Text="Visualization Colors" HorizontalAlignment="Stretch"
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
 
+                            <!--Project Color-->
+                            <TextBlock Text="PROJECT'S COLOR" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
+                            <wpfTool:ColorPicker x:Name="ProjectBoxColorPicker"
+                                                 SelectedColorChanged="ColorPicker_Changed"
+                                                 Height="30" Margin="0 10 0 0"
+                                                 HorizontalAlignment="Stretch"
+                                                 VerticalAlignment="Center" 
+                                                 SelectedColor="Gray"/>
+
+                            <!--Departments' Colors-->
+                            <TextBlock Text="DEPARTMENTS' COLOR" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
                             <Grid x:Name="DepartmentsColorPicker" HorizontalAlignment="Stretch"
-                                  Height="420" Margin="0 10 0 0">
+                                  Margin="0 10 0 0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
