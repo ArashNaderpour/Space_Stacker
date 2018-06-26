@@ -552,6 +552,9 @@ namespace StackingProgrammingTool
                             byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
                             this.colorsOfDepartments.Add(color);
 
+                            // Adding A Color Picker For Each Department
+                            VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color, ColorPicker_Changed);
+
                             for (int j = 0; j < initialNumberOfPrograms; j++)
                             {
                                 // Calculating Raw Cost And GSF Of Each Program
