@@ -44,6 +44,28 @@ namespace StackingProgrammingTool
             return result;
         }
 
+        /*------------ Change Foreground Color Of The Visualization Labels ------------*/
+        public static void ChangeForegroundColorVisualizationLabel(TextGroupVisual3D textGroup, 
+            int index, byte[] color)
+        {
+            TextVisual3D labelLeft = textGroup.Children[(2 * index) - 2] as TextVisual3D;
+            TextVisual3D labelRight = textGroup.Children[(2 * index) - 1] as TextVisual3D;
+
+
+            int mid = (color[0] + color[1] + color[2]) / 3;
+
+            if (mid < 120)
+            {
+                labelLeft.Foreground = Brushes.White;
+                labelRight.Foreground = Brushes.White;
+            }
+            else
+            {
+                labelLeft.Foreground = Brushes.Black;
+                labelRight.Foreground = Brushes.Black;
+            }
+        }
+
         /*------------ Generate Visualization Boxes' Labels ------------*/
         public static void GenerateVisualizationLabel(TextGroupVisual3D textGroup, string content,
             Point3D center, float[] dims, Color color)

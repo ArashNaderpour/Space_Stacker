@@ -320,7 +320,7 @@ namespace StackingProgrammingTool
 
                         Box programBox = new Box(programBoxName, programBoxCenter);
                         programBox.boxDims = programBoxDims;
-                        programBox.departmentName = department.Header.ToString();
+                        programBox.departmentHeader = department.Header.ToString();
                         programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                         programBox.function = program.SelectedItem.ToString();
                         programBox.keyRooms = (int)keyRooms.Value;
@@ -410,6 +410,8 @@ namespace StackingProgrammingTool
                 this.CMFeeButton.IsEnabled = true;
 
                 this.ProgramsCheckBox.IsEnabled = true;
+
+                this.ProjectBoxColorPicker.IsEnabled = true;
             }
             else
             {
@@ -593,7 +595,7 @@ namespace StackingProgrammingTool
 
                                 Box programBox = new Box(programBoxName, programBoxCenter);
                                 programBox.boxDims = programBoxDims;
-                                programBox.departmentName = department.Header.ToString();
+                                programBox.departmentHeader = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                                 programBox.function = program.SelectedItem.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
@@ -749,7 +751,7 @@ namespace StackingProgrammingTool
 
                     Box programBox = new Box(programBoxName, programBoxCenter);
                     programBox.boxDims = programBoxDims;
-                    programBox.departmentName = department.Header.ToString();
+                    programBox.departmentHeader = department.Header.ToString();
                     programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
                     programBox.function = program.SelectedItem.ToString();
                     programBox.keyRooms = (int)keyRooms.Value;
@@ -807,7 +809,7 @@ namespace StackingProgrammingTool
                     {
                         if (this.stackingVisualization.Children[i].GetName().Contains(department.Name))
                         {
-                            this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].departmentName = nameTextBox.Text;
+                            this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].departmentHeader = nameTextBox.Text;
                         }
                     }
                 }
@@ -1018,7 +1020,7 @@ namespace StackingProgrammingTool
 
                                 Box programBox = new Box(newProgramBoxName, newProgramBoxCenter);
                                 programBox.boxDims = newProgramBoxDims;
-                                programBox.departmentName = department.Header.ToString();
+                                programBox.departmentHeader = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(newProgramColors[newProgramIndex][0],
                                     newProgramColors[newProgramIndex][1], newProgramColors[newProgramIndex][2]);
                                 programBox.function = program.SelectedItem.ToString();
@@ -2407,7 +2409,7 @@ namespace StackingProgrammingTool
 
             if (colorPicker.Name == "ProjectBoxColorPicker")
             {
-                if (this.colorsOfBoxes.Count == 0)
+                if (this.ProjectBoxColorPicker.IsEnabled == false)
                 {
                     return;
                 }
@@ -2415,13 +2417,65 @@ namespace StackingProgrammingTool
                 {
                     ((GeometryModel3D)this.stackingVisualization.Children[0]).BackMaterial = 
                         MaterialHelper.CreateMaterial(this.ProjectBoxColorPicker.SelectedColor.Value);
+
+                    // Store The New Color In The Dictionary
+                    this.colorsOfBoxes[this.stackingVisualization.Children[0].GetName()] = new byte[] { this.ProjectBoxColorPicker.SelectedColor.Value.R,
+                        this.ProjectBoxColorPicker.SelectedColor.Value.G, this.ProjectBoxColorPicker.SelectedColor.Value.B};
                 }
             }
             else
             {
                 int departmentIndex = (this.DepartmentsColorPicker.Children.IndexOf(colorPicker) - 1) / 2;
-                string departmentName = this.DepartmentsWrapper.Children[departmentIndex].GetName();
-                MessageBox.Show(departmentName);
+                Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
+                TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(department, department.Name + "NumberInputTextBox") as TextBox;
+
+                // Number Of Programs That Exists In The Department
+                int programCount = int.Parse(programNumberTextBox.Text);
+
+                // New Selected Color
+                byte[] selectedColor = new byte[] { colorPicker.SelectedColor.Value.R,
+                    colorPicker.SelectedColor.Value.G, colorPicker.SelectedColor.Value.B };
+
+                // A List To Store New Colors Of The ProgramBoxes
+                List<byte[]> newProgramColors = new List<byte[]>();
+
+                // Generate New Gradient Color For Programs Of Each Department
+                for (int i = 0; i < programCount; i++)
+                {
+                    float stop = ((float)i) / ((float)(programCount));
+
+                    byte[] newColor = VisualizationMethods.GenerateGradientColor(selectedColor, stop);
+                    newProgramColors.Add(newColor);
+                }
+
+                string programName = "";
+                int indexInDepartment = new int();
+                for(int i = 1; i < this.stackingVisualization.Children.Count; i++)
+                {
+                    programName = this.stackingVisualization.Children[i].GetName();
+       
+                    if (this.boxesOfTheProject[programName].departmentName == department.Name)
+                    {
+                        indexInDepartment = this.boxesOfTheProject[programName].indexInDepartment;
+
+                        // Store New Color Of Each Program
+                        this.boxesOfTheProject[programName].boxColor = Color.FromRgb(newProgramColors[indexInDepartment][0],
+                            newProgramColors[indexInDepartment][1], newProgramColors[indexInDepartment][2]);
+
+                        // Change Color Of Each Program
+                        ((GeometryModel3D)this.stackingVisualization.Children[i]).Material = 
+                            MaterialHelper.CreateMaterial(this.boxesOfTheProject[programName].boxColor);
+
+                        // Change Visualization Label Foreground
+                        VisualizationMethods.ChangeForegroundColorVisualizationLabel(this.programVisualizationLabelsGroup, i,
+                            newProgramColors[indexInDepartment]);
+
+                        // Change Color Of The Labels Of The Existing UIs Of The Department
+                        ExtraMethods.ChangeLabelColor(department, indexInDepartment, newProgramColors[indexInDepartment]);
+                    }
+                }
+
+                this.colorsOfBoxes[department.Name] = selectedColor;
             }
         }
     }

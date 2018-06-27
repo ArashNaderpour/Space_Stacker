@@ -129,12 +129,12 @@ namespace StackingProgrammingTool
             numOfPrograms.ColumnDefinitions.Add(c1);
             numOfPrograms.ColumnDefinitions.Add(c2);
 
-            // Label of "Name of the Department"
+            // Label of "Number Of The Programs"
             TextBlock number = new TextBlock();
             number.Text = "Number of Programs";
             number.Margin = new Thickness(0, 0, 2, 0);
 
-            // TextBox for getting the Department's Name
+            // TextBox for getting the Department's Number Of Programs
             TextBox numberInput = new TextBox();
             numberInput.Text = numberOfProgramsInput.ToString();
             numberInput.HorizontalAlignment = HorizontalAlignment.Stretch;

@@ -8,6 +8,8 @@ namespace StackingProgrammingTool
     {
         public string name { get; set; }
         public string departmentName { get; set; }
+        public int indexInDepartment { get; set; }
+        public string departmentHeader { get; set; }
         public Point3D boxCenter { get; set; }
         public float[] boxDims { get; set; }
         public Color boxColor { get; set; }
@@ -25,6 +27,10 @@ namespace StackingProgrammingTool
         {
             this.name = name;
             this.boxCenter = boxCenter;
+
+            this.departmentName = name.Replace("ProgramBo", "").Split('x')[0];
+
+            this.indexInDepartment = int.Parse(name.Replace("ProgramBo", "").Split('x')[1]);
         }
     }
 }
