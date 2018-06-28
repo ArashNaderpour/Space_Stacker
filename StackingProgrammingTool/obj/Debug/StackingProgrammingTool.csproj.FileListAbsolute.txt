@@ -40,4 +40,3 @@ C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
-C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojResolveAssemblyReference.cache

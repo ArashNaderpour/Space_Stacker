@@ -998,7 +998,7 @@ namespace StackingProgrammingTool
 
                         // Length Of The Added Program
                         float newProgramLength = new float();
-                        MessageBox.Show(newVisualizationIndex.ToString());
+            
                         // Add New Programs
                         for (int i = firstProgramIndex; i < firstProgramIndex + difference + programCount; i++)
                         {
@@ -1561,7 +1561,7 @@ namespace StackingProgrammingTool
             // Extracting The Department And The Program Indices Of The Changed ComboBox
             string programBoxName = cbx.Name.Replace("ComboBox", "ProgramBox");
             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
-            int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
+            int programIndex = this.boxesOfTheProject[programBoxName].indexInDepartment;
 
             // Extracting The Department That Changed
             Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
@@ -1581,93 +1581,93 @@ namespace StackingProgrammingTool
             DGSF.Value = this.functions[cbx.SelectedItem.ToString()]["DGSFVal"];
             DGSF.Maximum = this.functions[cbx.SelectedItem.ToString()]["DGSFMax"];
 
-            // Extracting Floor And Visualization Index Of The ProgramBox
-            int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
-            int programBoxVisualizationIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
+                // Extracting Floor And Visualization Index Of The ProgramBox
+                int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
+                int programBoxVisualizationIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
 
-            // Calculating The Scale Factor Of Each ProgramBox
-            float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
-            // Calculating The Length Difference Of The ProgramBox 
-            float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
+                // Calculating The Scale Factor Of Each ProgramBox
+                float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
+                // Calculating The Length Difference Of The ProgramBox 
+                float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
 
-            for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
-            {
-                if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == programBoxFloor)
-                {
-                    // The Changed Program
-                    if (i == programBoxVisualizationIndex)
-                    {
-                        string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
-                        float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
-                            newProgramLength, (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-                        Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + (programLengthDifference / 2),
-                            this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
+            //    for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
+            //    {
+            //        if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == programBoxFloor)
+            //        {
+            //            // The Changed Program
+            //            if (i == programBoxVisualizationIndex)
+            //            {
+            //                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
+            //                float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+            //                    newProgramLength, (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
+            //                Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + (programLengthDifference / 2),
+            //                    this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
 
-                        GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
-                            ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
-                            ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+            //                GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
+            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                        // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
-                        float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
-                        float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
-                        float newGSF = (float)(keyRooms.Value * DGSF.Value);
-                        float newRawProgramCost = newGSF * this.functions[cbx.SelectedItem.ToString()]["cost"];
-                        float GSFDifference = newGSF - oldGSF;
-                        float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
+            //                // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
+            //                float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
+            //                float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
+            //                float newGSF = (float)(keyRooms.Value * DGSF.Value);
+            //                float newRawProgramCost = newGSF * this.functions[cbx.SelectedItem.ToString()]["cost"];
+            //                float GSFDifference = newGSF - oldGSF;
+            //                float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
 
-                        this.totalGSF += GSFDifference;
-                        this.totalRawDepartmentCost += rawProgramCostDifference;
+            //                this.totalGSF += GSFDifference;
+            //                this.totalRawDepartmentCost += rawProgramCostDifference;
 
-                        this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
-                        this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
-                        this.boxesOfTheProject[newProgramBoxName].function = cbx.SelectedItem.ToString();
-                        this.boxesOfTheProject[newProgramBoxName].keyRooms = (int)keyRooms.Value;
-                        this.boxesOfTheProject[newProgramBoxName].DGSF = (float)DGSF.Value;
-                        this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue = newGSF;
-                        this.boxesOfTheProject[newProgramBoxName].cost = this.functions[cbx.SelectedItem.ToString()]["cost"];
-                        this.boxesOfTheProject[newProgramBoxName].totalRawCostValue = newRawProgramCost;
+            //                this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+            //                this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
+            //                this.boxesOfTheProject[newProgramBoxName].function = cbx.SelectedItem.ToString();
+            //                this.boxesOfTheProject[newProgramBoxName].keyRooms = (int)keyRooms.Value;
+            //                this.boxesOfTheProject[newProgramBoxName].DGSF = (float)DGSF.Value;
+            //                this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue = newGSF;
+            //                this.boxesOfTheProject[newProgramBoxName].cost = this.functions[cbx.SelectedItem.ToString()]["cost"];
+            //                this.boxesOfTheProject[newProgramBoxName].totalRawCostValue = newRawProgramCost;
 
-                        this.stackingVisualization.Children.RemoveAt(i);
-                        this.stackingVisualization.Children.Insert(i, programBoxVisualization);
+            //                this.stackingVisualization.Children.RemoveAt(i);
+            //                this.stackingVisualization.Children.Insert(i, programBoxVisualization);
 
-                        // Add Index Of The Box To The Dictionary
-                        this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+            //                // Add Index Of The Box To The Dictionary
+            //                this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
 
-                        // Visualizations Of The Labels Of The Boxes
-                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
-                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
-                            newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
-                    }
-                    // Programs After The Changed One
-                    if (i > programBoxVisualizationIndex)
-                    {
-                        string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
-                        float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
-                            (float)this.stackingVisualization.Children[i].Bounds.SizeY,
-                            (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-                        Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + programLengthDifference,
-                            this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
+            //                // Visualizations Of The Labels Of The Boxes
+            //                VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
+            //                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+            //                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+            //            }
+            //            // Programs After The Changed One
+            //            if (i > programBoxVisualizationIndex)
+            //            {
+            //                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
+            //                float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
+            //                    (float)this.stackingVisualization.Children[i].Bounds.SizeY,
+            //                    (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
+            //                Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + programLengthDifference,
+            //                    this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
 
-                        GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
-                            ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
-                            ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
+            //                GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
+            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
+            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
 
-                        this.stackingVisualization.Children.RemoveAt(i);
-                        this.stackingVisualization.Children.Insert(i, newProgramBox);
+            //                this.stackingVisualization.Children.RemoveAt(i);
+            //                this.stackingVisualization.Children.Insert(i, newProgramBox);
 
-                        this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
-                        this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
+            //                this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
+            //                this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
 
-                        // Visualizations Of The Labels Of The Boxes
-                        VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
-                            this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
-                            newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
-                    }
-                }
-            }
+            //                // Visualizations Of The Labels Of The Boxes
+            //                VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
+            //                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
+            //                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
+            //            }
+            //        }
+            //    }
 
-            // All The Calculation, Prepration, And Visualization Of The Output Data
-            CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+            //    // All The Calculation, Prepration, And Visualization Of The Output Data
+            //    CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /*---------------- Handeling Program Slider Change Event ----------------*/
