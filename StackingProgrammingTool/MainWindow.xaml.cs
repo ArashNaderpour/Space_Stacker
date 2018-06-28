@@ -116,7 +116,7 @@ namespace StackingProgrammingTool
         {
             // Open The Spread Sheet File
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-
+            
             // Excel File Properties
             Excel.Application xlApp;
             Excel.Workbook xlWorkBook;
@@ -141,14 +141,11 @@ namespace StackingProgrammingTool
                     Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
                     float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
 
-                    Box projectBox = new Box(projectBoxName, projectBoxCenter);
-
                     GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
-                    this.boxesOfTheProject.Add(projectBox.name, projectBox);
                     this.stackingVisualization.Children.Add(projectVisualizationBox);
-
+              
                     filePath = openFileDialog.FileName;
                 }
                 else
@@ -694,12 +691,9 @@ namespace StackingProgrammingTool
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
             float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
 
-            Box projectBox = new Box(projectBoxName, projectBoxCenter);
-
             GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                 new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
-            this.boxesOfTheProject.Add(projectBox.name, projectBox);
             this.stackingVisualization.Children.Add(projectVisualizationBox);
 
             // Generating Initial Expanders And Programs Visualization
@@ -2167,7 +2161,7 @@ namespace StackingProgrammingTool
         {
             Button btn = sender as Button;
 
-            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(this.ProgramsStackingGrid, btn.Name.Replace("SetButton", "TextBox")) as TextBox;
+            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(this.ProgramsStackingGrid, btn.Name.Replace("SetButton", "StackingTextBox")) as TextBox;
 
             string programBoxName = btn.Name.Replace("SetButton", "");
 
@@ -2496,6 +2490,10 @@ namespace StackingProgrammingTool
 
                         // Change Color Of The Labels Of The Existing UIs Of The Department
                         ExtraMethods.ChangeLabelColor(department, indexInDepartment, newProgramColors[indexInDepartment]);
+
+                        // Change Color Of Labels Of The Stacking Tab
+                        ExtraMethods.ChangeProgramsStackingLabelColor(programName, this.boxesOfTheProject[programName].boxColor,
+                            this.ProgramsStackingGrid);
                     }
                 }
 

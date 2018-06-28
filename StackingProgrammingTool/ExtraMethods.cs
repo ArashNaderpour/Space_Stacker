@@ -559,6 +559,7 @@ namespace StackingProgrammingTool
 
                         // Generate And Display Label Of Each Program
                         Label programLabel = new Label();
+                        programLabel.Name = boxName + "StackingLabel";
                         programLabel.Content = original.Content;
                         programLabel.Width = 30;
                         programLabel.Height = 30;
@@ -581,7 +582,7 @@ namespace StackingProgrammingTool
                         programFloor.FontSize = 14;
                         programFloor.Margin = new Thickness(0, 0, 0, 5);
                         programFloor.Text = boxes[boxName].floor.ToString();
-                        programFloor.Name = boxName + "TextBox";
+                        programFloor.Name = boxName + "StackingTextBox";
                         programFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
                         programFloor.VerticalAlignment = VerticalAlignment.Center;
                         programFloor.VerticalContentAlignment = VerticalAlignment.Center;
@@ -607,6 +608,26 @@ namespace StackingProgrammingTool
                         rowIndex += 1;
                     }
                 }
+            }
+        }
+
+        /* --------------------- Method For Generating And Displaying Stacking Controllers --------------------- */
+        public static void ChangeProgramsStackingLabelColor(string boxName, Color color,
+            Grid programsStackingGrid)
+        {
+            Label label = LogicalTreeHelper.FindLogicalNode(programsStackingGrid, boxName + "StackingLabel") as Label;
+
+            label.Background = new SolidColorBrush(color);
+
+            int mid = (color.R + color.B + color.G) / 3;
+
+            if (mid < 120)
+            {
+                label.Foreground = Brushes.White;
+            }
+            else
+            {
+                label.Foreground = Brushes.Black;
             }
         }
     }
