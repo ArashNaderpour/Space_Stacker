@@ -870,7 +870,7 @@ namespace StackingProgrammingTool
                             newProgramColors.Add(newColor);
                         }
 
-                        // Calculating Total Length Of The Exsiting Programs
+                        // Calculating Indexes 
                         int newProgramIndex = 0;
                         int newVisualizationIndex = new int();
 
@@ -880,11 +880,14 @@ namespace StackingProgrammingTool
                         // Index Of First Program In The Department
                         int firstProgramIndex = 1;
 
+                        // Temporary Variable
+                        int tempProgramIndex = new int();
+
                         for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
                         {
                             string programBoxName = this.stackingVisualization.Children[i].GetName();
-                            string departmentName = programBoxName.Replace("ProgramBo", "").Split('x')[0];
-                            int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
+                            string departmentName = this.boxesOfTheProject[programBoxName].departmentName;
+                            int programIndex = this.boxesOfTheProject[programBoxName].indexInDepartment;
 
                             // Programs Of The Department In The Lower Floors
                             if (this.boxesOfTheProject[programBoxName].floor < indexOfDepartment)
@@ -903,6 +906,10 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)(this.stackingVisualization.Children[i])).Material =
                                         MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
                                         newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
+
+                                    // Change Visualization Label Foreground
+                                    VisualizationMethods.ChangeVisualizationLabelColor(this.programVisualizationLabelsGroup, i,
+                                        newProgramColors[programIndex]);
 
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
@@ -927,12 +934,25 @@ namespace StackingProgrammingTool
                                             MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
                                             newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
 
+                                        // Change Visualization Label Foreground
+                                        VisualizationMethods.ChangeVisualizationLabelColor(this.programVisualizationLabelsGroup, i,
+                                            newProgramColors[programIndex]);
+
                                         // Change Color Of The Labels Of The Existing UIs Of The Department
                                         ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
 
                                         // Extract Largest ProgramIndex In The Department
                                         newProgramIndex = programIndex + 1;
                                         newVisualizationIndex = i + 1;
+                                    }
+                                    else
+                                    {
+                                        if (programIndex > tempProgramIndex) {
+
+                                            tempProgramIndex = programIndex;
+
+                                            newVisualizationIndex = i + 1;
+                                        }
                                     }
                                 }
 
@@ -955,6 +975,10 @@ namespace StackingProgrammingTool
                                         MaterialHelper.CreateMaterial(Color.FromRgb(newProgramColors[programIndex][0],
                                         newProgramColors[programIndex][1], newProgramColors[programIndex][2]));
 
+                                    // Change Visualization Label Foreground
+                                    VisualizationMethods.ChangeVisualizationLabelColor(this.programVisualizationLabelsGroup, i,
+                                        newProgramColors[programIndex]);
+
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
 
@@ -974,7 +998,7 @@ namespace StackingProgrammingTool
 
                         // Length Of The Added Program
                         float newProgramLength = new float();
-
+                        MessageBox.Show(newVisualizationIndex.ToString());
                         // Add New Programs
                         for (int i = firstProgramIndex; i < firstProgramIndex + difference + programCount; i++)
                         {
@@ -1058,7 +1082,7 @@ namespace StackingProgrammingTool
                                     newProgramIndex += 1;
                                 }
                             }
-
+                            
                             // Move The Programs After The Inserted One
                             if (i > newVisualizationIndex)
                             {
@@ -2467,7 +2491,7 @@ namespace StackingProgrammingTool
                             MaterialHelper.CreateMaterial(this.boxesOfTheProject[programName].boxColor);
 
                         // Change Visualization Label Foreground
-                        VisualizationMethods.ChangeForegroundColorVisualizationLabel(this.programVisualizationLabelsGroup, i,
+                        VisualizationMethods.ChangeVisualizationLabelColor(this.programVisualizationLabelsGroup, i,
                             newProgramColors[indexInDepartment]);
 
                         // Change Color Of The Labels Of The Existing UIs Of The Department

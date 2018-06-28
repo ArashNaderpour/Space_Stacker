@@ -45,7 +45,7 @@ namespace StackingProgrammingTool
         }
 
         /*------------ Change Foreground Color Of The Visualization Labels ------------*/
-        public static void ChangeForegroundColorVisualizationLabel(TextGroupVisual3D textGroup, 
+        public static void ChangeVisualizationLabelColor(TextGroupVisual3D textGroup, 
             int index, byte[] color)
         {
             TextVisual3D labelLeft = textGroup.Children[(2 * index) - 2] as TextVisual3D;
