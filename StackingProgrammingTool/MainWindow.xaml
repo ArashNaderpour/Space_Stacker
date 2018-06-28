@@ -586,13 +586,30 @@
                             <!--Project Color-->
                             <TextBlock Text="PROJECT'S COLOR" FontSize="15" 
                                        FontWeight="Bold" Margin="0 10 0 0"/>
-                            <wpfTool:ColorPicker x:Name="ProjectBoxColorPicker"
-                                                 IsEnabled="False"
+
+                            <Grid x:Name="ProjectColorPicker" HorizontalAlignment="Stretch"
+                                  Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Label For ProjectBox's ColorPicker -->
+                                <Label Content="PROJECT" Height="30" FontSize="14"
+                                       FontWeight="DemiBold" Grid.Column="0"
+                                       HorizontalContentAlignment="Left"
+                                       VerticalContentAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" 
+                                       BorderBrush="Black" BorderThickness="0.3"/>
+                                
+                                <!-- ColorPicker For The Project's Box -->
+                                <wpfTool:ColorPicker x:Name="ProjectBoxColorPicker"
+                                                 IsEnabled="False" Grid.Column="1"
                                                  SelectedColorChanged="ColorPicker_Changed"
-                                                 Height="30" Margin="0 10 0 0"
-                                                 HorizontalAlignment="Stretch"
-                                                 VerticalAlignment="Center" 
-                                                 SelectedColor="Gray"/>
+                                                 Height="30" HorizontalAlignment="Stretch"
+                                                 VerticalAlignment="Center" SelectedColor="Gray"/>
+                            </Grid>
 
                             <!--Departments' Colors-->
                             <TextBlock Text="DEPARTMENTS' COLOR" FontSize="15" 
