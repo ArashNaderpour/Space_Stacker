@@ -1237,6 +1237,10 @@ namespace StackingProgrammingTool
                                     ((GeometryModel3D)this.stackingVisualization.Children[i]).Material =
                                         MaterialHelper.CreateMaterial(this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].boxColor);
 
+                                    // Change Visualization Label Foreground
+                                    VisualizationMethods.ChangeVisualizationLabelColor(this.programVisualizationLabelsGroup, i,
+                                        newProgramColors[programIndex]);
+
                                     // Change Color Of The Labels Of The Existing UIs Of The Department
                                     ExtraMethods.ChangeLabelColor(department, programIndex, newProgramColors[programIndex]);
                                 }
