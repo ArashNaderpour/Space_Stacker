@@ -14,7 +14,6 @@ namespace StackingProgrammingTool
     /// </summary>
     public partial class MainWindow : Window
     {
-
         // Visualization Variables
         Model3DGroup stackingVisualization = new Model3DGroup();
         TextGroupVisual3D programVisualizationLabelsGroup = new TextGroupVisual3D();

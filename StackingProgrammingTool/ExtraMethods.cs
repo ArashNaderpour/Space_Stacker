@@ -56,6 +56,10 @@ namespace StackingProgrammingTool
             {
                 programLabel.Foreground = Brushes.White;
             }
+            else
+            {
+                programLabel.Foreground = Brushes.Black;
+            }
            
             programLabel.Background = new SolidColorBrush(Color.FromRgb(color[0], color[1], color[2]));
         }
