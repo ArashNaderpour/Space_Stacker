@@ -1148,12 +1148,11 @@ namespace StackingProgrammingTool
                         for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
                         {
                             string programBoxName = this.stackingVisualization.Children[i].GetName();
-                            string departmentName = programBoxName.Replace("ProgramBo", "").Split('x')[0];
-                            int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
+                            string departmentName = this.boxesOfTheProject[programBoxName].departmentName;
+                            int programIndex = this.boxesOfTheProject[programBoxName].indexInDepartment;
 
                             if (departmentName == department.Name)
                             {
-
                                 // Omit Programs' Properties And Visualizations
                                 if (programIndex >= input)
                                 {
@@ -1161,13 +1160,16 @@ namespace StackingProgrammingTool
                                     programFloor = this.boxesOfTheProject[programBoxName].floor;
                                     programLength = this.boxesOfTheProject[programBoxName].boxDims[1];
 
-                                    // Move Programs Of The Other Departments That Exists In The Removed Department's Floor
+                                    // Move Other Programs That Exists After The Removed Department's Floor
                                     for (int j = i + 1; j < this.stackingVisualization.Children.Count; j++)
                                     {
                                         string newProgramBoxName = this.stackingVisualization.Children[j].GetName();
+                                        string newDepartmentName = this.boxesOfTheProject[newProgramBoxName].departmentName;
+                                        int newProgramIndex = this.boxesOfTheProject[newProgramBoxName].indexInDepartment;
 
-                                        if (this.boxesOfTheProject[this.stackingVisualization.Children[j].GetName()].floor == programFloor &&
-                                            department.Name != this.stackingVisualization.Children[j].GetName().Replace("ProgramBo", "").Split('x')[0])
+                                        if ((this.boxesOfTheProject[newProgramBoxName].floor == programFloor &&
+                                            department.Name != newDepartmentName) ||
+                                            (this.boxesOfTheProject[newProgramBoxName].floor == programFloor && newProgramIndex < programIndex))
                                         {
 
                                             float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
