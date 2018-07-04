@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -273,7 +274,8 @@ namespace StackingProgrammingTool
                     Expander department = ExtraMethods.DepartmentGernerator(i);
 
                     ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
-                        this.functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, ProgramSlider_ValueChanged);
+                        this.functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
+                        ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                     this.DepartmentsWrapper.Children.Add(department);
 
@@ -353,7 +355,8 @@ namespace StackingProgrammingTool
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Generate And Visualize Stacking Data Of The Stacking Tab
-                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
+                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                    StackingButton_Click, OnKeyUpHandler);
 
                 // Enabling The Disabled Controllers
                 this.ProjectWidth.IsEnabled = true;
@@ -535,7 +538,8 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                            StackingButton_Click, OnKeyUpHandler);
                     }
 
                     // Increase Number Of Departments
@@ -548,7 +552,8 @@ namespace StackingProgrammingTool
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
 
                             ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
-                                DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, ProgramSlider_ValueChanged);
+                                DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
+                                ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                             this.DepartmentsWrapper.Children.Add(department);
 
@@ -621,7 +626,8 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                            StackingButton_Click, OnKeyUpHandler);
                     }
                     // Input Is Equal To Existing Number Of Departments
                     if (existingDepartments == input)
@@ -700,7 +706,8 @@ namespace StackingProgrammingTool
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
-                    DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, ProgramSlider_ValueChanged);
+                    DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
+                    ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                 this.DepartmentsWrapper.Children.Add(department);
 
@@ -774,19 +781,20 @@ namespace StackingProgrammingTool
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
             // Generate And Visualize Stacking Data To The Stacking Tab
-            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
+            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                StackingButton_Click, OnKeyUpHandler);
         }
 
         /* ----------------The Event For Setting Name Of The Departments And The Number Of Programs It Contains ---------------- */
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-
+           
             // Setting The Name Of The Department (Recognizing Which Button Was Pressed)
-            if (btn.Name.Contains("SetNameButton"))
+            if (btn.Name.Contains("Name"))
             {
-                Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "")) as Expander;
-                TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNameButton", "NameInputTextBox")) as TextBox;
+                Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("NameInputTextBoxButton", "")) as Expander;
+                TextBox nameTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("Button", "")) as TextBox;
 
                 int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(department);
 
@@ -816,11 +824,11 @@ namespace StackingProgrammingTool
             // Setting The Number Of Programs In The Department (Number Of Programs Button Was Pressed) 
             else
             {
-                Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "")) as Expander;
-                TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "NumberInputTextBox")) as TextBox;
-                Grid programs = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("SetNumberButton", "") + "Programs") as Grid;
+                Expander department = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("NumberInputTextBoxButton", "")) as Expander;
+                TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("Button", "")) as TextBox;
+                Grid programs = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, department.Name + "Programs") as Grid;
                 int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(department);
-
+                
                 int input = new int();
                 int existingPrograms = programs.RowDefinitions.Count;
 
@@ -1107,7 +1115,8 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                            StackingButton_Click, OnKeyUpHandler);
                     }
 
                     // Decrease Number Of Programs
@@ -1250,7 +1259,8 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, StackingButton_Click);
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                            StackingButton_Click, OnKeyUpHandler);
                     }
 
                     if (input == existingPrograms)
@@ -2164,9 +2174,9 @@ namespace StackingProgrammingTool
         {
             Button btn = sender as Button;
 
-            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(this.ProgramsStackingGrid, btn.Name.Replace("SetButton", "StackingTextBox")) as TextBox;
+            TextBox programNumberTextBox = LogicalTreeHelper.FindLogicalNode(this.ProgramsStackingGrid, btn.Name.Replace("Button", "")) as TextBox;
 
-            string programBoxName = btn.Name.Replace("SetButton", "");
+            string programBoxName = btn.Name.Replace("StackingTextBoxButton", "");
 
             int inputFloor = new int();
 
@@ -2501,6 +2511,21 @@ namespace StackingProgrammingTool
                 }
 
                 this.colorsOfBoxes[department.Name] = selectedColor;
+            }
+        }
+
+        /* ########################################################### General Methods And Events ########################################################### */
+
+        /* ----------------------------------- Press Enter To Activate TextBox Event ----------------------------------- */
+        private void OnKeyUpHandler(object sender, KeyEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            if (e.Key == Key.Enter || e.Key == Key.Return)
+            {
+                Button button = LogicalTreeHelper.FindLogicalNode(this, textBox.Name + "Button") as Button;
+
+                button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
     }

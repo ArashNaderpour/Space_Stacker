@@ -227,7 +227,7 @@
                                            Grid.Row="0" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectWidth" Padding="2" HorizontalAlignment="Stretch" 
                                          Grid.Column="1" Grid.Row="0" Margin="0 0 0 5" 
-                                         IsEnabled="False"/>
+                                         IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="ProjectWidthButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="0" Margin="0 0 0 5" Click="ProjectSize_Click"
                                         IsEnabled="False"/>
@@ -237,27 +237,27 @@
                                            Grid.Row="1" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectLength" Padding="2" HorizontalAlignment="Stretch" 
                                          Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" 
-                                         IsEnabled="False"/>
+                                         IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="ProjectLengthButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="1" Margin="0 0 0 5" Click="ProjectSize_Click"
-                                        IsEnabled="False"/>
+                                        IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                 <!--======================-->
                                 <!-- Set Height of BGSF Box-->
                                 <TextBlock Text="Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
                                 <TextBox x:Name="ProjectHeight" Padding="2" HorizontalAlignment="Stretch" 
                                          Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" 
-                                         IsEnabled="False"/>
+                                         IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="ProjectHeightButton" Content="Set" Grid.Column="2" 
                                         Grid.Row="2" Margin="0 0 0 5" Click="ProjectSize_Click"
-                                        IsEnabled="False"/>
+                                        IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                 <!--======================-->
                                 <!-- Set Floor Height of BGSF Box-->
                                 <TextBlock Text="Floor Height" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="3" Margin="0 0 0 5"/>
                                 <TextBox x:Name="FloorHeight" Padding="2" HorizontalAlignment="Stretch" 
                                          IsEnabled="False" Grid.Column="1" Grid.Row="3" 
-                                         Margin="0 0 0 5"/>
+                                         Margin="0 0 0 5" KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="FloorHeightButton" Content="Set" Grid.Column="2" Grid.Row="3" 
                                         Margin="0 0 0 5" Click="ProjectSize_Click" IsEnabled="False"/>
                                 <!--=============================-->
@@ -289,7 +289,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="NumberOfDepartments" Grid.Column="0" IsEnabled="False" 
-                                             Padding="2"/>
+                                             Padding="2" KeyUp="OnKeyUpHandler"/>
                                     <Button x:Name="NumberOfDepartmentsButton" Grid.Column ="1" 
                                             IsEnabled="False" Content="Set" Click="NumberOfDepartments_Click"/>
                                 </Grid>
@@ -364,7 +364,7 @@
                                            Grid.Column="0" Margin="0 0 0 5"/>
                                 <TextBox x:Name="TotalBudget" Padding="2" 
                                          HorizontalAlignment="Stretch" Grid.Column="1" 
-                                         Margin="0 0 0 5" IsEnabled="False"/>
+                                         Margin="0 0 0 5" IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="TotalBudgetButton" Content="Set" Grid.Column="2" 
                                         Margin="0 0 0 5" IsEnabled="False"
                                         Click="TotalBudgetButton_Click"/>
@@ -423,7 +423,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="IndirectMultiplier" Grid.Column="0" Padding="2" 
                                              HorizontalAlignment="Stretch" Margin="0 0 0 5"
-                                             IsEnabled="False"/>
+                                             IsEnabled="False" KeyUp="OnKeyUpHandler"/>
                                     <Button x:Name="IndirectMultiplierButton" Content="Set" Grid.Column="1" 
                                             Margin="0 0 0 5" IsEnabled="False" Click="IndirectMultiplier_Click"/>
                                 </Grid>
@@ -445,7 +445,7 @@
                                            Margin="0 0 0 5"/>
                                 <TextBox x:Name="LandCost" IsEnabled="False" Padding="2" 
                                          HorizontalAlignment="Stretch" 
-                                         Grid.Column="1" Margin="0 0 0 5"/>
+                                         Grid.Column="1" Margin="0 0 0 5" KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="LandCostButton" Content="Set" 
                                         Grid.Column="2" Margin="0 0 0 5" IsEnabled="False"
                                         Click="LandCost_Click"/>
@@ -500,7 +500,8 @@
                                                Grid.Row="0" Margin="0 0 0 5"/>
                                 <TextBox x:Name="GeneralCosts" Padding="2" 
                                          HorizontalAlignment="Stretch" Grid.Column="1" 
-                                         Grid.Row="0" Margin="0 0 0 5" IsEnabled="False"/>
+                                         Grid.Row="0" Margin="0 0 0 5" IsEnabled="False" 
+                                         KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="GeneralCostsButton" Content="Set" 
                                         Grid.Column="2" Grid.Row="0" Margin="0 0 0 5"
                                         Click="GeneralCosts_Click" IsEnabled="False"/>
@@ -509,7 +510,8 @@
                                 <TextBlock Text="Design Contingency" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="1" Margin="0 0 0 5"/>
                                 <TextBox x:Name="DesignContingency" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" IsEnabled="False"/>
+                                             Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" IsEnabled="False" 
+                                         KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="DesignContingencyButton" Content="Set" Grid.Column="2" Grid.Row="1" 
                                         Margin="0 0 0 5" Click="DesignContingency_Click" IsEnabled="False"/>
                                 <!--======================-->
@@ -517,7 +519,8 @@
                                 <TextBlock Text="Build Contingency" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="2" Margin="0 0 0 5"/>
                                 <TextBox x:Name="BuildContingency" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsEnabled="False"/>
+                                         Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsEnabled="False"
+                                         KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="BuildContingencyButton" Content="Set" Grid.Column="2" Grid.Row="2" 
                                         Margin="0 0 0 5" Click="BuildContingency_Click" IsEnabled="False"/>
                                 <!--======================-->
@@ -525,14 +528,16 @@
                                 <TextBlock Text="CCIP" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="3" Margin="0 0 0 5"/>
                                 <TextBox x:Name="CCIP" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="3" Margin="0 0 0 5" IsEnabled="False"/>
+                                         Grid.Column="1" Grid.Row="3" Margin="0 0 0 5" IsEnabled="False"
+                                         KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="CCIPButton" Content="Set" Grid.Column="2" Grid.Row="3" 
                                         Margin="0 0 0 5" Click="CCIP_Click" IsEnabled="False"/>
                                 <!-- Set CM FEE -->
                                 <TextBlock Text="CM Fee" VerticalAlignment="Center" Grid.Column="0"
                                                Grid.Row="4" Margin="0 0 0 5"/>
                                 <TextBox x:Name="CMFee" Padding="2" HorizontalAlignment="Stretch" 
-                                             Grid.Column="1" Grid.Row="4" Margin="0 0 0 5" IsEnabled="False"/>
+                                         Grid.Column="1" Grid.Row="4" Margin="0 0 0 5" IsEnabled="False"
+                                         KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="CMFeeButton" Content="Set" Grid.Column="2" Grid.Row="4" 
                                         Margin="0 0 0 5" Click="CMFee_Click" IsEnabled="False"/>
                                 <!-- Set Percentage -->
@@ -541,7 +546,8 @@
                                 <TextBox x:Name="OtherCostsPercentage" Padding="2" IsEnabled="False" 
                                          HorizontalAlignment="Stretch" 
                                          Grid.Column="1" Grid.Row="5" 
-                                         Margin="0 0 0 5" Background="#e2e2e2"/>
+                                         Margin="0 0 0 5" Background="#e2e2e2"
+                                         KeyUp="OnKeyUpHandler"/>
                                 <Button x:Name="OtherCostsPercentageButton" IsEnabled="False" 
                                         Content="Set" Grid.Column="2" Grid.Row="5" 
                                         Margin="0 0 0 5"/>

@@ -3,8 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections.Generic;
-using HelixToolkit.Wpf;
-using System.Windows.Media.Media3D;
+using System.Windows.Input;
 
 namespace StackingProgrammingTool
 {
@@ -68,7 +67,7 @@ namespace StackingProgrammingTool
         public static void departmentExpanderGenerator(Expander department, int numberOfProgramsInput,
             Dictionary<string, Dictionary<string, float>> functions,
             RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged,
-            RoutedPropertyChangedEventHandler<double> Slider_ValueChanged)
+            RoutedPropertyChangedEventHandler<double> Slider_ValueChanged, KeyEventHandler OnKeyUpHandler)
         {
             // The Main Container of the Expander
             StackPanel expanderWrapper = new StackPanel();
@@ -102,11 +101,12 @@ namespace StackingProgrammingTool
             nameInput.HorizontalAlignment = HorizontalAlignment.Stretch;
             nameInput.Name = department.Name + "NameInputTextBox";
             nameInput.Padding = new Thickness(2);
+            nameInput.KeyUp += OnKeyUpHandler;
 
             // Button for setting the Departments Name
             Button setName = new Button();
             setName.Content = "SET";
-            setName.Name = department.Name + "SetNameButton";
+            setName.Name = nameInput.Name + "Button";
             setName.Click += Button_Clicked;
 
             departmentName.Children.Add(name);
@@ -144,11 +144,12 @@ namespace StackingProgrammingTool
             numberInput.HorizontalAlignment = HorizontalAlignment.Stretch;
             numberInput.Name = department.Name + "NumberInputTextBox";
             numberInput.Padding = new Thickness(2);
+            numberInput.KeyUp += OnKeyUpHandler;
 
             // Button for setting the Departments Name
             Button setNumber = new Button();
             setNumber.Content = "SET";
-            setNumber.Name = department.Name + "SetNumberButton";
+            setNumber.Name = numberInput.Name + "Button";
             setNumber.Click += Button_Clicked;
 
             numOfPrograms.Children.Add(number);
@@ -531,7 +532,7 @@ namespace StackingProgrammingTool
 
         /* --------------------- Method For Generating And Displaying Stacking Controllers --------------------- */
         public static void GenerateProgramsStacking(Dictionary<String, Box> boxes, StackPanel departmentsWrapper,
-            Grid programsStackingGrid, RoutedEventHandler Button_Clicked)
+            Grid programsStackingGrid, RoutedEventHandler Button_Clicked, KeyEventHandler OnKeyUpHandler)
         {
             // Clear Rows Of The Grid
             programsStackingGrid.Children.Clear();
@@ -591,6 +592,7 @@ namespace StackingProgrammingTool
                         programFloor.VerticalAlignment = VerticalAlignment.Center;
                         programFloor.VerticalContentAlignment = VerticalAlignment.Center;
                         programFloor.Padding = new Thickness(2);
+                        programFloor.KeyUp += OnKeyUpHandler;
                         Grid.SetColumn(programFloor, 1);
                         Grid.SetRow(programFloor, rowIndex);
                         programsStackingGrid.Children.Add(programFloor);
@@ -601,7 +603,7 @@ namespace StackingProgrammingTool
                         setFloor.FontSize = 14;
                         setFloor.Margin = new Thickness(0, 0, 0, 5);
                         setFloor.Content = "SET";
-                        setFloor.Name = boxName + "SetButton";
+                        setFloor.Name = programFloor.Name + "Button";
                         setFloor.Click += Button_Clicked;
                         setFloor.HorizontalAlignment = HorizontalAlignment.Stretch;
                         setFloor.VerticalContentAlignment = VerticalAlignment.Center;
