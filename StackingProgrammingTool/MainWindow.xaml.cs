@@ -133,7 +133,7 @@ namespace StackingProgrammingTool
                     this.functions.Clear();
                     this.DepartmentsWrapper.Children.Clear();
                     this.stackingVisualization.Children.Clear();
-                    this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
+                    this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
                     this.colorsOfBoxes.Clear();
 
                     // ProjectBox Visualization
@@ -273,7 +273,7 @@ namespace StackingProgrammingTool
                     // Setting Up Initial Departments' Expanders
                     Expander department = ExtraMethods.DepartmentGernerator(i);
 
-                    ExtraMethods.departmentExpanderGenerator(department, initialNumberOfPrograms,
+                    ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
                         this.functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
                         ProgramSlider_ValueChanged, OnKeyUpHandler);
 
@@ -288,7 +288,7 @@ namespace StackingProgrammingTool
                     VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
                         ColorPicker_Changed);
 
-                    for (int j = 0; j < initialNumberOfPrograms; j++)
+                    for (int j = 0; j < this.initialNumberOfPrograms; j++)
                     {
                         // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
                         ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
@@ -304,7 +304,7 @@ namespace StackingProgrammingTool
                         this.totalRawDepartmentCost += rawCost;
 
                         // Generate Gradient Colors For Programs Of Each Department
-                        float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                        float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
                         byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
                         // Setting Program Label Background Color
@@ -565,7 +565,7 @@ namespace StackingProgrammingTool
                             VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
                                 ColorPicker_Changed);
 
-                            for (int j = 0; j < initialNumberOfPrograms; j++)
+                            for (int j = 0; j < this.initialNumberOfPrograms; j++)
                             {
                                 // Calculating Raw Cost And GSF Of Each Program
                                 ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
@@ -581,14 +581,15 @@ namespace StackingProgrammingTool
                                 this.totalRawDepartmentCost += rawCost;
 
                                 // Add Program's Boxes For The Added Departments
-                                float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                                float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
                                 byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
                                 // Setting Program Label Background Color
                                 ExtraMethods.ChangeLabelColor(department, j, gradient);
 
                                 string programBoxName = department.Name + "ProgramBox" + j.ToString();
-                                float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, float.Parse(this.FloorHeight.Text) };
+                                float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), GSF/float.Parse(this.ProjectWidth.Text),
+                                    float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
                                     ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
@@ -651,7 +652,7 @@ namespace StackingProgrammingTool
             // Clear All The Lists
             this.DepartmentsWrapper.Children.Clear();
             this.stackingVisualization.Children.Clear();
-            this.NumberOfDepartments.Text = initialNumberOfDepartments.ToString();
+            this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
             this.colorsOfBoxes.Clear();
             this.boxesOfTheProject.Clear();
             this.programVisualizationLabelsGroup.Children.Clear();
@@ -702,7 +703,7 @@ namespace StackingProgrammingTool
             this.stackingVisualization.Children.Add(projectVisualizationBox);
 
             // Generating Initial Expanders And Programs Visualization
-            for (int i = 0; i < initialNumberOfDepartments; i++)
+            for (int i = 0; i < this.initialNumberOfDepartments; i++)
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
@@ -720,7 +721,7 @@ namespace StackingProgrammingTool
                 VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
                     ColorPicker_Changed);
 
-                for (int j = 0; j < initialNumberOfPrograms; j++)
+                for (int j = 0; j < this.initialNumberOfPrograms; j++)
                 {
                     // Calculating Raw Cost And GSF Of Each Program
                     ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
@@ -736,7 +737,7 @@ namespace StackingProgrammingTool
                     this.totalRawDepartmentCost += rawCost;
 
                     // Generate Gradient Colors For Programs Of Each Department
-                    float stop = ((float)j) / ((float)initialNumberOfPrograms);
+                    float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
                     byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
                     // Setting Program Label Background Color
