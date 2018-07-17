@@ -188,6 +188,26 @@
                                       CanContentScroll="False">
                         <StackPanel>
                             <!--BGSF Visualization-->
+                            <TextBlock Text="Program Definition" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--Open Program Generator Page-->
+                                <Button x:Name="OpenProgramDefinePage" Grid.Column="0"
+                                        Content="Generate Programs" Margin="2.5 10 0 0"/>
+                                <!--=================-->
+                                <!--Open Excel File Button-->
+                                <Button x:Name="OpenExcelFile" Grid.Column="1" Background="#98AD80"
+                                        Content="Load Spread Sheet" Margin="2.5 10 0 0" Click="OpenSpreadSheet_Click"/>
+                                <!--=================-->
+                            </Grid>
+                            
+                            <!--BGSF Visualization-->
                             <TextBlock Text="BGSF Visualization" HorizontalAlignment="Stretch"
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
@@ -312,10 +332,6 @@
                                 <!--Reset Departments Button-->
                                 <Button x:Name="ResetDepartmentsButton" Grid.Column="0" Grid.Row="2" IsEnabled="False" 
                                         Content="Reset Departments" Margin="0 10 2.5 0" Click="ResetDepartments_Click"/>
-                                <!--=================-->
-                                <!--Open Excel File Button-->
-                                <Button x:Name="OpenExcelFile" Grid.Column="1" Grid.Row="2" Background="#98AD80"
-                                        Content="Spread Sheet" Margin="2.5 10 0 0" Click="OpenSpreadSheet_Click"/>
                                 <!--=================-->
                                 <!--Reset Departments Button-->
                                 <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3" IsEnabled="False" 
