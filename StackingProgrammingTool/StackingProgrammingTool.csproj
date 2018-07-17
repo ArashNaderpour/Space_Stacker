@@ -92,11 +92,18 @@
     <Compile Include="ExcelImageSubWindow.xaml.cs">
       <DependentUpon>ExcelImageSubWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GenerateInitialDataWindow.xaml.cs">
+      <DependentUpon>GenerateInitialDataWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProgramsSubWindow.xaml.cs">
       <DependentUpon>ProgramsSubWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualizationMethods.cs" />
     <Page Include="ExcelImageSubWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GenerateInitialDataWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

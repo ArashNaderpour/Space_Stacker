@@ -198,12 +198,14 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!--Open Program Generator Page-->
-                                <Button x:Name="OpenProgramDefinePage" Grid.Column="0"
-                                        Content="Generate Programs" Margin="2.5 10 0 0"/>
+                                <Button x:Name="GenerateInitialDataButton" Grid.Column="0"
+                                        Content="Generate Programs" Margin="2.5 10 0 0"
+                                        Click="GeneratePrograms_Click"/>
                                 <!--=================-->
                                 <!--Open Excel File Button-->
                                 <Button x:Name="OpenExcelFile" Grid.Column="1" Background="#98AD80"
-                                        Content="Load Spread Sheet" Margin="2.5 10 0 0" Click="OpenSpreadSheet_Click"/>
+                                        Content="Load Spread Sheet" Margin="2.5 10 0 0" 
+                                        Click="OpenSpreadSheet_Click"/>
                                 <!--=================-->
                             </Grid>
                             

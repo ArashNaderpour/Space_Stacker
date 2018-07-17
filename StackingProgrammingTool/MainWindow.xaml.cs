@@ -58,6 +58,9 @@ namespace StackingProgrammingTool
         // SubWindows: Programs Window
         ProgramsSubWindow programsWindow = new ProgramsSubWindow();
 
+        // SubWindows: Generate Initial Data Window
+        GenerateInitialDataWindow generateInitialDataWindow = new GenerateInitialDataWindow();
+
         // SubWindows: Excel Image Window
         ExcelImageSubWindow excelImageWindow = new ExcelImageSubWindow();
 
@@ -89,7 +92,7 @@ namespace StackingProgrammingTool
             byte[] projectBoxColor = { 100, 100, 100 };
             Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
             Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
-            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(projectBoxColor[0], 
+            Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(projectBoxColor[0],
                 projectBoxColor[1], projectBoxColor[2]));
             GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter,
                 new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) },
@@ -111,12 +114,22 @@ namespace StackingProgrammingTool
 
         /* ########################################################### End Of Windows Load And Start Of Handeling Events ########################################################### */
 
+        /*---------------- Handeling Generate Progerams Event ----------------*/
+        private void GeneratePrograms_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+
+                // Display Programs SubWindow
+                this.generateInitialDataWindow.Show();
+
+        }
+
         /*---------------- Handeling Open Spread-Sheet File Event ----------------*/
         private void OpenSpreadSheet_Click(object sender, RoutedEventArgs e)
         {
             // Open The Spread Sheet File
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            
+
             // Excel File Properties
             Excel.Application xlApp;
             Excel.Workbook xlWorkBook;
@@ -145,7 +158,7 @@ namespace StackingProgrammingTool
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
                     this.stackingVisualization.Children.Add(projectVisualizationBox);
-              
+
                     filePath = openFileDialog.FileName;
                 }
                 else
@@ -274,7 +287,7 @@ namespace StackingProgrammingTool
                     Expander department = ExtraMethods.DepartmentGernerator(i);
 
                     ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
-                        this.functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
+                        this.functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
                         ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                     this.DepartmentsWrapper.Children.Add(department);
@@ -355,7 +368,7 @@ namespace StackingProgrammingTool
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                 // Generate And Visualize Stacking Data Of The Stacking Tab
-                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                     StackingButton_Click, OnKeyUpHandler);
 
                 // Enabling The Disabled Controllers
@@ -538,7 +551,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                             StackingButton_Click, OnKeyUpHandler);
                     }
 
@@ -552,7 +565,7 @@ namespace StackingProgrammingTool
                             Expander department = ExtraMethods.DepartmentGernerator((existingDepartments + i));
 
                             ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
-                                DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
+                                DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
                                 ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                             this.DepartmentsWrapper.Children.Add(department);
@@ -627,7 +640,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                             StackingButton_Click, OnKeyUpHandler);
                     }
                     // Input Is Equal To Existing Number Of Departments
@@ -707,7 +720,7 @@ namespace StackingProgrammingTool
             {
                 Expander department = ExtraMethods.DepartmentGernerator(i);
                 ExtraMethods.departmentExpanderGenerator(department, 4, this.functions,
-                    DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged, 
+                    DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
                     ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                 this.DepartmentsWrapper.Children.Add(department);
@@ -782,7 +795,7 @@ namespace StackingProgrammingTool
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
             // Generate And Visualize Stacking Data To The Stacking Tab
-            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                 StackingButton_Click, OnKeyUpHandler);
         }
 
@@ -790,7 +803,7 @@ namespace StackingProgrammingTool
         private void DepartmentNameAndNumberButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-           
+
             // Setting The Name Of The Department (Recognizing Which Button Was Pressed)
             if (btn.Name.Contains("Name"))
             {
@@ -829,7 +842,7 @@ namespace StackingProgrammingTool
                 TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, btn.Name.Replace("Button", "")) as TextBox;
                 Grid programs = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, department.Name + "Programs") as Grid;
                 int departmentIndex = this.DepartmentsWrapper.Children.IndexOf(department);
-                
+
                 int input = new int();
                 int existingPrograms = programs.RowDefinitions.Count;
 
@@ -949,7 +962,8 @@ namespace StackingProgrammingTool
                                     }
                                     else
                                     {
-                                        if (programIndex > tempProgramIndex) {
+                                        if (programIndex > tempProgramIndex)
+                                        {
 
                                             tempProgramIndex = programIndex;
 
@@ -1000,7 +1014,7 @@ namespace StackingProgrammingTool
 
                         // Length Of The Added Program
                         float newProgramLength = new float();
-            
+
                         // Add New Programs
                         for (int i = firstProgramIndex; i < firstProgramIndex + difference + programCount; i++)
                         {
@@ -1084,7 +1098,7 @@ namespace StackingProgrammingTool
                                     newProgramIndex += 1;
                                 }
                             }
-                            
+
                             // Move The Programs After The Inserted One
                             if (i > newVisualizationIndex)
                             {
@@ -1116,7 +1130,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Add Stacking Data To The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                             StackingButton_Click, OnKeyUpHandler);
                     }
 
@@ -1262,7 +1276,7 @@ namespace StackingProgrammingTool
                         CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
                         // Omit Stacking Data From The Stacking Tab
-                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid, 
+                        ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                             StackingButton_Click, OnKeyUpHandler);
                     }
 
@@ -1591,14 +1605,14 @@ namespace StackingProgrammingTool
             DGSF.Value = this.functions[cbx.SelectedItem.ToString()]["DGSFVal"];
             DGSF.Maximum = this.functions[cbx.SelectedItem.ToString()]["DGSFMax"];
 
-                // Extracting Floor And Visualization Index Of The ProgramBox
-                int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
-                int programBoxVisualizationIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
+            // Extracting Floor And Visualization Index Of The ProgramBox
+            int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
+            int programBoxVisualizationIndex = this.boxesOfTheProject[programBoxName].visualizationIndex;
 
-                // Calculating The Scale Factor Of Each ProgramBox
-                float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
-                // Calculating The Length Difference Of The ProgramBox 
-                float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
+            // Calculating The Scale Factor Of Each ProgramBox
+            float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
+            // Calculating The Length Difference Of The ProgramBox 
+            float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
 
             //    for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
             //    {
@@ -2449,7 +2463,7 @@ namespace StackingProgrammingTool
                 }
                 else
                 {
-                    ((GeometryModel3D)this.stackingVisualization.Children[0]).BackMaterial = 
+                    ((GeometryModel3D)this.stackingVisualization.Children[0]).BackMaterial =
                         MaterialHelper.CreateMaterial(this.ProjectBoxColorPicker.SelectedColor.Value);
 
                     // Store The New Color In The Dictionary
@@ -2484,10 +2498,10 @@ namespace StackingProgrammingTool
 
                 string programName = "";
                 int indexInDepartment = new int();
-                for(int i = 1; i < this.stackingVisualization.Children.Count; i++)
+                for (int i = 1; i < this.stackingVisualization.Children.Count; i++)
                 {
                     programName = this.stackingVisualization.Children[i].GetName();
-       
+
                     if (this.boxesOfTheProject[programName].departmentName == department.Name)
                     {
                         indexInDepartment = this.boxesOfTheProject[programName].indexInDepartment;
@@ -2497,7 +2511,7 @@ namespace StackingProgrammingTool
                             newProgramColors[indexInDepartment][1], newProgramColors[indexInDepartment][2]);
 
                         // Change Color Of Each Program
-                        ((GeometryModel3D)this.stackingVisualization.Children[i]).Material = 
+                        ((GeometryModel3D)this.stackingVisualization.Children[i]).Material =
                             MaterialHelper.CreateMaterial(this.boxesOfTheProject[programName].boxColor);
 
                         // Change Visualization Label Foreground
