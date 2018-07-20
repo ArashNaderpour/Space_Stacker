@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StackingProgrammingTool"
         mc:Ignorable="d"
-        Title="GenerateInitialDataWindow" Height="900" Width="900">
+        Title="GenerateInitialData" Height="910" Width="910">
 
 
     <Border x:Name="InitialDataSubWindowContainer" Padding="10">
@@ -28,24 +28,28 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
                     <Label Content="Name" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
-                       Grid.Column="0"/>
+                       Grid.Column="0" Grid.Row="0"/>
                     <Label Content="Cost" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
-                       Grid.Column="1"/>
+                       Grid.Column="1" Grid.Row="0"/>
                     <Label Content="Initial Count" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
-                       Grid.Column="2"/>
+                       Grid.Column="2" Grid.Row="0"/>
                     <Label Content="Count Range" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
-                       Grid.Column="3"/>
+                       Grid.Column="3" Grid.Row="0"/>
                     <Label Content="Initial Gross(FT²)" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
-                       Grid.Column="4"/>
+                       Grid.Column="4" Grid.Row="0"/>
                     <Label Content="Gross Range(FT²)" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
-                       Grid.Column="5"/>
+                       Grid.Column="5" Grid.Row="0"/>
                 </Grid>
 
                 <Grid Width="300">
@@ -62,15 +66,15 @@
 
                         <Button x:Name="AddProgramButton" Content="Add Program"
                             Grid.Column="0" HorizontalAlignment="Stretch"
-                                Margin="0 0 2.5 0"/>
+                                Margin="0 0 2.5 0" Click="AddProgramData_Click"/>
                         <Button x:Name="RemoveProgramButton" Content="Remove Program"
                             Grid.Column="2" HorizontalAlignment="Stretch"
-                                Margin="2.5 0 0 0"/>
+                                Margin="2.5 0 0 0" Click="RemoveProgramData_Click"/>
                     </Grid>
 
                     <Button x:Name="SetInitialDataButton" Content="Generate Programs"
                             VerticalAlignment="Stretch"  Grid.Row="1" 
-                            Margin="0 5 0 0"/>
+                            Margin="0 5 0 0" Click="GenerateProgramData_Click"/>
                 </Grid>
             </StackPanel>
 

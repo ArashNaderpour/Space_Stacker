@@ -59,7 +59,7 @@ namespace StackingProgrammingTool
         ProgramsSubWindow programsWindow = new ProgramsSubWindow();
 
         // SubWindows: Generate Initial Data Window
-        GenerateInitialDataWindow generateInitialDataWindow = new GenerateInitialDataWindow();
+        GenerateInitialDataWindow generateInitialDataWindow;
 
         // SubWindows: Excel Image Window
         ExcelImageSubWindow excelImageWindow = new ExcelImageSubWindow();
@@ -117,11 +117,10 @@ namespace StackingProgrammingTool
         /*---------------- Handeling Generate Progerams Event ----------------*/
         private void GeneratePrograms_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
+                this.generateInitialDataWindow = new GenerateInitialDataWindow();
 
                 // Display Programs SubWindow
                 this.generateInitialDataWindow.Show();
-
         }
 
         /*---------------- Handeling Open Spread-Sheet File Event ----------------*/
