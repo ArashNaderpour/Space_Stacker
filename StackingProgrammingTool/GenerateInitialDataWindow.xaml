@@ -30,6 +30,9 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <Label Content="Name" HorizontalAlignment="Center"
@@ -50,6 +53,24 @@
                     <Label Content="Gross Range(FT²)" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
                        Grid.Column="5" Grid.Row="0"/>
+
+                    <Label Content="MEP" HorizontalAlignment="Center"
+                       FontSize="14" FontWeight="DemiBold"
+                       Grid.Column="0" Grid.Row="1" Margin="2.5 10 2.5 2.5"/>
+                    <TextBox x:Name="MEPCost" Padding="2" Margin="2.5 10 2.5 2.5"
+                             Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+
+                    <Label Content="Circulation" HorizontalAlignment="Center"
+                       FontSize="14" FontWeight="DemiBold"
+                       Grid.Column="0" Grid.Row="2" Margin="2.5 0 2.5 2.5"/>
+                    <TextBox x:Name="CirculationCost" Padding="2" Margin="2.5 0 2.5 2.5"
+                             Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"/>
+
+                    <Label Content="BES" HorizontalAlignment="Center"
+                       FontSize="14" FontWeight="DemiBold" 
+                       Grid.Column="0" Grid.Row="3" Margin="2.5 0 2.5 5"/>
+                    <TextBox x:Name="BESCost" Padding="2" Margin="2.5 0 2.5 5"
+                             Grid.Column="1" Grid.Row="3" VerticalAlignment="Center"/>
                 </Grid>
 
                 <Grid Width="300">
