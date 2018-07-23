@@ -95,6 +95,9 @@
     <Compile Include="GenerateInitialDataWindow.xaml.cs">
       <DependentUpon>GenerateInitialDataWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ModifyProgramDataWindow.xaml.cs">
+      <DependentUpon>ModifyProgramDataWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProgramsSubWindow.xaml.cs">
       <DependentUpon>ProgramsSubWindow.xaml</DependentUpon>
     </Compile>
@@ -120,6 +123,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ModifyProgramDataWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProgramsSubWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

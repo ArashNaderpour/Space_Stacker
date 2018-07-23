@@ -56,10 +56,13 @@ namespace StackingProgrammingTool
         public static Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
 
         // SubWindows: Programs Window
-        ProgramsSubWindow programsWindow = new ProgramsSubWindow();
+        ProgramsSubWindow programsWindow;
 
         // SubWindows: Generate Initial Data Window
         GenerateInitialDataWindow generateInitialDataWindow;
+
+        // SubWindows: Modify Input Data Window
+        ModifyProgramDataWindow modifyInputDataWindow;
 
         // SubWindows: Excel Image Window
         ExcelImageSubWindow excelImageWindow = new ExcelImageSubWindow();
@@ -117,6 +120,10 @@ namespace StackingProgrammingTool
         /*---------------- Handeling Generate Progerams Event ----------------*/
         private void GeneratePrograms_Click(object sender, RoutedEventArgs e)
         {
+            if (this.generateInitialDataWindow != null)
+            {
+                this.generateInitialDataWindow.Close();
+            }
             this.generateInitialDataWindow = new GenerateInitialDataWindow();
 
             // Display Programs SubWindow
@@ -228,8 +235,8 @@ namespace StackingProgrammingTool
                     this.ProjectHeight.IsEnabled = true;
                     this.ProjectHeightButton.IsEnabled = true;
 
-                    this.BGSFBox.IsEnabled = true;
-                    this.ProgramLabel.IsEnabled = true;
+                    //this.BGSFBox.IsEnabled = true;
+                    //this.ProgramLabel.IsEnabled = true;
 
                     this.FloorHeight.IsEnabled = true;
                     this.FloorHeightButton.IsEnabled = true;
@@ -266,8 +273,10 @@ namespace StackingProgrammingTool
 
                     this.CMFee.IsEnabled = true;
                     this.CMFeeButton.IsEnabled = true;
+     
+                    this.GenearateProjectInformationButton.IsEnabled = true;
 
-                    this.ProgramsCheckBox.IsEnabled = true;
+                    this.ModifyInputsButton.IsEnabled = true;
 
                     this.ProjectBoxColorPicker.IsEnabled = true;
                 }
@@ -530,9 +539,6 @@ namespace StackingProgrammingTool
                     this.ProjectHeight.IsEnabled = true;
                     this.ProjectHeightButton.IsEnabled = true;
 
-                    this.BGSFBox.IsEnabled = true;
-                    this.ProgramLabel.IsEnabled = true;
-
                     this.FloorHeight.IsEnabled = true;
                     this.FloorHeightButton.IsEnabled = true;
 
@@ -569,7 +575,9 @@ namespace StackingProgrammingTool
                     this.CMFee.IsEnabled = true;
                     this.CMFeeButton.IsEnabled = true;
 
-                    this.ProgramsCheckBox.IsEnabled = true;
+                    this.GenearateProjectInformationButton.IsEnabled = true;
+
+                    this.ModifyInputsButton.IsEnabled = true;
 
                     this.ProjectBoxColorPicker.IsEnabled = true;
                 }
@@ -579,6 +587,18 @@ namespace StackingProgrammingTool
                     return;
                 }
             }
+        }
+
+        /*---------------- Handeling Modify Input Button Event ----------------*/
+        private void ModifyInputs_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.modifyInputDataWindow != null)
+            {
+                this.modifyInputDataWindow.Close();
+            }
+
+            this.modifyInputDataWindow = new ModifyProgramDataWindow();
+            this.modifyInputDataWindow.Show();
         }
 
         /*---------------- Handeling Number Of Departments Button Event ----------------*/
@@ -839,9 +859,6 @@ namespace StackingProgrammingTool
             this.ProjectHeight.Text = initialProjectBoxDims[2].ToString();
             this.FloorHeight.Text = initialProgramHeight.ToString();
 
-            // CheckBoxes
-            this.ProgramsCheckBox.IsChecked = false;
-
             // SubWindows: Programs Window
             if (this.programsWindow != null)
             {
@@ -852,6 +869,18 @@ namespace StackingProgrammingTool
             if (this.excelImageWindow != null)
             {
                 this.excelImageWindow.Close();
+            }
+
+            // SubWindows: Initial Input Data Window
+            if (this.generateInitialDataWindow != null)
+            {
+                this.generateInitialDataWindow.Close();
+            }
+
+            // SubWindows: Modify Input Data Window
+            if (this.modifyInputDataWindow != null)
+            {
+                this.modifyInputDataWindow.Close();
             }
 
             // ProjectBox Visualization
@@ -1762,85 +1791,6 @@ namespace StackingProgrammingTool
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
             // Calculating The Length Difference Of The ProgramBox 
             float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
-
-            //    for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
-            //    {
-            //        if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == programBoxFloor)
-            //        {
-            //            // The Changed Program
-            //            if (i == programBoxVisualizationIndex)
-            //            {
-            //                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
-            //                float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
-            //                    newProgramLength, (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-            //                Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + (programLengthDifference / 2),
-            //                    this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
-
-            //                GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
-            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
-            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
-
-            //                // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
-            //                float oldGSF = this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue;
-            //                float oldRawProgramCost = this.boxesOfTheProject[newProgramBoxName].totalRawCostValue;
-            //                float newGSF = (float)(keyRooms.Value * DGSF.Value);
-            //                float newRawProgramCost = newGSF * this.functions[cbx.SelectedItem.ToString()]["cost"];
-            //                float GSFDifference = newGSF - oldGSF;
-            //                float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
-
-            //                this.totalGSF += GSFDifference;
-            //                this.totalRawDepartmentCost += rawProgramCostDifference;
-
-            //                this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
-            //                this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
-            //                this.boxesOfTheProject[newProgramBoxName].function = cbx.SelectedItem.ToString();
-            //                this.boxesOfTheProject[newProgramBoxName].keyRooms = (int)keyRooms.Value;
-            //                this.boxesOfTheProject[newProgramBoxName].DGSF = (float)DGSF.Value;
-            //                this.boxesOfTheProject[newProgramBoxName].boxTotalGSFValue = newGSF;
-            //                this.boxesOfTheProject[newProgramBoxName].cost = this.functions[cbx.SelectedItem.ToString()]["cost"];
-            //                this.boxesOfTheProject[newProgramBoxName].totalRawCostValue = newRawProgramCost;
-
-            //                this.stackingVisualization.Children.RemoveAt(i);
-            //                this.stackingVisualization.Children.Insert(i, programBoxVisualization);
-
-            //                // Add Index Of The Box To The Dictionary
-            //                this.boxesOfTheProject[newProgramBoxName].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
-
-            //                // Visualizations Of The Labels Of The Boxes
-            //                VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
-            //                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
-            //                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
-            //            }
-            //            // Programs After The Changed One
-            //            if (i > programBoxVisualizationIndex)
-            //            {
-            //                string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
-            //                float[] newProgramBoxDims = { (float)this.stackingVisualization.Children[0].Bounds.SizeX,
-            //                    (float)this.stackingVisualization.Children[i].Bounds.SizeY,
-            //                    (float)this.stackingVisualization.Children[i].Bounds.SizeZ };
-            //                Point3D newProgramBoxCenter = new Point3D(0, this.boxesOfTheProject[newProgramBoxName].boxCenter.Y + programLengthDifference,
-            //                    this.boxesOfTheProject[newProgramBoxName].boxCenter.Z);
-
-            //                GeometryModel3D newProgramBox = VisualizationMethods.GenerateBox(newProgramBoxName, newProgramBoxCenter, newProgramBoxDims,
-            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material,
-            //                    ((GeometryModel3D)this.stackingVisualization.Children[i]).Material);
-
-            //                this.stackingVisualization.Children.RemoveAt(i);
-            //                this.stackingVisualization.Children.Insert(i, newProgramBox);
-
-            //                this.boxesOfTheProject[newProgramBoxName].boxCenter = newProgramBoxCenter;
-            //                this.boxesOfTheProject[newProgramBoxName].boxDims = newProgramBoxDims;
-
-            //                // Visualizations Of The Labels Of The Boxes
-            //                VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, i,
-            //                    this.boxesOfTheProject[newProgramBoxName].visualizationIndex, this.boxesOfTheProject[newProgramBoxName].visualizationLabel,
-            //                    newProgramBoxCenter, newProgramBoxDims, this.boxesOfTheProject[newProgramBoxName].boxColor);
-            //            }
-            //        }
-            //    }
-
-            //    // All The Calculation, Prepration, And Visualization Of The Output Data
-            //    CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /*---------------- Handeling Program Slider Change Event ----------------*/
@@ -2299,17 +2249,12 @@ namespace StackingProgrammingTool
         /* ########################################################### Stacking And Programs Events ########################################################### */
 
         /* ----------------------------------- Handeling Programs CheckBox Event And Programs SubWindow ----------------------------------- */
-        private void Programs_Click(object sender, RoutedEventArgs e)
+        private void ProjectInformation_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox checkBox = sender as CheckBox;
-
-            if (checkBox.IsChecked == true)
+            if (this.programsWindow != null)
             {
-                if (this.programsWindow != null)
-                {
-                    // Close The Open Program
-                    this.programsWindow.Close();
-
+                this.programsWindow.Close();
+            }
                     // Initiate A New Program Window
                     this.programsWindow = new ProgramsSubWindow();
                     this.programsWindow.Owner = this;
@@ -2319,20 +2264,6 @@ namespace StackingProgrammingTool
 
                     // Display Programs SubWindow
                     this.programsWindow.Show();
-                }
-                else
-                {
-                    // Generating Programs' Data And Add Them To The Programs SubWindow
-                    ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.DepartmentsWrapper, programsWindow);
-
-                    // Display Programs SubWindow
-                    programsWindow.Show();
-                }
-            }
-            else
-            {
-                this.programsWindow.Close();
-            }
         }
 
         /* ----------------------------------- Handeling Stacking Button Event----------------------------------- */

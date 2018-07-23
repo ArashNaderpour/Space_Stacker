@@ -121,9 +121,10 @@ namespace StackingProgrammingTool
             }
         }
 
-        /*---------------- Handeling RemoveProgramData Event ----------------*/
+        /*---------------- Handeling Generate Program Data Event ----------------*/
         private void GenerateProgramData_Click(object sender, RoutedEventArgs e)
         {
+            // Clear The Dictionary Every Time Generate Button Is Pressed
             MainWindow.functions.Clear();
 
             for (int i = 1; i < this.ProgramsDataChart.RowDefinitions.Count; i++)
@@ -134,6 +135,7 @@ namespace StackingProgrammingTool
 
                 foreach (UIElement element in this.ProgramsDataChart.Children)
                 {
+                    // MEP, Circulation, BES
                     if (i < 4)
                     {
 
@@ -165,7 +167,7 @@ namespace StackingProgrammingTool
                             }
                             catch
                             {
-                                MessageBox.Show("\"Cost\" Has To Have A Number Value.");
+                                MessageBox.Show("All The \"Cost\" Cells Must Have Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -176,12 +178,14 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Cost\" Has To Have A Positive Number Value.");
+                                MessageBox.Show("All The \"Cost\" Cells Must Have Positive Number Values.");
                                 generateDataError = true;
                                 return;
                             }
                         }
                     }
+
+                    // Other Programs Of The Project
                     else
                     {
                         if (Grid.GetColumn(element) == 0 && Grid.GetRow(element) == i)
@@ -196,7 +200,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Name\" Has To Have A Value");
+                                MessageBox.Show("All The \"Name\" Must Have Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -213,7 +217,7 @@ namespace StackingProgrammingTool
                             }
                             catch
                             {
-                                MessageBox.Show("\"Cost\" Has To Have A Number Value.");
+                                MessageBox.Show("All The \"Cost\" Cells Must Have Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -223,7 +227,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Cost\" Has To Have A Positive Number Value.");
+                                MessageBox.Show("All The \"Cost\" Cells Must Have Positive Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -241,7 +245,7 @@ namespace StackingProgrammingTool
                             }
                             catch
                             {
-                                MessageBox.Show("\"Initial Count\" Has To Have A Number Value.");
+                                MessageBox.Show("All The \"Initial Count\" Must Have Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -251,7 +255,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Initial Count\" Has To Have A Positive Number Value.");
+                                MessageBox.Show("All The \"Initial Count\" Must Have Positive Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -269,7 +273,7 @@ namespace StackingProgrammingTool
                             }
                             catch
                             {
-                                MessageBox.Show("\"Count Range\" Has To Have A Number Value.");
+                                MessageBox.Show("All The \"Count Range\" Must Have Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -293,7 +297,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Count Range\" Has To Have A Positive Number Value.");
+                                MessageBox.Show("All The \"Count Range\" Must Have Positive Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -311,7 +315,7 @@ namespace StackingProgrammingTool
                             }
                             catch
                             {
-                                MessageBox.Show("\"Initial Gross\" Has To Have A Number Value.");
+                                MessageBox.Show("All The \"Initial Gross\" Must Have Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -321,7 +325,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Initial Gross\" Has To Have A Positive Number Value.");
+                                MessageBox.Show("All The \"Initial Gross\" Must Have Positive Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -339,7 +343,7 @@ namespace StackingProgrammingTool
                             }
                             catch
                             {
-                                MessageBox.Show("\"Gross Range\" Has To Have A Number Value.");
+                                MessageBox.Show("All The \"Gross Range\" Must Have Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -363,7 +367,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("\"Gross Range\" Has To Have A Positive Number Value.");
+                                MessageBox.Show("All The \"Gross Range\"Must Have Positive Number Values.");
                                 generateDataError = true;
                                 return;
                             }
@@ -373,10 +377,18 @@ namespace StackingProgrammingTool
 
                 MainWindow.functions[key] = tempDictionary;
             }
-            
-            dataWindow = true;
-            this.generateDataButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            this.Close();
+
+            // Check To See Any Program Data Was Entered
+            if (MainWindow.functions.Count > 3) {
+                dataWindow = true;
+                this.generateDataButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Atleast One Program Has To Be Added.");
+                return;
+            }
         }
     }
 }

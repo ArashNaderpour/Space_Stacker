@@ -199,7 +199,7 @@
 
                                 <!--Open Program Generator Page-->
                                 <Button x:Name="GenerateInitialDataButton" Grid.Column="0"
-                                        Content="Generate Programs" Margin="2.5 10 0 0"
+                                        Content="Generate Programs" Margin="0 10 2.5 0"
                                         Click="GeneratePrograms_Click"/>
                                 <!--=================-->
                                 <!--Open Excel File Button-->
@@ -214,24 +214,7 @@
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
                             <!--====================-->
-                            <!-- CheckBoxes for BGSF limit box and Programs Labels-->
-                            <Grid Margin="0 10 0 0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <!--BGSF CheckBox-->
-                                <CheckBox x:Name="BGSFBox" FlowDirection="RightToLeft" 
-                                              HorizontalAlignment="Left" Grid.Column="0" IsEnabled="False">
-                                    <TextBlock FlowDirection="LeftToRight" Text="BGSF Box" />
-                                </CheckBox>
-                                <!--Program Label CheckBox-->
-                                <CheckBox x:Name="ProgramLabel" FlowDirection="RightToLeft" 
-                                              HorizontalAlignment="Right" Grid.Column="1" IsEnabled="False">
-                                    <TextBlock FlowDirection="LeftToRight" Text="Program Label" />
-                                </CheckBox>
-                            </Grid>
-                            <Grid Margin="0 10 0 0">
+                            <Grid Margin="0 20 0 0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -312,30 +295,23 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="NumberOfDepartments" Grid.Column="0" IsEnabled="False" 
                                              Padding="2" KeyUp="OnKeyUpHandler"/>
-                                    <Button x:Name="NumberOfDepartmentsButton" Grid.Column ="1" 
+                                    <Button x:Name="NumberOfDepartmentsButton" Grid.Column ="1"
                                             IsEnabled="False" Content="Set" Click="NumberOfDepartments_Click"/>
                                 </Grid>
                                 <!--=======================================-->
-                                <!--DockPanel that Wraps Staking and Program CheckBoxes -->
-                                <DockPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"
-                                           Margin="2.5 0 0 0">
-                                    <!--Stacking CheckBox-->
-                                    <CheckBox x:Name="StackingCheckBox" Content="Stacking" IsEnabled="False"
-                                              HorizontalAlignment="Left"
-                                              VerticalAlignment="Center"/>
-                                    <!--=================-->
-                                    <!--Programming CheckBox-->
-                                    <CheckBox x:Name="ProgramsCheckBox" Content="Programs" IsEnabled="False" 
-                                              HorizontalAlignment="Right"
-                                              VerticalAlignment="Center" Click="Programs_Click"/>
-                                    <!--=================-->
-                                </DockPanel>
-                                <!--====================================================-->
+                                <!--Reset Departments Button-->
+                                <Button x:Name="ModifyInputsButton" Grid.Column="1" Grid.Row="1" IsEnabled="False" 
+                                        Content="Modify Inputs" Margin="2.5 0 0 0" Click="ModifyInputs_Click"/>
+                                <!--=================-->
                                 <!--Reset Departments Button-->
                                 <Button x:Name="ResetDepartmentsButton" Grid.Column="0" Grid.Row="2" IsEnabled="False" 
                                         Content="Reset Departments" Margin="0 10 2.5 0" Click="ResetDepartments_Click"/>
                                 <!--=================-->
                                 <!--Reset Departments Button-->
+                                <Button x:Name="GenearateProjectInformationButton" Grid.Column="1" Grid.Row="2" IsEnabled="False" 
+                                        Content="Show Information" Margin="2.5 10 0 0" Click="ProjectInformation_Click"/>
+                                <!--=================-->
+                                <!--Generate Project Inofrmation Button-->
                                 <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3" IsEnabled="False" 
                                         Content="Save Project" Margin="0 5 2.5 0"/>
                                 <!--=================-->

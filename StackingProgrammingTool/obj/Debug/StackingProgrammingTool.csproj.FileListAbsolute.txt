@@ -42,3 +42,5 @@ C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\GenerateInitialDataWindow.g.cs
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\GenerateInitialDataWindow.baml
+C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ModifyProgramDataWindow.g.cs
+C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ModifyProgramDataWindow.baml
