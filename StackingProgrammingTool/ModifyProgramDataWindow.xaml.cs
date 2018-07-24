@@ -19,6 +19,9 @@ namespace StackingProgrammingTool
     /// </summary>
     public partial class ModifyProgramDataWindow : Window
     {
+        // Store Initial Keys In A Seperate List
+        List<string> listOfKeys = new List<string>();
+
         public ModifyProgramDataWindow()
         {
             InitializeComponent();
@@ -54,6 +57,8 @@ namespace StackingProgrammingTool
                     TextBox programName = new TextBox();
                     programName.Name = "ProgramName" + addedProgramDataIndex;
                     programName.Text = key;
+                    // Store Function Names In The Sequence Of Rows
+                    this.listOfKeys.Add(programName.Text);
                     programName.Margin = new Thickness(0, 0, 2.5, 10);
                     programName.Padding = new Thickness(2);
                     programName.VerticalAlignment = VerticalAlignment.Center;
@@ -129,111 +134,305 @@ namespace StackingProgrammingTool
 
                 foreach (UIElement element in this.ProgramsDataChart.Children)
                 {
-                    if (Grid.GetRow(element) > 3)
+                    if (Grid.GetRow(element) >= 4)
                     {
                         TextBox textBox = element as TextBox;
 
                         if (Grid.GetColumn(textBox) == 0 && Grid.GetRow(textBox) == i)
                         {
                             functionName = textBox.Text;
+
+                            // Change Function Name Of An Existing Funtion
+                            if (i - 4 < this.listOfKeys.Count)
+                            {
+                                Dictionary<string, float> tempDict = MainWindow.functions[this.listOfKeys[i - 4]];
+
+                                MainWindow.functions.Remove(this.listOfKeys[i - 4]);
+
+                                MainWindow.functions.Add(functionName, tempDict);
+                            }
+
+                            // New Function Added To The Input Data
+                            else
+                            {
+                                Dictionary<string, float> parameters = new Dictionary<string, float>();
+                                parameters.Add("cost", 0);
+                                parameters.Add("keyMin", 0);
+                                parameters.Add("keyMax", 0);
+                                parameters.Add("keyVal", 0);
+                                parameters.Add("DGSFMin", 0);
+                                parameters.Add("DGSFMax", 0);
+                                parameters.Add("DGSFVal", 0);
+
+                                MainWindow.functions.Add(functionName, parameters);
+                            }
                         }
 
+                        // Cost Value
                         if (Grid.GetColumn(textBox) == 1 && Grid.GetRow(textBox) == i)
                         {
+                            float value;
 
-                            MainWindow.functions[functionName]["cost"] = float.Parse(textBox.Text.Replace("$", "").Replace(",", ""));
+                            try
+                            {
+                                value = float.Parse(textBox.Text.Replace("$", "").Replace(",", ""));
+                            }
+                            catch
+                            {
+                                MessageBox.Show("All The \"Cost\" Cells Must Have Number Values.");
+                                return;
+                            }
+
+                            if (value >= 0)
+                            {
+                                MainWindow.functions[functionName]["cost"] = value;
+                            }
+                            else
+                            {
+                                MessageBox.Show("All The \"Cost\" Cells Must Have Positive Number Values.");
+                                return;
+                            }
                         }
 
+                        // Initial Count Value
                         if (Grid.GetColumn(textBox) == 2 && Grid.GetRow(textBox) == i)
                         {
-                            float value = float.Parse(textBox.Text);
+                            float value;
 
-                            if (MainWindow.functions[functionName]["keyMin"] - value > 0)
+                            try
                             {
-                                MainWindow.functions[functionName]["keyMin"] -= value;
+                                value = float.Parse(textBox.Text);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("All The \"Initial Count\" Must Have Number Values.");
+                                return;
+                            }
+
+                            if (value >= 0)
+                            {
+                                if (MainWindow.functions[functionName]["keyMin"] - value > 0)
+                                {
+                                    MainWindow.functions[functionName]["keyMin"] -= value;
+                                }
+                                else
+                                {
+                                    MainWindow.functions[functionName]["keyMin"] = 0;
+                                }
+
+                                MainWindow.functions[functionName]["keyMax"] += value;
+
+                                MainWindow.functions[functionName]["keyVal"] = value;
                             }
                             else
                             {
-                                MainWindow.functions[functionName]["keyMin"] = 0;
+                                MessageBox.Show("All The \"Initial Count\" Must Have Positive Number Values.");
+                                return;
                             }
-
-                            MainWindow.functions[functionName]["keyMax"] += value;
-
-                            MainWindow.functions[functionName]["keyVal"] = value;
                         }
 
+                        // Count Range Value
                         if (Grid.GetColumn(textBox) == 3 && Grid.GetRow(textBox) == i)
                         {
-                            float value = (float)int.Parse(textBox.Text);
+                            float value;
 
-                            if (MainWindow.functions[functionName]["keyVal"] - value <= 0)
+                            try
                             {
-                                MainWindow.functions[functionName]["keyMin"] = 0;
+                                value = (float)int.Parse(textBox.Text);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("All The \"Count Range\" Must Have Number Values.");
+                                return;
+                            }
+
+                            if (value > 0)
+                            {
+                                if (MainWindow.functions[functionName]["keyVal"] - value <= 0)
+                                {
+                                    MainWindow.functions[functionName]["keyMin"] = 0;
+                                }
+                                else
+                                {
+                                    MainWindow.functions[functionName]["keyMin"] = MainWindow.functions[functionName]["keyVal"] - value;
+                                }
+                                MainWindow.functions[functionName]["keyMax"] = MainWindow.functions[functionName]["keyVal"] + value;
                             }
                             else
                             {
-                                MainWindow.functions[functionName]["keyMin"] = MainWindow.functions[functionName]["keyVal"] - value;
+                                MessageBox.Show("All The \"Count Range\" Must Have Positive Number Values, Larger Than Zero.");
+                                return;
                             }
-                            MainWindow.functions[functionName]["keyMax"] = MainWindow.functions[functionName]["keyVal"] + value;
                         }
 
+                        // Initial Gross Value
                         if (Grid.GetColumn(textBox) == 4 && Grid.GetRow(textBox) == i)
                         {
-                            float value = float.Parse(textBox.Text);
+                            float value;
 
-                            if (MainWindow.functions[functionName]["DGSFMin"] - value > 0)
+                            try
                             {
-                                MainWindow.functions[functionName]["DGSFMin"] -= value;
+                                value = float.Parse(textBox.Text);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("All The \"Initial Gross\" Must Have Number Values.");
+                                return;
+                            }
+
+                            if (value >= 0)
+                            {
+                                if (MainWindow.functions[functionName]["DGSFMin"] - value > 0)
+                                {
+                                    MainWindow.functions[functionName]["DGSFMin"] -= value;
+                                }
+                                else
+                                {
+                                    MainWindow.functions[functionName]["DGSFMin"] = 0;
+                                }
+
+                                MainWindow.functions[functionName]["DGSFMax"] += value;
+
+                                MainWindow.functions[functionName]["DGSFVal"] = value;
                             }
                             else
                             {
-                                MainWindow.functions[functionName]["DGSFMin"] = 0;
+                                MessageBox.Show("All The \"Initial Gross\" Must Have Positive Number Values.");
+                                return;
                             }
-
-                            MainWindow.functions[functionName]["DGSFMax"] += value;
-
-                            MainWindow.functions[functionName]["DGSFVal"] = value;
                         }
 
+                        // Gross Range Value
                         if (Grid.GetColumn(textBox) == 5 && Grid.GetRow(textBox) == i)
                         {
-                            float value = (float)int.Parse(textBox.Text);
+                            float value;
 
-                            if (MainWindow.functions[functionName]["DGSFVal"] - value <= 0)
+                            try
                             {
-                                MainWindow.functions[functionName]["DGSFMin"] = 0;
+                                value = (float)int.Parse(textBox.Text);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("All The \"Gross Range\" Must Have Number Values.");
+                                return;
+                            }
+
+                            if (value > 0)
+                            {
+                                if (MainWindow.functions[functionName]["DGSFVal"] - value <= 0)
+                                {
+                                    MainWindow.functions[functionName]["DGSFMin"] = 0;
+                                }
+                                else
+                                {
+                                    MainWindow.functions[functionName]["DGSFMin"] = MainWindow.functions[functionName]["DGSFVal"] - value;
+                                }
+                                MainWindow.functions[functionName]["DGSFMax"] = MainWindow.functions[functionName]["DGSFVal"] + value;
                             }
                             else
                             {
-                                MainWindow.functions[functionName]["DGSFMin"] = MainWindow.functions[functionName]["DGSFVal"] - value;
+                                MessageBox.Show("All The \"Gross Range\"Must Have Positive Number Values, Larger Than Zero.");
+                                return;
                             }
-                            MainWindow.functions[functionName]["DGSFMax"] = MainWindow.functions[functionName]["DGSFVal"] + value;
                         }
                     }
                 }
             }
 
-            foreach (string key1 in MainWindow.functions.Keys)
-            {
-                MessageBox.Show(key1);
-                foreach (string key2 in MainWindow.functions[key1].Keys)
-                {
-                    MessageBox.Show(key2);
-                    MessageBox.Show(MainWindow.functions[key1][key2].ToString());
-                }
-            }
+            this.Close();
         }
 
         /*---------------- Handeling Add Program Data Event ----------------*/
         private void AddProgramData_Click(object sender, RoutedEventArgs e)
         {
+            string addedProgramDataIndex = (this.ProgramsDataChart.RowDefinitions.Count - 1).ToString();
 
+            RowDefinition gridRow = new RowDefinition();
+            this.ProgramsDataChart.RowDefinitions.Add(gridRow);
+
+            TextBox programName = new TextBox();
+            programName.Name = "ProgramName" + addedProgramDataIndex;
+            programName.Margin = new Thickness(0, 0, 2.5, 10);
+            programName.Padding = new Thickness(2);
+            programName.VerticalAlignment = VerticalAlignment.Center;
+            this.ProgramsDataChart.Children.Add(programName);
+            Grid.SetColumn(programName, 0);
+            Grid.SetRow(programName, this.ProgramsDataChart.RowDefinitions.Count - 1);
+
+            TextBox programCost = new TextBox();
+            programCost.Name = "ProgramCost" + addedProgramDataIndex;
+            programCost.Margin = new Thickness(2.5, 0, 2.5, 10);
+            programCost.Padding = new Thickness(2);
+            programCost.VerticalAlignment = VerticalAlignment.Center;
+            this.ProgramsDataChart.Children.Add(programCost);
+            Grid.SetColumn(programCost, 1);
+            Grid.SetRow(programCost, this.ProgramsDataChart.RowDefinitions.Count - 1);
+
+            TextBox initialCount = new TextBox();
+            initialCount.Name = "ProgramInitialCount" + addedProgramDataIndex;
+            initialCount.Margin = new Thickness(2.5, 0, 2.5, 10);
+            initialCount.Padding = new Thickness(2);
+            initialCount.VerticalAlignment = VerticalAlignment.Center;
+            this.ProgramsDataChart.Children.Add(initialCount);
+            Grid.SetColumn(initialCount, 2);
+            Grid.SetRow(initialCount, this.ProgramsDataChart.RowDefinitions.Count - 1);
+
+            TextBox countRange = new TextBox();
+            countRange.Name = "ProgramCountRange" + addedProgramDataIndex;
+            countRange.Margin = new Thickness(2.5, 0, 2.5, 10);
+            countRange.Padding = new Thickness(2);
+            countRange.VerticalAlignment = VerticalAlignment.Center;
+            this.ProgramsDataChart.Children.Add(countRange);
+            Grid.SetColumn(countRange, 3);
+            Grid.SetRow(countRange, this.ProgramsDataChart.RowDefinitions.Count - 1);
+
+            TextBox initialGross = new TextBox();
+            initialGross.Name = "ProgramInitialGross" + addedProgramDataIndex;
+            initialGross.Margin = new Thickness(2.5, 0, 2.5, 10);
+            initialGross.Padding = new Thickness(2);
+            initialGross.VerticalAlignment = VerticalAlignment.Center;
+            this.ProgramsDataChart.Children.Add(initialGross);
+            Grid.SetColumn(initialGross, 4);
+            Grid.SetRow(initialGross, this.ProgramsDataChart.RowDefinitions.Count - 1);
+
+            TextBox grossRange = new TextBox();
+            grossRange.Name = "ProgramGrossRange" + addedProgramDataIndex;
+            grossRange.Margin = new Thickness(2.5, 0, 0, 10);
+            grossRange.Padding = new Thickness(2);
+            grossRange.VerticalAlignment = VerticalAlignment.Center;
+            this.ProgramsDataChart.Children.Add(grossRange);
+            Grid.SetColumn(grossRange, 5);
+            Grid.SetRow(grossRange, this.ProgramsDataChart.RowDefinitions.Count - 1);
         }
 
         /*---------------- Handeling Remove Program Data Event ----------------*/
         private void RemoveProgramData_Click(object sender, RoutedEventArgs e)
         {
+            // A List To Store UI Elements To Remove From The Controller Window
+            List<UIElement> elementsToRemove = new List<UIElement>();
 
+            if (this.ProgramsDataChart.RowDefinitions.Count > 4)
+            {
+                // Removing UI Elemets From The Controller Window
+                foreach (UIElement element in this.ProgramsDataChart.Children)
+                {
+                    if (Grid.GetRow(element) == this.ProgramsDataChart.RowDefinitions.Count - 1)
+                    {
+                        elementsToRemove.Add(element);
+                    }
+                }
+                foreach (UIElement element in elementsToRemove)
+                {
+                    this.ProgramsDataChart.Children.Remove(element);
+                }
+
+                this.ProgramsDataChart.RowDefinitions.RemoveAt(this.ProgramsDataChart.RowDefinitions.Count - 1);
+                elementsToRemove.Clear();
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

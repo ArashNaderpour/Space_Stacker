@@ -277,7 +277,7 @@ namespace StackingProgrammingTool
                                 generateDataError = true;
                                 return;
                             }
-                            if (value >= 0)
+                            if (value > 0)
                             {
                                 float keyMin;
 
@@ -297,7 +297,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("All The \"Count Range\" Must Have Positive Number Values.");
+                                MessageBox.Show("All The \"Count Range\" Must Have Positive Number Values, Larger Than Zero.");
                                 generateDataError = true;
                                 return;
                             }
@@ -367,7 +367,7 @@ namespace StackingProgrammingTool
                             }
                             else
                             {
-                                MessageBox.Show("All The \"Gross Range\"Must Have Positive Number Values.");
+                                MessageBox.Show("All The \"Gross Range\"Must Have Positive Number Values, Larger Than Zero.");
                                 generateDataError = true;
                                 return;
                             }

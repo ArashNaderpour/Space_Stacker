@@ -136,150 +136,147 @@ namespace StackingProgrammingTool
         {
             if (GenerateInitialDataWindow.dataWindow == true)
             {
-                if (GenerateInitialDataWindow.generateDataError == false)
+                // Adding Department Expanders And Programs To The Controller Window
+                this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
+
+                for (int i = 0; i < this.initialNumberOfDepartments; i++)
                 {
-                    // Adding Department Expanders And Programs To The Controller Window
-                    this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
+                    // Setting Up Initial Departments' Expanders
+                    Expander department = ExtraMethods.DepartmentGernerator(i);
 
-                    for (int i = 0; i < this.initialNumberOfDepartments; i++)
+                    ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
+                        functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
+                        ProgramSlider_ValueChanged, OnKeyUpHandler);
+
+                    this.DepartmentsWrapper.Children.Add(department);
+
+                    /*--- Setting Up Initial Departments And Programs Visualization ---*/
+                    // Generating A Random Color In The Format Of An Array That Contains Three Bytes
+                    byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                    this.colorsOfBoxes.Add(department.Name, color);
+
+                    // Adding A Color Picker For Each Department
+                    VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
+                        ColorPicker_Changed);
+
+                    for (int j = 0; j < this.initialNumberOfPrograms; j++)
                     {
-                        // Setting Up Initial Departments' Expanders
-                        Expander department = ExtraMethods.DepartmentGernerator(i);
+                        // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
+                        ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                        Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                        Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                        Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
+                        this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
 
-                        ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
-                            functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
-                            ProgramSlider_ValueChanged, OnKeyUpHandler);
+                        // Adding To Total GSF And Total Raw Cost
+                        float GSF = ((float)(keyRooms.Value * DGSF.Value));
+                        float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                        this.totalGSF += GSF;
+                        this.totalRawDepartmentCost += rawCost;
 
-                        this.DepartmentsWrapper.Children.Add(department);
+                        // Generate Gradient Colors For Programs Of Each Department
+                        float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
+                        byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
-                        /*--- Setting Up Initial Departments And Programs Visualization ---*/
-                        // Generating A Random Color In The Format Of An Array That Contains Three Bytes
-                        byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                        this.colorsOfBoxes.Add(department.Name, color);
+                        // Setting Program Label Background Color
+                        ExtraMethods.ChangeLabelColor(department, j, gradient);
 
-                        // Adding A Color Picker For Each Department
-                        VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
-                            ColorPicker_Changed);
+                        float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
+                        string programBoxName = department.Name + "ProgramBox" + j.ToString();
+                        Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                            this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
+                        Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                        for (int j = 0; j < this.initialNumberOfPrograms; j++)
-                        {
-                            // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
-                            ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
-                            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                            Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                            Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
-                            this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+                        Box programBox = new Box(programBoxName, programBoxCenter);
+                        programBox.boxDims = programBoxDims;
+                        programBox.departmentHeader = department.Header.ToString();
+                        programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
+                        programBox.function = program.SelectedItem.ToString();
+                        programBox.keyRooms = (int)keyRooms.Value;
+                        programBox.DGSF = (float)DGSF.Value;
+                        programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                        programBox.boxTotalGSFValue = GSF;
+                        programBox.totalRawCostValue = rawCost;
+                        programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                        programBox.visualizationLabel = labelElement.Content.ToString();
 
-                            // Adding To Total GSF And Total Raw Cost
-                            float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                            float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
-                            this.totalGSF += GSF;
-                            this.totalRawDepartmentCost += rawCost;
+                        GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
+                            programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
 
-                            // Generate Gradient Colors For Programs Of Each Department
-                            float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
-                            byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+                        // Visualizations Of The Labels Of The Boxes
+                        VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                            programBoxCenter, programBoxDims, programBox.boxColor);
 
-                            // Setting Program Label Background Color
-                            ExtraMethods.ChangeLabelColor(department, j, gradient);
+                        this.boxesOfTheProject.Add(programBox.name, programBox);
+                        this.stackingVisualization.Children.Add(programBoxVisualization);
 
-                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
-                            string programBoxName = department.Name + "ProgramBox" + j.ToString();
-                            Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
-                                this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
-                            Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
-
-                            Box programBox = new Box(programBoxName, programBoxCenter);
-                            programBox.boxDims = programBoxDims;
-                            programBox.departmentHeader = department.Header.ToString();
-                            programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                            programBox.function = program.SelectedItem.ToString();
-                            programBox.keyRooms = (int)keyRooms.Value;
-                            programBox.DGSF = (float)DGSF.Value;
-                            programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
-                            programBox.boxTotalGSFValue = GSF;
-                            programBox.totalRawCostValue = rawCost;
-                            programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
-                            programBox.visualizationLabel = labelElement.Content.ToString();
-
-                            GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
-                                programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
-
-                            // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
-                                programBoxCenter, programBoxDims, programBox.boxColor);
-
-                            this.boxesOfTheProject.Add(programBox.name, programBox);
-                            this.stackingVisualization.Children.Add(programBoxVisualization);
-
-                            // Add Index Of The Box To The Dictionary
-                            this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
-                        }
+                        // Add Index Of The Box To The Dictionary
+                        this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                     }
-
-                    // All The Calculation, Prepration, And Visualization Of The Output Data
-                    CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
-
-                    // Generate And Visualize Stacking Data Of The Stacking Tab
-                    ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
-                        StackingButton_Click, OnKeyUpHandler);
-
-                    // Enabling The Disabled Controllers
-                    this.ProjectWidth.IsEnabled = true;
-                    this.ProjectWidthButton.IsEnabled = true;
-                    this.Seperator.Visibility = Visibility.Visible;
-
-                    this.ProjectLength.IsEnabled = true;
-                    this.ProjectLengthButton.IsEnabled = true;
-
-                    this.ProjectHeight.IsEnabled = true;
-                    this.ProjectHeightButton.IsEnabled = true;
-
-                    //this.BGSFBox.IsEnabled = true;
-                    //this.ProgramLabel.IsEnabled = true;
-
-                    this.FloorHeight.IsEnabled = true;
-                    this.FloorHeightButton.IsEnabled = true;
-
-                    this.NumberOfDepartments.IsEnabled = true;
-
-                    this.NumberOfDepartmentsButton.IsEnabled = true;
-                    this.ResetDepartmentsButton.IsEnabled = true;
-
-                    this.TotalBudget.IsEnabled = true;
-                    this.TotalBudgetButton.IsEnabled = true;
-
-                    this.CirculationSlider.IsEnabled = true;
-                    this.MEPSlider.IsEnabled = true;
-                    this.ExteriorStackSlider.IsEnabled = true;
-
-                    this.IndirectMultiplier.IsEnabled = true;
-                    this.IndirectMultiplierButton.IsEnabled = true;
-
-                    this.LandCost.IsEnabled = true;
-                    this.LandCostButton.IsEnabled = true;
-
-                    this.GeneralCosts.IsEnabled = true;
-                    this.GeneralCostsButton.IsEnabled = true;
-
-                    this.DesignContingency.IsEnabled = true;
-                    this.DesignContingencyButton.IsEnabled = true;
-
-                    this.BuildContingency.IsEnabled = true;
-                    this.BuildContingencyButton.IsEnabled = true;
-
-                    this.CCIP.IsEnabled = true;
-                    this.CCIPButton.IsEnabled = true;
-
-                    this.CMFee.IsEnabled = true;
-                    this.CMFeeButton.IsEnabled = true;
-     
-                    this.GenearateProjectInformationButton.IsEnabled = true;
-
-                    this.ModifyInputsButton.IsEnabled = true;
-
-                    this.ProjectBoxColorPicker.IsEnabled = true;
                 }
+
+                // All The Calculation, Prepration, And Visualization Of The Output Data
+                CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+                // Generate And Visualize Stacking Data Of The Stacking Tab
+                ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
+                    StackingButton_Click, OnKeyUpHandler);
+
+                // Enabling The Disabled Controllers
+                this.ProjectWidth.IsEnabled = true;
+                this.ProjectWidthButton.IsEnabled = true;
+                this.Seperator.Visibility = Visibility.Visible;
+
+                this.ProjectLength.IsEnabled = true;
+                this.ProjectLengthButton.IsEnabled = true;
+
+                this.ProjectHeight.IsEnabled = true;
+                this.ProjectHeightButton.IsEnabled = true;
+
+                //this.BGSFBox.IsEnabled = true;
+                //this.ProgramLabel.IsEnabled = true;
+
+                this.FloorHeight.IsEnabled = true;
+                this.FloorHeightButton.IsEnabled = true;
+
+                this.NumberOfDepartments.IsEnabled = true;
+
+                this.NumberOfDepartmentsButton.IsEnabled = true;
+                this.ResetDepartmentsButton.IsEnabled = true;
+
+                this.TotalBudget.IsEnabled = true;
+                this.TotalBudgetButton.IsEnabled = true;
+
+                this.CirculationSlider.IsEnabled = true;
+                this.MEPSlider.IsEnabled = true;
+                this.ExteriorStackSlider.IsEnabled = true;
+
+                this.IndirectMultiplier.IsEnabled = true;
+                this.IndirectMultiplierButton.IsEnabled = true;
+
+                this.LandCost.IsEnabled = true;
+                this.LandCostButton.IsEnabled = true;
+
+                this.GeneralCosts.IsEnabled = true;
+                this.GeneralCostsButton.IsEnabled = true;
+
+                this.DesignContingency.IsEnabled = true;
+                this.DesignContingencyButton.IsEnabled = true;
+
+                this.BuildContingency.IsEnabled = true;
+                this.BuildContingencyButton.IsEnabled = true;
+
+                this.CCIP.IsEnabled = true;
+                this.CCIPButton.IsEnabled = true;
+
+                this.CMFee.IsEnabled = true;
+                this.CMFeeButton.IsEnabled = true;
+
+                this.GenearateProjectInformationButton.IsEnabled = true;
+
+                this.ModifyInputsButton.IsEnabled = true;
+
+                this.ProjectBoxColorPicker.IsEnabled = true;
             }
 
             else
@@ -2255,15 +2252,15 @@ namespace StackingProgrammingTool
             {
                 this.programsWindow.Close();
             }
-                    // Initiate A New Program Window
-                    this.programsWindow = new ProgramsSubWindow();
-                    this.programsWindow.Owner = this;
+            // Initiate A New Program Window
+            this.programsWindow = new ProgramsSubWindow();
+            this.programsWindow.Owner = this;
 
-                    // Generating Programs' Data And Add Them To The Programs SubWindow
-                    ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.DepartmentsWrapper, this.programsWindow);
+            // Generating Programs' Data And Add Them To The Programs SubWindow
+            ExtraMethods.DisplayProgramData(this.boxesOfTheProject, this.DepartmentsWrapper, this.programsWindow);
 
-                    // Display Programs SubWindow
-                    this.programsWindow.Show();
+            // Display Programs SubWindow
+            this.programsWindow.Show();
         }
 
         /* ----------------------------------- Handeling Stacking Button Event----------------------------------- */
