@@ -23,10 +23,12 @@ namespace StackingProgrammingTool
         {
             InitializeComponent();
 
-            foreach (string key in MainWindow.functions.Keys) {
+            foreach (string key in MainWindow.functions.Keys)
+            {
                 // Initialize And Illustrate MEP
-                if (key == "MEP") { 
-                this.MEPCost.Text = ExtraMethods.CastDollar(MainWindow.functions["MEP"]["cost"]);
+                if (key == "MEP")
+                {
+                    this.MEPCost.Text = ExtraMethods.CastDollar(MainWindow.functions["MEP"]["cost"]);
                 }
 
                 // Initialize And Illustrate Circulatio
@@ -36,7 +38,7 @@ namespace StackingProgrammingTool
                 }
 
                 // Initialize And Illustrate BES
-                 else if (key == "BES")
+                else if (key == "BES")
                 {
                     this.BESCost.Text = ExtraMethods.CastDollar(MainWindow.functions["BES"]["cost"]);
                 }
@@ -110,10 +112,128 @@ namespace StackingProgrammingTool
                     Grid.SetRow(grossRange, this.ProgramsDataChart.RowDefinitions.Count - 1);
                 }
             }
+        }
 
+        /*---------------- Handeling Modify Program Data Event ----------------*/
+        private void ModifyInputData_Click(object sender, RoutedEventArgs e)
+        {
+            // Constant Parameters
+            MainWindow.functions["MEP"]["cost"] = float.Parse(this.MEPCost.Text.Replace("$", "").Replace(",", ""));
+            MainWindow.functions["Circulation"]["cost"] = float.Parse(this.CirculationCost.Text.Replace("$", "").Replace(",", ""));
+            MainWindow.functions["BES"]["cost"] = float.Parse(this.BESCost.Text.Replace("$", "").Replace(",", ""));
+
+            // Other Functionalities
+            for (int i = 4; i < this.ProgramsDataChart.RowDefinitions.Count; i++)
+            {
+                string functionName = "";
+
+                foreach (UIElement element in this.ProgramsDataChart.Children)
+                {
+                    if (Grid.GetRow(element) > 3)
+                    {
+                        TextBox textBox = element as TextBox;
+
+                        if (Grid.GetColumn(textBox) == 0 && Grid.GetRow(textBox) == i)
+                        {
+                            functionName = textBox.Text;
+                        }
+
+                        if (Grid.GetColumn(textBox) == 1 && Grid.GetRow(textBox) == i)
+                        {
+
+                            MainWindow.functions[functionName]["cost"] = float.Parse(textBox.Text.Replace("$", "").Replace(",", ""));
+                        }
+
+                        if (Grid.GetColumn(textBox) == 2 && Grid.GetRow(textBox) == i)
+                        {
+                            float value = float.Parse(textBox.Text);
+
+                            if (MainWindow.functions[functionName]["keyMin"] - value > 0)
+                            {
+                                MainWindow.functions[functionName]["keyMin"] -= value;
+                            }
+                            else
+                            {
+                                MainWindow.functions[functionName]["keyMin"] = 0;
+                            }
+
+                            MainWindow.functions[functionName]["keyMax"] += value;
+
+                            MainWindow.functions[functionName]["keyVal"] = value;
+                        }
+
+                        if (Grid.GetColumn(textBox) == 3 && Grid.GetRow(textBox) == i)
+                        {
+                            float value = (float)int.Parse(textBox.Text);
+
+                            if (MainWindow.functions[functionName]["keyVal"] - value <= 0)
+                            {
+                                MainWindow.functions[functionName]["keyMin"] = 0;
+                            }
+                            else
+                            {
+                                MainWindow.functions[functionName]["keyMin"] = MainWindow.functions[functionName]["keyVal"] - value;
+                            }
+                            MainWindow.functions[functionName]["keyMax"] = MainWindow.functions[functionName]["keyVal"] + value;
+                        }
+
+                        if (Grid.GetColumn(textBox) == 4 && Grid.GetRow(textBox) == i)
+                        {
+                            float value = float.Parse(textBox.Text);
+
+                            if (MainWindow.functions[functionName]["DGSFMin"] - value > 0)
+                            {
+                                MainWindow.functions[functionName]["DGSFMin"] -= value;
+                            }
+                            else
+                            {
+                                MainWindow.functions[functionName]["DGSFMin"] = 0;
+                            }
+
+                            MainWindow.functions[functionName]["DGSFMax"] += value;
+
+                            MainWindow.functions[functionName]["DGSFVal"] = value;
+                        }
+
+                        if (Grid.GetColumn(textBox) == 5 && Grid.GetRow(textBox) == i)
+                        {
+                            float value = (float)int.Parse(textBox.Text);
+
+                            if (MainWindow.functions[functionName]["DGSFVal"] - value <= 0)
+                            {
+                                MainWindow.functions[functionName]["DGSFMin"] = 0;
+                            }
+                            else
+                            {
+                                MainWindow.functions[functionName]["DGSFMin"] = MainWindow.functions[functionName]["DGSFVal"] - value;
+                            }
+                            MainWindow.functions[functionName]["DGSFMax"] = MainWindow.functions[functionName]["DGSFVal"] + value;
+                        }
+                    }
+                }
+            }
+
+            foreach (string key1 in MainWindow.functions.Keys)
+            {
+                MessageBox.Show(key1);
+                foreach (string key2 in MainWindow.functions[key1].Keys)
+                {
+                    MessageBox.Show(key2);
+                    MessageBox.Show(MainWindow.functions[key1][key2].ToString());
+                }
+            }
+        }
+
+        /*---------------- Handeling Add Program Data Event ----------------*/
+        private void AddProgramData_Click(object sender, RoutedEventArgs e)
+        {
 
         }
 
+        /*---------------- Handeling Remove Program Data Event ----------------*/
+        private void RemoveProgramData_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }
