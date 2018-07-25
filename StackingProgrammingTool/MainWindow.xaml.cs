@@ -117,6 +117,158 @@ namespace StackingProgrammingTool
 
         /* ########################################################### End Of Windows Load And Start Of Handeling Events ########################################################### */
 
+        /*---------------- Updating The Department Expanders After ModifyInputs Window Was Clossed ----------------*/
+        public void GeneratePrograms()
+        {
+            // Adding Department Expanders And Programs To The Controller Window
+            this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
+
+            for (int i = 0; i < this.initialNumberOfDepartments; i++)
+            {
+                // Setting Up Initial Departments' Expanders
+                Expander department = ExtraMethods.DepartmentGernerator(i);
+
+                ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
+                    functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
+                    ProgramSlider_ValueChanged, OnKeyUpHandler);
+
+                this.DepartmentsWrapper.Children.Add(department);
+
+                /*--- Setting Up Initial Departments And Programs Visualization ---*/
+                // Generating A Random Color In The Format Of An Array That Contains Three Bytes
+                byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                this.colorsOfBoxes.Add(department.Name, color);
+
+                // Adding A Color Picker For Each Department
+                VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
+                    ColorPicker_Changed);
+
+                for (int j = 0; j < this.initialNumberOfPrograms; j++)
+                {
+                    // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
+                    ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                    Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
+                    this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+
+                    // Adding To Total GSF And Total Raw Cost
+                    float GSF = ((float)(keyRooms.Value * DGSF.Value));
+                    float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                    this.totalGSF += GSF;
+                    this.totalRawDepartmentCost += rawCost;
+
+                    // Generate Gradient Colors For Programs Of Each Department
+                    float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
+                    byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                    // Setting Program Label Background Color
+                    ExtraMethods.ChangeLabelColor(department, j, gradient);
+
+                    float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
+                    string programBoxName = department.Name + "ProgramBox" + j.ToString();
+                    Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                        this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
+                    Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                    Box programBox = new Box(programBoxName, programBoxCenter);
+                    programBox.boxDims = programBoxDims;
+                    programBox.departmentHeader = department.Header.ToString();
+                    programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
+                    programBox.function = program.SelectedItem.ToString();
+                    programBox.keyRooms = (int)keyRooms.Value;
+                    programBox.DGSF = (float)DGSF.Value;
+                    programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                    programBox.boxTotalGSFValue = GSF;
+                    programBox.totalRawCostValue = rawCost;
+                    programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                    programBox.visualizationLabel = labelElement.Content.ToString();
+
+                    GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
+                        programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+
+                    // Visualizations Of The Labels Of The Boxes
+                    VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                        programBoxCenter, programBoxDims, programBox.boxColor);
+
+                    this.boxesOfTheProject.Add(programBox.name, programBox);
+                    this.stackingVisualization.Children.Add(programBoxVisualization);
+
+                    // Add Index Of The Box To The Dictionary
+                    this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+                }
+            }
+
+            // All The Calculation, Prepration, And Visualization Of The Output Data
+            CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
+
+            // Generate And Visualize Stacking Data Of The Stacking Tab
+            ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
+                StackingButton_Click, OnKeyUpHandler);
+
+            // Enabling The Disabled Controllers
+            this.ProjectWidth.IsEnabled = true;
+            this.ProjectWidthButton.IsEnabled = true;
+            this.Seperator.Visibility = Visibility.Visible;
+
+            this.ProjectLength.IsEnabled = true;
+            this.ProjectLengthButton.IsEnabled = true;
+
+            this.ProjectHeight.IsEnabled = true;
+            this.ProjectHeightButton.IsEnabled = true;
+
+            this.FloorHeight.IsEnabled = true;
+            this.FloorHeightButton.IsEnabled = true;
+
+            this.NumberOfDepartments.IsEnabled = true;
+
+            this.NumberOfDepartmentsButton.IsEnabled = true;
+            this.ResetDepartmentsButton.IsEnabled = true;
+
+            this.TotalBudget.IsEnabled = true;
+            this.TotalBudgetButton.IsEnabled = true;
+
+            this.CirculationSlider.IsEnabled = true;
+            this.MEPSlider.IsEnabled = true;
+            this.ExteriorStackSlider.IsEnabled = true;
+
+            this.IndirectMultiplier.IsEnabled = true;
+            this.IndirectMultiplierButton.IsEnabled = true;
+
+            this.LandCost.IsEnabled = true;
+            this.LandCostButton.IsEnabled = true;
+
+            this.GeneralCosts.IsEnabled = true;
+            this.GeneralCostsButton.IsEnabled = true;
+
+            this.DesignContingency.IsEnabled = true;
+            this.DesignContingencyButton.IsEnabled = true;
+
+            this.BuildContingency.IsEnabled = true;
+            this.BuildContingencyButton.IsEnabled = true;
+
+            this.CCIP.IsEnabled = true;
+            this.CCIPButton.IsEnabled = true;
+
+            this.CMFee.IsEnabled = true;
+            this.CMFeeButton.IsEnabled = true;
+
+            this.GenearateProjectInformationButton.IsEnabled = true;
+
+            this.ModifyInputsButton.IsEnabled = true;
+
+            this.ProjectBoxColorPicker.IsEnabled = true;
+        }
+
+        /*---------------- Updating The Department Expanders After ModifyInputs Window Was Clossed ----------------*/
+        public void ModifyInputs()
+        {
+
+            MessageBox.Show("Hello");
+        }
+
+        /* ########################################################### Handeling Events Of The Main Window ########################################################### */
+
         /*---------------- Handeling Generate Progerams Event ----------------*/
         private void GeneratePrograms_Click(object sender, RoutedEventArgs e)
         {
@@ -126,16 +278,166 @@ namespace StackingProgrammingTool
             }
             this.generateInitialDataWindow = new GenerateInitialDataWindow();
 
+            this.generateInitialDataWindow.Owner = this;
+
             // Display Programs SubWindow
             this.generateInitialDataWindow.Show();
-            this.generateInitialDataWindow.generateDataButton = this.OpenExcelFile;
         }
 
         /*---------------- Handeling Open Spread-Sheet File Event ----------------*/
         public void OpenSpreadSheet_Click(object sender, RoutedEventArgs e)
         {
-            if (GenerateInitialDataWindow.dataWindow == true)
+            // Open The Spread Sheet File
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+
+            // Excel File Properties
+            Excel.Application xlApp;
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            Excel.Range range;
+
+            String filePath = "";
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                if (this.DepartmentsWrapper.Children.Count > 0)
+                {
+                    // Clear All The Lists
+                    functions.Clear();
+                    this.DepartmentsWrapper.Children.Clear();
+                    this.stackingVisualization.Children.Clear();
+                    this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
+                    this.colorsOfBoxes.Clear();
+
+                    // ProjectBox Visualization
+                    string projectBoxName = "ProjectBox";
+                    Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
+                    float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
+
+                    GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
+                        new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
+
+                    this.stackingVisualization.Children.Add(projectVisualizationBox);
+
+                    filePath = openFileDialog.FileName;
+                }
+                else
+                {
+                    filePath = openFileDialog.FileName;
+                }
+
+                if (filePath.Substring(filePath.Length - 3).ToLower() != "xls" &&
+                    filePath.Substring(filePath.Length - 4).ToLower() != "xlsx")
+                {
+                    MessageBox.Show("Please Select An Execl File.");
+                    return;
+                }
+            }
+            else
+            {
+                // Nothing Was Selected
+                return;
+            }
+
+            xlApp = new Excel.Application();
+            xlWorkBook = xlApp.Workbooks.Open(filePath, 0, true, 5, "", "", true,
+                Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false,
+                false, 0, true, 1, 0);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            range = xlWorkSheet.UsedRange;
+            int rowCount = range.Rows.Count;
+            int columnCount = range.Columns.Count;
+
+            if (rowCount > 1 && columnCount == 8)
+            {
+                for (int r = 1; r <= rowCount; r++)
+                {
+                    Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
+                    if (r > 1)
+                    {
+                        String name = (String)(range.Cells[r, 1] as Excel.Range).Value2;
+                        try
+                        {
+                            tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("\"Cost\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"500\" Will Be Considered As The Cost Value Automatically.");
+                            tempDictionary.Add("cost", 500);
+                        }
+                        if (name == "MEP" || name == "Circulation" || name == "BES" || name == "Building Exterior Stacking")
+                        {
+                            tempDictionary.Add("keyMin", 0);
+                            tempDictionary.Add("keyVal", 0);
+                            tempDictionary.Add("keyMax", 0);
+                            tempDictionary.Add("DGSFMin", 0);
+                            tempDictionary.Add("DGSFVal", 0);
+                            tempDictionary.Add("DGSFMax", 0);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"Key Rooms Slider Minimum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"1\" Will Be Considered As The Cost Value Automatically.");
+                                tempDictionary.Add("keyMin", 1);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"Key Rooms Slider Value\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"5\" Will Be Considered As The Cost Value Automatically.");
+                                tempDictionary.Add("keyVal", 5);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"Key Rooms Slider Maximum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"10\" Will Be Considered As The Cost Value Automatically.");
+                                tempDictionary.Add("keyMax", 10);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("DGSFMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"DGSF Slider Minimum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"100\" Will Be Considered As The Cost Value Automatically.");
+                                tempDictionary.Add("DGSFMin", 100);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("DGSFVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"DGSF Slider Value\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"500\" Will Be Considered As The Cost Value Automatically.");
+                                tempDictionary.Add("DGSFVal", 500);
+                            }
+                            try
+                            {
+                                tempDictionary.Add("DGSFMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
+                            }
+                            catch
+                            {
+                                MessageBox.Show("\"DGSF Slider Maximum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"1000\" Will Be Considered As The Cost Value Automatically.");
+                                tempDictionary.Add("DGSFMax", 1000);
+                            }
+                        }
+
+                        //Adding Data To The Main Data Dictionary
+                        functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
+                    }
+                }
+
                 // Adding Department Expanders And Programs To The Controller Window
                 this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
@@ -215,6 +517,13 @@ namespace StackingProgrammingTool
                     }
                 }
 
+                xlWorkBook.Close(true, null, null);
+                xlApp.Quit();
+
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+
                 // All The Calculation, Prepration, And Visualization Of The Output Data
                 CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
@@ -232,9 +541,6 @@ namespace StackingProgrammingTool
 
                 this.ProjectHeight.IsEnabled = true;
                 this.ProjectHeightButton.IsEnabled = true;
-
-                //this.BGSFBox.IsEnabled = true;
-                //this.ProgramLabel.IsEnabled = true;
 
                 this.FloorHeight.IsEnabled = true;
                 this.FloorHeightButton.IsEnabled = true;
@@ -278,318 +584,11 @@ namespace StackingProgrammingTool
 
                 this.ProjectBoxColorPicker.IsEnabled = true;
             }
-
             else
             {
-                // Open The Spread Sheet File
-                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-
-                // Excel File Properties
-                Excel.Application xlApp;
-                Excel.Workbook xlWorkBook;
-                Excel.Worksheet xlWorkSheet;
-                Excel.Range range;
-
-                String filePath = "";
-
-                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    if (this.DepartmentsWrapper.Children.Count > 0)
-                    {
-                        // Clear All The Lists
-                        functions.Clear();
-                        this.DepartmentsWrapper.Children.Clear();
-                        this.stackingVisualization.Children.Clear();
-                        this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
-                        this.colorsOfBoxes.Clear();
-
-                        // ProjectBox Visualization
-                        string projectBoxName = "ProjectBox";
-                        Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
-                        float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
-
-                        GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
-                            new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
-
-                        this.stackingVisualization.Children.Add(projectVisualizationBox);
-
-                        filePath = openFileDialog.FileName;
-                    }
-                    else
-                    {
-                        filePath = openFileDialog.FileName;
-                    }
-
-                    if (filePath.Substring(filePath.Length - 3).ToLower() != "xls" &&
-                        filePath.Substring(filePath.Length - 4).ToLower() != "xlsx")
-                    {
-                        MessageBox.Show("Please Select An Execl File.");
-                        return;
-                    }
-                }
-                else
-                {
-                    // Nothing Was Selected
-                    return;
-                }
-
-                xlApp = new Excel.Application();
-                xlWorkBook = xlApp.Workbooks.Open(filePath, 0, true, 5, "", "", true,
-                    Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false,
-                    false, 0, true, 1, 0);
-                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-                range = xlWorkSheet.UsedRange;
-                int rowCount = range.Rows.Count;
-                int columnCount = range.Columns.Count;
-
-                if (rowCount > 1 && columnCount == 8)
-                {
-                    for (int r = 1; r <= rowCount; r++)
-                    {
-                        Dictionary<String, float> tempDictionary = new Dictionary<String, float>();
-                        if (r > 1)
-                        {
-                            String name = (String)(range.Cells[r, 1] as Excel.Range).Value2;
-                            try
-                            {
-                                tempDictionary.Add("cost", (float)(range.Cells[r, 2] as Excel.Range).Value2);
-                            }
-                            catch
-                            {
-                                MessageBox.Show("\"Cost\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"500\" Will Be Considered As The Cost Value Automatically.");
-                                tempDictionary.Add("cost", 500);
-                            }
-                            if (name == "MEP" || name == "Circulation" || name == "BES" || name == "Building Exterior Stacking")
-                            {
-                                tempDictionary.Add("keyMin", 0);
-                                tempDictionary.Add("keyVal", 0);
-                                tempDictionary.Add("keyMax", 0);
-                                tempDictionary.Add("DGSFMin", 0);
-                                tempDictionary.Add("DGSFVal", 0);
-                                tempDictionary.Add("DGSFMax", 0);
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    tempDictionary.Add("keyMin", (float)(range.Cells[r, 3] as Excel.Range).Value2);
-                                }
-                                catch
-                                {
-                                    MessageBox.Show("\"Key Rooms Slider Minimum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"1\" Will Be Considered As The Cost Value Automatically.");
-                                    tempDictionary.Add("keyMin", 1);
-                                }
-                                try
-                                {
-                                    tempDictionary.Add("keyVal", (float)(range.Cells[r, 4] as Excel.Range).Value2);
-                                }
-                                catch
-                                {
-                                    MessageBox.Show("\"Key Rooms Slider Value\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"5\" Will Be Considered As The Cost Value Automatically.");
-                                    tempDictionary.Add("keyVal", 5);
-                                }
-                                try
-                                {
-                                    tempDictionary.Add("keyMax", (float)(range.Cells[r, 5] as Excel.Range).Value2);
-                                }
-                                catch
-                                {
-                                    MessageBox.Show("\"Key Rooms Slider Maximum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"10\" Will Be Considered As The Cost Value Automatically.");
-                                    tempDictionary.Add("keyMax", 10);
-                                }
-                                try
-                                {
-                                    tempDictionary.Add("DGSFMin", (float)(range.Cells[r, 6] as Excel.Range).Value2);
-                                }
-                                catch
-                                {
-                                    MessageBox.Show("\"DGSF Slider Minimum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"100\" Will Be Considered As The Cost Value Automatically.");
-                                    tempDictionary.Add("DGSFMin", 100);
-                                }
-                                try
-                                {
-                                    tempDictionary.Add("DGSFVal", (float)(range.Cells[r, 7] as Excel.Range).Value2);
-                                }
-                                catch
-                                {
-                                    MessageBox.Show("\"DGSF Slider Value\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"500\" Will Be Considered As The Cost Value Automatically.");
-                                    tempDictionary.Add("DGSFVal", 500);
-                                }
-                                try
-                                {
-                                    tempDictionary.Add("DGSFMax", (float)(range.Cells[r, 8] as Excel.Range).Value2);
-                                }
-                                catch
-                                {
-                                    MessageBox.Show("\"DGSF Slider Maximum\" Value Is Not Accessable For " + "\"" + name + "\"" + ", \"1000\" Will Be Considered As The Cost Value Automatically.");
-                                    tempDictionary.Add("DGSFMax", 1000);
-                                }
-                            }
-
-                            //Adding Data To The Main Data Dictionary
-                            functions.Add((String)(range.Cells[r, 1] as Excel.Range).Value2, tempDictionary);
-                        }
-                    }
-
-                    // Adding Department Expanders And Programs To The Controller Window
-                    this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
-
-                    for (int i = 0; i < this.initialNumberOfDepartments; i++)
-                    {
-                        // Setting Up Initial Departments' Expanders
-                        Expander department = ExtraMethods.DepartmentGernerator(i);
-
-                        ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
-                            functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
-                            ProgramSlider_ValueChanged, OnKeyUpHandler);
-
-                        this.DepartmentsWrapper.Children.Add(department);
-
-                        /*--- Setting Up Initial Departments And Programs Visualization ---*/
-                        // Generating A Random Color In The Format Of An Array That Contains Three Bytes
-                        byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                        this.colorsOfBoxes.Add(department.Name, color);
-
-                        // Adding A Color Picker For Each Department
-                        VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
-                            ColorPicker_Changed);
-
-                        for (int j = 0; j < this.initialNumberOfPrograms; j++)
-                        {
-                            // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
-                            ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
-                            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                            Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                            Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
-                            this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
-
-                            // Adding To Total GSF And Total Raw Cost
-                            float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                            float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
-                            this.totalGSF += GSF;
-                            this.totalRawDepartmentCost += rawCost;
-
-                            // Generate Gradient Colors For Programs Of Each Department
-                            float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
-                            byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
-
-                            // Setting Program Label Background Color
-                            ExtraMethods.ChangeLabelColor(department, j, gradient);
-
-                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
-                            string programBoxName = department.Name + "ProgramBox" + j.ToString();
-                            Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
-                                this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
-                            Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
-
-                            Box programBox = new Box(programBoxName, programBoxCenter);
-                            programBox.boxDims = programBoxDims;
-                            programBox.departmentHeader = department.Header.ToString();
-                            programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                            programBox.function = program.SelectedItem.ToString();
-                            programBox.keyRooms = (int)keyRooms.Value;
-                            programBox.DGSF = (float)DGSF.Value;
-                            programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
-                            programBox.boxTotalGSFValue = GSF;
-                            programBox.totalRawCostValue = rawCost;
-                            programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
-                            programBox.visualizationLabel = labelElement.Content.ToString();
-
-                            GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
-                                programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
-
-                            // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
-                                programBoxCenter, programBoxDims, programBox.boxColor);
-
-                            this.boxesOfTheProject.Add(programBox.name, programBox);
-                            this.stackingVisualization.Children.Add(programBoxVisualization);
-
-                            // Add Index Of The Box To The Dictionary
-                            this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
-                        }
-                    }
-
-                    xlWorkBook.Close(true, null, null);
-                    xlApp.Quit();
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
-
-                    // All The Calculation, Prepration, And Visualization Of The Output Data
-                    CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
-
-                    // Generate And Visualize Stacking Data Of The Stacking Tab
-                    ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
-                        StackingButton_Click, OnKeyUpHandler);
-
-                    // Enabling The Disabled Controllers
-                    this.ProjectWidth.IsEnabled = true;
-                    this.ProjectWidthButton.IsEnabled = true;
-                    this.Seperator.Visibility = Visibility.Visible;
-
-                    this.ProjectLength.IsEnabled = true;
-                    this.ProjectLengthButton.IsEnabled = true;
-
-                    this.ProjectHeight.IsEnabled = true;
-                    this.ProjectHeightButton.IsEnabled = true;
-
-                    this.FloorHeight.IsEnabled = true;
-                    this.FloorHeightButton.IsEnabled = true;
-
-                    this.NumberOfDepartments.IsEnabled = true;
-
-                    this.NumberOfDepartmentsButton.IsEnabled = true;
-                    this.ResetDepartmentsButton.IsEnabled = true;
-
-                    this.TotalBudget.IsEnabled = true;
-                    this.TotalBudgetButton.IsEnabled = true;
-
-                    this.CirculationSlider.IsEnabled = true;
-                    this.MEPSlider.IsEnabled = true;
-                    this.ExteriorStackSlider.IsEnabled = true;
-
-                    this.IndirectMultiplier.IsEnabled = true;
-                    this.IndirectMultiplierButton.IsEnabled = true;
-
-                    this.LandCost.IsEnabled = true;
-                    this.LandCostButton.IsEnabled = true;
-
-                    this.GeneralCosts.IsEnabled = true;
-                    this.GeneralCostsButton.IsEnabled = true;
-
-                    this.DesignContingency.IsEnabled = true;
-                    this.DesignContingencyButton.IsEnabled = true;
-
-                    this.BuildContingency.IsEnabled = true;
-                    this.BuildContingencyButton.IsEnabled = true;
-
-                    this.CCIP.IsEnabled = true;
-                    this.CCIPButton.IsEnabled = true;
-
-                    this.CMFee.IsEnabled = true;
-                    this.CMFeeButton.IsEnabled = true;
-
-                    this.GenearateProjectInformationButton.IsEnabled = true;
-
-                    this.ModifyInputsButton.IsEnabled = true;
-
-                    this.ProjectBoxColorPicker.IsEnabled = true;
-                }
-                else
-                {
-                    MessageBox.Show("Format Of The Data In The Excel File Is Inappropriate.");
-                    return;
-                }
+                MessageBox.Show("Format Of The Data In The Excel File Is Inappropriate.");
+                return;
             }
-        }
-
-        public void ModifyInputs()
-        {
-           
-            MessageBox.Show("Hello");
         }
 
         /*---------------- Handeling Modify Input Button Event ----------------*/

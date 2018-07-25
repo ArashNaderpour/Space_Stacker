@@ -21,7 +21,6 @@ namespace StackingProgrammingTool
     {
         public static bool generateDataError = false;
         public static bool dataWindow = false;
-        public Button generateDataButton = new Button();
 
         public GenerateInitialDataWindow()
         {
@@ -381,7 +380,7 @@ namespace StackingProgrammingTool
             // Check To See Any Program Data Was Entered
             if (MainWindow.functions.Count > 3) {
                 dataWindow = true;
-                this.generateDataButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                ((MainWindow)this.Owner).GeneratePrograms();
                 this.Close();
             }
             else
