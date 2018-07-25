@@ -586,6 +586,12 @@ namespace StackingProgrammingTool
             }
         }
 
+        public void ModifyInputs()
+        {
+           
+            MessageBox.Show("Hello");
+        }
+
         /*---------------- Handeling Modify Input Button Event ----------------*/
         private void ModifyInputs_Click(object sender, RoutedEventArgs e)
         {
@@ -595,6 +601,7 @@ namespace StackingProgrammingTool
             }
 
             this.modifyInputDataWindow = new ModifyProgramDataWindow();
+            this.modifyInputDataWindow.Owner = this;
             this.modifyInputDataWindow.Show();
         }
 

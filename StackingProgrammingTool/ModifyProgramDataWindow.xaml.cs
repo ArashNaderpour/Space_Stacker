@@ -88,7 +88,7 @@ namespace StackingProgrammingTool
 
                     TextBox countRange = new TextBox();
                     countRange.Name = "ProgramCountRange" + addedProgramDataIndex;
-                    countRange.Text = (MainWindow.functions[key]["keyMax"] - MainWindow.functions[key]["keyMin"]).ToString();
+                    countRange.Text = ((MainWindow.functions[key]["keyMax"] - MainWindow.functions[key]["keyVal"]) * 2).ToString();
                     countRange.Margin = new Thickness(2.5, 0, 2.5, 10);
                     countRange.Padding = new Thickness(2);
                     countRange.VerticalAlignment = VerticalAlignment.Center;
@@ -108,7 +108,7 @@ namespace StackingProgrammingTool
 
                     TextBox grossRange = new TextBox();
                     grossRange.Name = "ProgramGrossRange" + addedProgramDataIndex;
-                    grossRange.Text = (MainWindow.functions[key]["DGSFMax"] - MainWindow.functions[key]["DGSFMin"]).ToString();
+                    grossRange.Text = ((MainWindow.functions[key]["DGSFMax"] - MainWindow.functions[key]["DGSFVal"]) * 2).ToString();
                     grossRange.Margin = new Thickness(2.5, 0, 0, 10);
                     grossRange.Padding = new Thickness(2);
                     grossRange.VerticalAlignment = VerticalAlignment.Center;
@@ -198,6 +198,7 @@ namespace StackingProgrammingTool
                         if (Grid.GetColumn(textBox) == 2 && Grid.GetRow(textBox) == i)
                         {
                             float value;
+                            float range = MainWindow.functions[functionName]["keyMax"] - MainWindow.functions[functionName]["keyVal"];
 
                             try
                             {
@@ -211,16 +212,16 @@ namespace StackingProgrammingTool
 
                             if (value >= 0)
                             {
-                                if (MainWindow.functions[functionName]["keyMin"] - value > 0)
-                                {
-                                    MainWindow.functions[functionName]["keyMin"] -= value;
-                                }
-                                else
+                                if (value > range)
                                 {
                                     MainWindow.functions[functionName]["keyMin"] = 0;
                                 }
+                                else
+                                {
+                                    MainWindow.functions[functionName]["keyMin"] = value - range;
+                                }
 
-                                MainWindow.functions[functionName]["keyMax"] += value;
+                                MainWindow.functions[functionName]["keyMax"] += value + range;
 
                                 MainWindow.functions[functionName]["keyVal"] = value;
                             }
@@ -238,7 +239,7 @@ namespace StackingProgrammingTool
 
                             try
                             {
-                                value = (float)int.Parse(textBox.Text);
+                                value = (float)Math.Floor(double.Parse(textBox.Text) / 2);
                             }
                             catch
                             {
@@ -269,6 +270,7 @@ namespace StackingProgrammingTool
                         if (Grid.GetColumn(textBox) == 4 && Grid.GetRow(textBox) == i)
                         {
                             float value;
+                            float range = MainWindow.functions[functionName]["DGSFMax"] - MainWindow.functions[functionName]["DGSFVal"];
 
                             try
                             {
@@ -282,16 +284,16 @@ namespace StackingProgrammingTool
 
                             if (value >= 0)
                             {
-                                if (MainWindow.functions[functionName]["DGSFMin"] - value > 0)
-                                {
-                                    MainWindow.functions[functionName]["DGSFMin"] -= value;
-                                }
-                                else
+                                if (value > range)
                                 {
                                     MainWindow.functions[functionName]["DGSFMin"] = 0;
                                 }
+                                else
+                                {
+                                    MainWindow.functions[functionName]["DGSFMin"] = value - range;
+                                }
 
-                                MainWindow.functions[functionName]["DGSFMax"] += value;
+                                MainWindow.functions[functionName]["DGSFMax"] += value + range;
 
                                 MainWindow.functions[functionName]["DGSFVal"] = value;
                             }
@@ -309,7 +311,7 @@ namespace StackingProgrammingTool
 
                             try
                             {
-                                value = (float)int.Parse(textBox.Text);
+                                value = (float) Math.Floor(double.Parse(textBox.Text)/2);
                             }
                             catch
                             {
@@ -340,6 +342,7 @@ namespace StackingProgrammingTool
             }
 
             this.Close();
+            ((MainWindow)this.Owner).ModifyInputs();
         }
 
         /*---------------- Handeling Add Program Data Event ----------------*/
