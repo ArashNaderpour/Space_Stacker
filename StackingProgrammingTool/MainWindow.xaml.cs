@@ -263,8 +263,35 @@ namespace StackingProgrammingTool
         /*---------------- Updating The Department Expanders After ModifyInputs Window Was Clossed ----------------*/
         public void ModifyInputs()
         {
+            Expander department = new Expander();
+            Grid programs = new Grid();
 
-            MessageBox.Show("Hello");
+            for(int i = 0; i < this.DepartmentsWrapper.Children.Count; i++)
+            {
+                department = this.DepartmentsWrapper.Children[i] as Expander;
+                programs = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Programs") as Grid;
+
+                ComboBox cbx = new ComboBox();
+                Slider keyRooms = new Slider();
+                Slider DGSF = new Slider();
+
+                for (int j = 0; j < programs.RowDefinitions.Count; j++)
+                {
+                    cbx = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+             
+                    // Update Room Count Sliders
+                    keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    keyRooms.Minimum = functions[cbx.SelectedItem.ToString()]["keyMin"];
+                    keyRooms.Value = functions[cbx.SelectedItem.ToString()]["keyVal"];
+                    keyRooms.Maximum = functions[cbx.SelectedItem.ToString()]["keyMax"];
+
+                    // Update DGSF Sliders
+                    DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                    DGSF.Minimum = functions[cbx.SelectedItem.ToString()]["DGSFMin"];
+                    DGSF.Value = functions[cbx.SelectedItem.ToString()]["DGSFVal"];
+                    DGSF.Maximum = functions[cbx.SelectedItem.ToString()]["DGSFMax"];
+                }
+            }
         }
 
         /* ########################################################### Handeling Events Of The Main Window ########################################################### */
