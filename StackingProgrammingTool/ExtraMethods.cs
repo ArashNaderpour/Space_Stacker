@@ -210,7 +210,9 @@ namespace StackingProgrammingTool
                 {
                     if (functions[functionName]["DGSFMax"] != 0 && functions[functionName]["keyMax"] != 0)
                     {
-                        program.Items.Add(functionName);
+                        ComboBoxItem item = new ComboBoxItem();
+                        item.Content = functionName;
+                        program.Items.Add(item);
                     }
                 }
                 program.SelectedIndex = 0;
@@ -225,14 +227,17 @@ namespace StackingProgrammingTool
                 Grid.SetColumn(p, 0);
                 Grid.SetRow(p, i);
 
+                // First Item Of The ComboBox
+                ComboBoxItem firstItem = program.Items[0] as ComboBoxItem;
+
                 // Keys
                 Label keyLabel = new Label();
                 keyLabel.Content = "Rooms";
                 Slider keyRooms = new Slider();
                 keyRooms.Name = department.Name + "Rooms" + i.ToString();
-                keyRooms.Minimum = functions[program.Items[0].ToString()]["keyMin"];
-                keyRooms.Value = functions[program.Items[0].ToString()]["keyVal"];
-                keyRooms.Maximum = functions[program.Items[0].ToString()]["keyMax"];
+                keyRooms.Minimum = functions[firstItem.Content.ToString()]["keyMin"];
+                keyRooms.Value = functions[firstItem.Content.ToString()]["keyVal"];
+                keyRooms.Maximum = functions[firstItem.Content.ToString()]["keyMax"];
                 keyRooms.TickFrequency = 1;
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -252,9 +257,9 @@ namespace StackingProgrammingTool
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
                 DGSF.Name = department.Name + "DGSF" + i.ToString();
-                DGSF.Minimum = functions[program.Items[0].ToString()]["DGSFMin"];
-                DGSF.Value = functions[program.Items[0].ToString()]["DGSFVal"];
-                DGSF.Maximum = functions[program.Items[0].ToString()]["DGSFMax"];
+                DGSF.Minimum = functions[firstItem.Content.ToString()]["DGSFMin"];
+                DGSF.Value = functions[firstItem.Content.ToString()]["DGSFVal"];
+                DGSF.Maximum = functions[firstItem.Content.ToString()]["DGSFMax"];
                 DGSF.TickFrequency = 10;
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -319,7 +324,9 @@ namespace StackingProgrammingTool
                 {
                     if (functions[functionName]["DGSFMax"] != 0 && functions[functionName]["keyMax"] != 0)
                     {
-                        program.Items.Add(functionName);
+                        ComboBoxItem item = new ComboBoxItem();
+                        item.Content = functionName;
+                        program.Items.Add(item);
                     }
                 }
                 program.SelectedIndex = 0;
@@ -334,14 +341,17 @@ namespace StackingProgrammingTool
                 Grid.SetColumn(p, 0);
                 Grid.SetRow(p, i);
 
+                // First Item Of The ComboBox
+                ComboBoxItem firstItem = program.Items[0] as ComboBoxItem;
+
                 // Keys
                 Label keyLabel = new Label();
                 keyLabel.Content = "Rooms";
                 Slider keyRooms = new Slider();
                 keyRooms.Name = department.Name + "Rooms" + (i).ToString();
-                keyRooms.Minimum = functions[program.Items[0].ToString()]["keyMin"];
-                keyRooms.Value = functions[program.Items[0].ToString()]["keyVal"];
-                keyRooms.Maximum = functions[program.Items[0].ToString()]["keyMax"];
+                keyRooms.Minimum = functions[firstItem.Content.ToString()]["keyMin"];
+                keyRooms.Value = functions[firstItem.Content.ToString()]["keyVal"];
+                keyRooms.Maximum = functions[firstItem.Content.ToString()]["keyMax"];
                 keyRooms.TickFrequency = 1;
                 keyRooms.IsSnapToTickEnabled = true;
                 keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
@@ -361,9 +371,9 @@ namespace StackingProgrammingTool
                 DGSFLabel.Content = "DGSF";
                 Slider DGSF = new Slider();
                 DGSF.Name = department.Name + "DGSF" + (i).ToString();
-                DGSF.Minimum = functions[program.Items[0].ToString()]["DGSFMin"];
-                DGSF.Value = functions[program.Items[0].ToString()]["DGSFVal"];
-                DGSF.Maximum = functions[program.Items[0].ToString()]["DGSFMax"];
+                DGSF.Minimum = functions[firstItem.Content.ToString()]["DGSFMin"];
+                DGSF.Value = functions[firstItem.Content.ToString()]["DGSFVal"];
+                DGSF.Maximum = functions[firstItem.Content.ToString()]["DGSFMax"];
                 DGSF.TickFrequency = 10;
                 DGSF.IsSnapToTickEnabled = true;
                 DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;

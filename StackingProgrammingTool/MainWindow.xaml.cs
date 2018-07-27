@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Linq;
 
 namespace StackingProgrammingTool
 {
@@ -154,7 +155,7 @@ namespace StackingProgrammingTool
 
                     // Adding To Total GSF And Total Raw Cost
                     float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                    float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                    float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                     this.totalGSF += GSF;
                     this.totalRawDepartmentCost += rawCost;
 
@@ -175,10 +176,10 @@ namespace StackingProgrammingTool
                     programBox.boxDims = programBoxDims;
                     programBox.departmentHeader = department.Header.ToString();
                     programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                    programBox.function = program.SelectedItem.ToString();
+                    programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
                     programBox.keyRooms = (int)keyRooms.Value;
                     programBox.DGSF = (float)DGSF.Value;
-                    programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                    programBox.cost = functions[programBox.function]["cost"];
                     programBox.boxTotalGSFValue = GSF;
                     programBox.totalRawCostValue = rawCost;
                     programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -266,7 +267,7 @@ namespace StackingProgrammingTool
             Expander department = new Expander();
             Grid programs = new Grid();
 
-            for(int i = 0; i < this.DepartmentsWrapper.Children.Count; i++)
+            for (int i = 0; i < this.DepartmentsWrapper.Children.Count; i++)
             {
                 department = this.DepartmentsWrapper.Children[i] as Expander;
                 programs = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Programs") as Grid;
@@ -275,21 +276,46 @@ namespace StackingProgrammingTool
                 Slider keyRooms = new Slider();
                 Slider DGSF = new Slider();
 
+                int boxCounter = 0;
+
                 for (int j = 0; j < programs.RowDefinitions.Count; j++)
                 {
                     cbx = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
-             
+
+                    // Change Content Of The ComboBoxes
+                    ComboBoxItem item = new ComboBoxItem();
+
+                    for (int k = 0; k < cbx.Items.Count; k++)
+                    {
+                        item = cbx.Items[k] as ComboBoxItem;
+
+                        if (functions.Keys.ToArray()[0] == "MEP")
+                        {
+                            item.Content = functions.Keys.ToArray()[k + 3];
+                        }
+                        else
+                        {
+                            item.Content = functions.Keys.ToArray()[k];
+                        }
+                    }
+
+                    // Change Function Name in The Boxes Dictionary
+                    string boxName = department.Name + "ProgramBox" + boxCounter.ToString();
+                    this.boxesOfTheProject[boxName].function = item.Content.ToString();
+
                     // Update Room Count Sliders
                     keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
-                    keyRooms.Minimum = functions[cbx.SelectedItem.ToString()]["keyMin"];
-                    keyRooms.Value = functions[cbx.SelectedItem.ToString()]["keyVal"];
-                    keyRooms.Maximum = functions[cbx.SelectedItem.ToString()]["keyMax"];
+                    keyRooms.Minimum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyMin"];
+                    keyRooms.Value = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyVal"];
+                    keyRooms.Maximum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyMax"];
 
                     // Update DGSF Sliders
                     DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
-                    DGSF.Minimum = functions[cbx.SelectedItem.ToString()]["DGSFMin"];
-                    DGSF.Value = functions[cbx.SelectedItem.ToString()]["DGSFVal"];
-                    DGSF.Maximum = functions[cbx.SelectedItem.ToString()]["DGSFMax"];
+                    DGSF.Minimum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFMin"];
+                    DGSF.Value = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFVal"];
+                    DGSF.Maximum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFMax"];
+
+                    boxCounter++;
                 }
             }
         }
@@ -499,7 +525,7 @@ namespace StackingProgrammingTool
 
                         // Adding To Total GSF And Total Raw Cost
                         float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                        float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                        float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                         this.totalGSF += GSF;
                         this.totalRawDepartmentCost += rawCost;
 
@@ -520,10 +546,10 @@ namespace StackingProgrammingTool
                         programBox.boxDims = programBoxDims;
                         programBox.departmentHeader = department.Header.ToString();
                         programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                        programBox.function = program.SelectedItem.ToString();
+                        programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
                         programBox.keyRooms = (int)keyRooms.Value;
                         programBox.DGSF = (float)DGSF.Value;
-                        programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                        programBox.cost = functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                         programBox.boxTotalGSFValue = GSF;
                         programBox.totalRawCostValue = rawCost;
                         programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -727,7 +753,8 @@ namespace StackingProgrammingTool
 
                                     // Subtracting From Total GSF And Total Raw Cost
                                     this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
-                                    this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) * functions[program.SelectedItem.ToString()]["cost"];
+                                    this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) *
+                                        functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
 
                                     // Remove The Visualization Boxes
                                     this.stackingVisualization.Children.RemoveAt(j);
@@ -788,7 +815,7 @@ namespace StackingProgrammingTool
 
                                 // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                                float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                                float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                                 this.totalGSF += GSF;
                                 this.totalRawDepartmentCost += rawCost;
 
@@ -811,10 +838,10 @@ namespace StackingProgrammingTool
                                 programBox.boxDims = programBoxDims;
                                 programBox.departmentHeader = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                                programBox.function = program.SelectedItem.ToString();
+                                programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
-                                programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                                programBox.cost = functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                                 programBox.boxTotalGSFValue = GSF;
                                 programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -953,7 +980,7 @@ namespace StackingProgrammingTool
 
                     // Adding To Total GSF And Total Raw Cost
                     float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                    float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                    float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                     this.totalGSF += GSF;
                     this.totalRawDepartmentCost += rawCost;
 
@@ -975,10 +1002,10 @@ namespace StackingProgrammingTool
                     programBox.boxDims = programBoxDims;
                     programBox.departmentHeader = department.Header.ToString();
                     programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                    programBox.function = program.SelectedItem.ToString();
+                    programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
                     programBox.keyRooms = (int)keyRooms.Value;
                     programBox.DGSF = (float)DGSF.Value;
-                    programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                    programBox.cost = functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                     programBox.boxTotalGSFValue = GSF;
                     programBox.totalRawCostValue = rawCost;
                     programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
@@ -1236,7 +1263,7 @@ namespace StackingProgrammingTool
 
                                 // Adding To Total GSF And Total Raw Cost
                                 float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                                float rawCost = GSF * functions[program.SelectedItem.ToString()]["cost"];
+                                float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                                 this.totalGSF += GSF;
                                 this.totalRawDepartmentCost += rawCost;
 
@@ -1271,10 +1298,10 @@ namespace StackingProgrammingTool
                                 programBox.departmentHeader = department.Header.ToString();
                                 programBox.boxColor = Color.FromRgb(newProgramColors[newProgramIndex][0],
                                     newProgramColors[newProgramIndex][1], newProgramColors[newProgramIndex][2]);
-                                programBox.function = program.SelectedItem.ToString();
+                                programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
                                 programBox.keyRooms = (int)keyRooms.Value;
                                 programBox.DGSF = (float)DGSF.Value;
-                                programBox.cost = functions[program.SelectedItem.ToString()]["cost"];
+                                programBox.cost = functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
                                 programBox.boxTotalGSFValue = GSF;
                                 programBox.totalRawCostValue = rawCost;
                                 programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / newProgramBoxDims[2]));
@@ -1794,6 +1821,7 @@ namespace StackingProgrammingTool
             string programBoxName = cbx.Name.Replace("ComboBox", "ProgramBox");
             int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
             int programIndex = this.boxesOfTheProject[programBoxName].indexInDepartment;
+            string selectedFunction = ((ComboBoxItem)cbx.SelectedItem).Content.ToString();
 
             // Extracting The Department That Changed
             Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
@@ -1804,14 +1832,14 @@ namespace StackingProgrammingTool
 
             // Calculating Length Of Each Program Based On Total Area Of The Program And Width Of The Project Box
             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, keyRoomsSliderName) as Slider;
-            keyRooms.Minimum = functions[cbx.SelectedItem.ToString()]["keyMin"];
-            keyRooms.Value = functions[cbx.SelectedItem.ToString()]["keyVal"];
-            keyRooms.Maximum = functions[cbx.SelectedItem.ToString()]["keyMax"];
+            keyRooms.Minimum = functions[selectedFunction]["keyMin"];
+            keyRooms.Value = functions[selectedFunction]["keyVal"];
+            keyRooms.Maximum = functions[selectedFunction]["keyMax"];
 
             Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, DGSFSliderName) as Slider;
-            DGSF.Minimum = functions[cbx.SelectedItem.ToString()]["DGSFMin"];
-            DGSF.Value = functions[cbx.SelectedItem.ToString()]["DGSFVal"];
-            DGSF.Maximum = functions[cbx.SelectedItem.ToString()]["DGSFMax"];
+            DGSF.Minimum = functions[selectedFunction]["DGSFMin"];
+            DGSF.Value = functions[selectedFunction]["DGSFVal"];
+            DGSF.Maximum = functions[selectedFunction]["DGSFMax"];
 
             // Extracting Floor And Visualization Index Of The ProgramBox
             int programBoxFloor = this.boxesOfTheProject[programBoxName].floor;
