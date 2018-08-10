@@ -123,7 +123,7 @@ namespace StackingProgrammingTool
         /*---------------- Handeling Generate Program Data Event ----------------*/
         private void GenerateProgramData_Click(object sender, RoutedEventArgs e)
         {
-            // Clear The Dictionary Every Time Generate Button Is Pressed
+            // Clear All The Lists
             MainWindow.functions.Clear();
 
             for (int i = 1; i < this.ProgramsDataChart.RowDefinitions.Count; i++)

@@ -17,15 +17,15 @@ namespace StackingProgrammingTool
     public partial class MainWindow : Window
     {
         // Visualization Variables
-        Model3DGroup stackingVisualization = new Model3DGroup();
+        public Model3DGroup stackingVisualization = new Model3DGroup();
         TextGroupVisual3D programVisualizationLabelsGroup = new TextGroupVisual3D();
 
         // Initial Project Variables
-        float initialProgramHeight = 15;
-        float initialProgramLength = 0;
-        float[] initialProjectBoxDims = { 150, 200, 100 };
-        int initialNumberOfDepartments = 4;
-        int initialNumberOfPrograms = 4;
+        public float initialProgramHeight = 15;
+        public float initialProgramLength = 0;
+        public float[] initialProjectBoxDims = { 150, 200, 100 };
+        public int initialNumberOfDepartments = 4;
+        public int initialNumberOfPrograms = 4;
 
         // Output Variables
         float constructionCost = new float();
@@ -118,9 +118,28 @@ namespace StackingProgrammingTool
 
         /* ########################################################### End Of Windows Load And Start Of Handeling Events ########################################################### */
 
-        /*---------------- Updating The Department Expanders After ModifyInputs Window Was Clossed ----------------*/
+        /*---------------- Generating The Project`s Data After "Generate Programs" Was Pressed ----------------*/
         public void GeneratePrograms()
         {
+            // Clear All The Lists ("this.functions" Was Cleared From Inside The "Generate Programs Page" After Pressin The Button)
+            this.DepartmentsWrapper.Children.Clear();
+            this.stackingVisualization.Children.Clear();
+            this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
+            this.colorsOfBoxes.Clear();
+            this.boxesOfTheProject.Clear();
+            this.stackingVisualization.Children.Clear();
+            this.programVisualizationLabelsGroup.Children.Clear();
+
+            // ProjectBox Visualization
+            string projectBoxName = "ProjectBox";
+            Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
+            float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
+
+            GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
+                new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
+
+            this.stackingVisualization.Children.Add(projectVisualizationBox);
+
             // Adding Department Expanders And Programs To The Controller Window
             this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
 
@@ -361,6 +380,9 @@ namespace StackingProgrammingTool
                     this.stackingVisualization.Children.Clear();
                     this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
                     this.colorsOfBoxes.Clear();
+                    this.boxesOfTheProject.Clear();
+                    this.stackingVisualization.Children.Clear();
+                    this.programVisualizationLabelsGroup.Children.Clear();
 
                     // ProjectBox Visualization
                     string projectBoxName = "ProjectBox";
