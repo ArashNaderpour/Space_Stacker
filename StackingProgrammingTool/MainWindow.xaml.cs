@@ -127,8 +127,21 @@ namespace StackingProgrammingTool
             this.NumberOfDepartments.Text = this.initialNumberOfDepartments.ToString();
             this.colorsOfBoxes.Clear();
             this.boxesOfTheProject.Clear();
-            this.stackingVisualization.Children.Clear();
             this.programVisualizationLabelsGroup.Children.Clear();
+            this.DepartmentsColorPicker.Children.Clear();
+            this.DepartmentsColorPicker.RowDefinitions.Clear();
+
+            // Output Variables
+            this.constructionCost = 0;
+            this.projectCost = 0;
+            this.budgetDifference = 0;
+            this.costPerGSF = 0;
+            this.totalBGSF = 0;
+            this.limitOfBGSF = 0;
+
+            // Temp Output Variables
+            this.totalGSF = 0;
+            this.totalRawDepartmentCost = 0;
 
             // ProjectBox Visualization
             string projectBoxName = "ProjectBox";
@@ -318,9 +331,11 @@ namespace StackingProgrammingTool
                         }
                     }
 
-                    // Change Function Name in The Boxes Dictionary
+                    // Change Function Name In The Boxes Dictionary
                     string boxName = department.Name + "ProgramBox" + boxCounter.ToString();
+
                     this.boxesOfTheProject[boxName].function = item.Content.ToString();
+                    this.boxesOfTheProject[boxName].cost = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["cost"];
 
                     // Update Room Count Sliders
                     keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
@@ -334,9 +349,23 @@ namespace StackingProgrammingTool
                     DGSF.Value = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFVal"];
                     DGSF.Maximum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFMax"];
 
+                    // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
+                    float oldGSF = this.boxesOfTheProject[boxName].boxTotalGSFValue;
+                    float oldRawProgramCost = this.boxesOfTheProject[boxName].totalRawCostValue;
+                    float newGSF = (float)(keyRooms.Value * DGSF.Value);
+                    float newRawProgramCost = newGSF * functions[this.boxesOfTheProject[boxName].function]["cost"];
+                    float GSFDifference = newGSF - oldGSF;
+                    float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
+
+                    this.totalGSF += GSFDifference;
+                    this.totalRawDepartmentCost += rawProgramCostDifference;
+
                     boxCounter++;
                 }
             }
+
+            // All The Calculation, Prepration, And Visualization Of The Output Data
+            CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
         }
 
         /* ########################################################### Handeling Events Of The Main Window ########################################################### */
@@ -1876,7 +1905,7 @@ namespace StackingProgrammingTool
         /*---------------- Handeling Program Slider Change Event ----------------*/
         private void ProgramSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            // ... Get Slider Reference.
+            // Get Slider Reference.
             Slider slider = sender as Slider;
 
             // Extracting Name Of The ProgramBox

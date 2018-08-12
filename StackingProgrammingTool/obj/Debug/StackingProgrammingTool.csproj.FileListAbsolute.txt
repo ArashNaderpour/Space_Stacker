@@ -44,3 +44,4 @@ C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\GenerateInitialDataWindow.baml
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ModifyProgramDataWindow.g.cs
 C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ModifyProgramDataWindow.baml
+C:\Users\arash\Desktop\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojResolveAssemblyReference.cache
