@@ -334,31 +334,43 @@ namespace StackingProgrammingTool
                     // Change Function Name In The Boxes Dictionary
                     string boxName = department.Name + "ProgramBox" + boxCounter.ToString();
 
+                    // Sliders Of Each Program
+                    keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                    DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+
                     this.boxesOfTheProject[boxName].function = item.Content.ToString();
-                    this.boxesOfTheProject[boxName].cost = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["cost"];
+
+                    // If Cost Of The Program Has Been Modified
+                    if (this.boxesOfTheProject[boxName].cost != functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["cost"])
+                    {
+                        // Update "cost" Value Of The Program
+                        this.boxesOfTheProject[boxName].cost = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["cost"];
+
+                        // If Slider Changed Event Does Not Activate
+                        if ((keyRooms.Value == functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyVal"] ||
+                        DGSF.Value == functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFVal"]))
+                        {
+                            // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
+                            float GSF = this.boxesOfTheProject[boxName].boxTotalGSFValue;
+                            float oldRawProgramCost = this.boxesOfTheProject[boxName].totalRawCostValue;
+                            float newRawProgramCost = GSF * this.boxesOfTheProject[boxName].cost;
+                            float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
+
+                            this.totalRawDepartmentCost += rawProgramCostDifference;
+
+                            this.boxesOfTheProject[boxName].totalRawCostValue = newRawProgramCost;
+                        }
+                    }
 
                     // Update Room Count Sliders
-                    keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                     keyRooms.Minimum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyMin"];
                     keyRooms.Value = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyVal"];
                     keyRooms.Maximum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["keyMax"];
 
                     // Update DGSF Sliders
-                    DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                     DGSF.Minimum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFMin"];
                     DGSF.Value = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFVal"];
                     DGSF.Maximum = functions[((ComboBoxItem)cbx.SelectedItem).Content.ToString()]["DGSFMax"];
-
-                    // Calculating GSF And Cost Difference And Updating Values Of The Boxes Dictionary
-                    float oldGSF = this.boxesOfTheProject[boxName].boxTotalGSFValue;
-                    float oldRawProgramCost = this.boxesOfTheProject[boxName].totalRawCostValue;
-                    float newGSF = (float)(keyRooms.Value * DGSF.Value);
-                    float newRawProgramCost = newGSF * functions[this.boxesOfTheProject[boxName].function]["cost"];
-                    float GSFDifference = newGSF - oldGSF;
-                    float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
-
-                    this.totalGSF += GSFDifference;
-                    this.totalRawDepartmentCost += rawProgramCostDifference;
 
                     boxCounter++;
                 }
