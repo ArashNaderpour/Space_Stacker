@@ -312,13 +312,12 @@
                                         Content="Show Information" Margin="2.5 10 0 0" Click="ProjectInformation_Click"/>
                                 <!--=================-->
                                 <!--Generate Project Inofrmation Button-->
-                                <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3" IsEnabled="False" 
-                                        Content="Save Project" Margin="0 5 2.5 0"/>
+                                <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3"
+                                        Content="Save Project" Margin="0 5 2.5 0" Click="SaveProject_Click"/>
                                 <!--=================-->
                                 <!--Load Existing Project File Button-->
                                 <Button x:Name="LoadProject" Grid.Column="1" Grid.Row="3" Background="#98AD80"
-                                        Content="Load Project" Margin="2.5 5 0 0"
-                                        IsEnabled="False"/>
+                                        Content="Load Project" Margin="2.5 5 0 0" Click="LoadProject_Click"/>
                                 <!--=================-->
                             </Grid>
                             <!--=====================-->

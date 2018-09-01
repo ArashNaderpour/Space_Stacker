@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
@@ -8,6 +9,7 @@ using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace StackingProgrammingTool
 {
@@ -16,6 +18,9 @@ namespace StackingProgrammingTool
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Save Dictionary
+        Dictionary<string, object> saveData = new Dictionary<string, object>();
+
         // Visualization Variables
         public Model3DGroup stackingVisualization = new Model3DGroup();
         TextGroupVisual3D programVisualizationLabelsGroup = new TextGroupVisual3D();
@@ -2757,6 +2762,39 @@ namespace StackingProgrammingTool
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             }
         }
+
+        /* ########################################################### Save/Load Methods And Events ########################################################### */
+
+        /* ----------------------------------- Handeling Save Button  ----------------------------------- */
+        private void SaveProject_Click(object sender, RoutedEventArgs e)
+        {
+            // Store Required Data Into The Dictionary
+            saveData.Add("Colors", this.colorsOfBoxes);
+            saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
+
+            // Json String Of The Save Data
+            string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
+
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Stream stream = File.Open(saveFileDialog.FileName, FileMode.CreateNew);
+                StreamWriter streamWriter = new StreamWriter(stream);
+
+                streamWriter.Write(projectData);
+            }
+        }
+
+        /* ----------------------------------- Handeling Load Button ----------------------------------- */
+        private void LoadProject_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+            }
+            }
     }
 }
 
