@@ -1912,7 +1912,7 @@ namespace StackingProgrammingTool
                 float oldRawProgramCost = this.boxesOfTheProject[programBoxName].totalRawCostValue;
                 float newRawProgramCost = GSF * this.boxesOfTheProject[programBoxName].cost;
                 float rawProgramCostDifference = newRawProgramCost - oldRawProgramCost;
-                
+
                 this.totalRawDepartmentCost += rawProgramCostDifference;
 
                 this.boxesOfTheProject[programBoxName].totalRawCostValue = newRawProgramCost;
@@ -1936,7 +1936,7 @@ namespace StackingProgrammingTool
         {
             // Get Slider Reference.
             Slider slider = sender as Slider;
-           
+
             // Extracting Name Of The ProgramBox
             string programBoxName = "";
 
@@ -2768,6 +2768,9 @@ namespace StackingProgrammingTool
         /* ----------------------------------- Handeling Save Button  ----------------------------------- */
         private void SaveProject_Click(object sender, RoutedEventArgs e)
         {
+            Stream stream = null;
+            StreamWriter streamWriter = null;
+
             // Store Required Data Into The Dictionary
             saveData.Add("Colors", this.colorsOfBoxes);
             saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
@@ -2779,22 +2782,64 @@ namespace StackingProgrammingTool
 
             if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Stream stream = File.Open(saveFileDialog.FileName, FileMode.CreateNew);
-                StreamWriter streamWriter = new StreamWriter(stream);
-
-                streamWriter.Write(projectData);
+                using (stream = File.Open(saveFileDialog.FileName, FileMode.Create))
+                {
+                    using (streamWriter = new StreamWriter(stream))
+                    {
+                        streamWriter.Write(projectData);
+                    }
+                }
             }
         }
 
         /* ----------------------------------- Handeling Load Button ----------------------------------- */
         private void LoadProject_Click(object sender, RoutedEventArgs e)
         {
+            Dictionary<string, object> loadData = new Dictionary<string, object>();
+
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            Stream stream = null;
+
+            string pathToFile = "";
 
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                try
+                {
+                    stream = openFileDialog.OpenFile();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could Not Read File From Disk. Original Error: " + ex.Message);
+                    return;
+                }
+
+                if (stream != null)
+                {
+                    pathToFile = openFileDialog.FileName;
+
+                    try
+                    {
+                        loadData = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(pathToFile));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: Could Not Open The File. Original error: " + ex.Message);
+                        return;
+                    }
+
+                    // Load The Project
+
+                }
+
+                // Handeling Selected File Not Exist.
+                else
+                {
+                    MessageBox.Show("Error: File Not Found.");
+                    return;
+                }
             }
-            }
+        }
     }
 }
 
