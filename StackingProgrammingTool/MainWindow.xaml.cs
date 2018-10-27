@@ -10,6 +10,7 @@ using HelixToolkit.Wpf;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace StackingProgrammingTool
 {
@@ -56,7 +57,7 @@ namespace StackingProgrammingTool
 
         // Essential Data
         Dictionary<string, byte[]> colorsOfBoxes = new Dictionary<string, byte[]>();
-        Dictionary<String, Box> boxesOfTheProject = new Dictionary<string, Box>();
+        Dictionary<string, Box> boxesOfTheProject = new Dictionary<string, Box>();
 
         // Spread-Sheet Data
         public static Dictionary<String, Dictionary<String, float>> functions = new Dictionary<String, Dictionary<String, float>>();
@@ -2774,6 +2775,7 @@ namespace StackingProgrammingTool
             // Store Required Data Into The Dictionary
             saveData.Add("Colors", this.colorsOfBoxes);
             saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
+            saveData.Add("NumberOfTheDepartments", this.NumberOfDepartments.Text);
 
             // Json String Of The Save Data
             string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -2802,6 +2804,7 @@ namespace StackingProgrammingTool
 
             string pathToFile = "";
 
+            // Read The File
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
@@ -2829,6 +2832,104 @@ namespace StackingProgrammingTool
                     }
 
                     // Load The Project
+                    try
+                    {
+                        this.boxesOfTheProject = ((JObject)loadData["BoxesOfTheProject"]).ToObject<Dictionary<string, Box>>();
+                        this.colorsOfBoxes = ((JObject)loadData["Colors"]).ToObject<Dictionary<string, byte[]>>();
+
+                        // Adding Department Expanders And Programs To The Controller Window
+                        this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: Data is Corupted: " + ex.Message);
+                        return;
+                    }
+
+                    // ProjectBox Visualization
+                    string projectBoxName = "ProjectBox";
+                    Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
+                    float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
+
+                    GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
+                        new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
+
+                    for (int i = 0; i < Convert.ToInt32(this.NumberOfDepartments.Text); i++)
+                    {
+                        // Setting Up Initial Departments' Expanders
+                        Expander department = ExtraMethods.DepartmentGernerator(i);
+
+                        ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
+                            functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
+                            ProgramSlider_ValueChanged, OnKeyUpHandler);
+
+                        this.DepartmentsWrapper.Children.Add(department);
+
+                        /*--- Setting Up Initial Departments And Programs Visualization ---*/
+                        // Generating A Random Color In The Format Of An Array That Contains Three Bytes
+                        byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
+                        this.colorsOfBoxes.Add(department.Name, color);
+
+                        // Adding A Color Picker For Each Department
+                        VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
+                            ColorPicker_Changed);
+
+                        for (int j = 0; j < this.initialNumberOfPrograms; j++)
+                        {
+                            // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
+                            ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
+                            Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
+                            Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
+                            Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
+                            this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+
+                            // Adding To Total GSF And Total Raw Cost
+                            float GSF = ((float)(keyRooms.Value * DGSF.Value));
+                            float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
+                            this.totalGSF += GSF;
+                            this.totalRawDepartmentCost += rawCost;
+
+                            // Generate Gradient Colors For Programs Of Each Department
+                            float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
+                            byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
+
+                            // Setting Program Label Background Color
+                            ExtraMethods.ChangeLabelColor(department, j, gradient);
+
+                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
+                            string programBoxName = department.Name + "ProgramBox" + j.ToString();
+                            Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
+                                this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
+                            Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
+
+                            Box programBox = new Box(programBoxName, programBoxCenter);
+                            programBox.boxDims = programBoxDims;
+                            programBox.departmentHeader = department.Header.ToString();
+                            programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
+                            programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
+                            programBox.keyRooms = (int)keyRooms.Value;
+                            programBox.DGSF = (float)DGSF.Value;
+                            programBox.cost = functions[programBox.function]["cost"];
+                            programBox.boxTotalGSFValue = GSF;
+                            programBox.totalRawCostValue = rawCost;
+                            programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
+                            programBox.visualizationLabel = labelElement.Content.ToString();
+
+                            GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
+                                programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
+
+                            // Visualizations Of The Labels Of The Boxes
+                            VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                                programBoxCenter, programBoxDims, programBox.boxColor);
+
+                            this.boxesOfTheProject.Add(programBox.name, programBox);
+                            this.stackingVisualization.Children.Add(programBoxVisualization);
+
+                            // Add Index Of The Box To The Dictionary
+                            this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
+                        }
+                    }
+
 
                 }
 
