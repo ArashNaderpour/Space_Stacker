@@ -2777,6 +2777,26 @@ namespace StackingProgrammingTool
             saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
             saveData.Add("NumberOfTheDepartments", this.NumberOfDepartments.Text);
 
+            List<string> departmentNames = new List<string>();
+            List<int> numOfPrograms = new List<int>();
+
+            for (int i = 0; i < this.DepartmentsWrapper.Children.Count; i++)
+            {
+
+
+                string departmentName = ((Expander)this.DepartmentsWrapper.Children[i]).Header.ToString();
+                departmentNames.Add(departmentName);
+
+
+                string expanderName = ((Expander)this.DepartmentsWrapper.Children[i]).Name + "NumberInputTextBox";
+                TextBox numberTextBox = LogicalTreeHelper.FindLogicalNode(this.DepartmentsWrapper, expanderName) as TextBox;
+                numOfPrograms.Add(Convert.ToInt32(numberTextBox.Text));
+
+            }
+
+            saveData.Add("NameOfTheDepartments", departmentNames);
+            saveData.Add("NumberOfPrograms", numOfPrograms);
+
             // Json String Of The Save Data
             string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
 
@@ -2836,8 +2856,6 @@ namespace StackingProgrammingTool
                     {
                         this.boxesOfTheProject = ((JObject)loadData["BoxesOfTheProject"]).ToObject<Dictionary<string, Box>>();
                         this.colorsOfBoxes = ((JObject)loadData["Colors"]).ToObject<Dictionary<string, byte[]>>();
-
-                        // Adding Department Expanders And Programs To The Controller Window
                         this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
                     }
                     catch (Exception ex)
