@@ -2772,13 +2772,13 @@ namespace StackingProgrammingTool
             Stream stream = null;
             StreamWriter streamWriter = null;
 
+            List<string> departmentNames = new List<string>();
+            List<int> numOfPrograms = new List<int>();
+
             // Store Required Data Into The Dictionary
             saveData.Add("Colors", this.colorsOfBoxes);
             saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
             saveData.Add("NumberOfTheDepartments", this.NumberOfDepartments.Text);
-
-            List<string> departmentNames = new List<string>();
-            List<int> numOfPrograms = new List<int>();
 
             for (int i = 0; i < this.DepartmentsWrapper.Children.Count; i++)
             {
@@ -2796,6 +2796,8 @@ namespace StackingProgrammingTool
 
             saveData.Add("NameOfTheDepartments", departmentNames);
             saveData.Add("NumberOfPrograms", numOfPrograms);
+
+            saveData.Add("Functions", functions);
 
             // Json String Of The Save Data
             string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -2818,6 +2820,9 @@ namespace StackingProgrammingTool
         private void LoadProject_Click(object sender, RoutedEventArgs e)
         {
             Dictionary<string, object> loadData = new Dictionary<string, object>();
+
+            List<string> departmentNames = new List<string>();
+            List<int> numOfPrograms = new List<int>();
 
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             Stream stream = null;
@@ -2857,6 +2862,12 @@ namespace StackingProgrammingTool
                         this.boxesOfTheProject = ((JObject)loadData["BoxesOfTheProject"]).ToObject<Dictionary<string, Box>>();
                         this.colorsOfBoxes = ((JObject)loadData["Colors"]).ToObject<Dictionary<string, byte[]>>();
                         this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
+
+                        functions = ((JObject)loadData["Functions"]).ToObject<Dictionary<String, Dictionary<String, float>>>();
+
+                        numOfPrograms =  ((JArray)loadData["NumberOfPrograms"]).ToObject<List<int>>();
+                        departmentNames = ((JArray)loadData["NameOfTheDepartments"]).ToObject<List<string>>();
+
                     }
                     catch (Exception ex)
                     {
@@ -2875,24 +2886,22 @@ namespace StackingProgrammingTool
                     for (int i = 0; i < Convert.ToInt32(this.NumberOfDepartments.Text); i++)
                     {
                         // Setting Up Initial Departments' Expanders
-                        Expander department = ExtraMethods.DepartmentGernerator(i);
+                        Expander department = ExtraMethods.LoadDepartment(i, departmentNames[i]);
 
-                        ExtraMethods.departmentExpanderGenerator(department, this.initialNumberOfPrograms,
+                        ExtraMethods.departmentExpanderGenerator(department, numOfPrograms[i],
                             functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
                             ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                         this.DepartmentsWrapper.Children.Add(department);
 
-                        /*--- Setting Up Initial Departments And Programs Visualization ---*/
-                        // Generating A Random Color In The Format Of An Array That Contains Three Bytes
-                        byte[] color = { Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)), Convert.ToByte(random.Next(255)) };
-                        this.colorsOfBoxes.Add(department.Name, color);
+                        // Loading Colors of The Departments
+                        byte[] color = this.colorsOfBoxes[department.Name];
 
                         // Adding A Color Picker For Each Department
                         VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
                             ColorPicker_Changed);
-
-                        for (int j = 0; j < this.initialNumberOfPrograms; j++)
+                        
+                        for (int j = 0; j < numOfPrograms[i]; j++)
                         {
                             // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
                             ComboBox program = LogicalTreeHelper.FindLogicalNode(department, department.Name + "ComboBox" + j.ToString()) as ComboBox;
@@ -2908,7 +2917,7 @@ namespace StackingProgrammingTool
                             this.totalRawDepartmentCost += rawCost;
 
                             // Generate Gradient Colors For Programs Of Each Department
-                            float stop = ((float)j) / ((float)this.initialNumberOfPrograms);
+                            float stop = ((float)j / (float)(numOfPrograms[i]));
                             byte[] gradient = VisualizationMethods.GenerateGradientColor(color, stop);
 
                             // Setting Program Label Background Color
@@ -2940,11 +2949,7 @@ namespace StackingProgrammingTool
                             VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                                 programBoxCenter, programBoxDims, programBox.boxColor);
 
-                            this.boxesOfTheProject.Add(programBox.name, programBox);
                             this.stackingVisualization.Children.Add(programBoxVisualization);
-
-                            // Add Index Of The Box To The Dictionary
-                            this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                         }
                     }
 

@@ -44,6 +44,20 @@ namespace StackingProgrammingTool
             return department;
         }
 
+        /* ------------------------ Method For Loading Expander For Each Department ------------------------ */
+        public static Expander LoadDepartment(int index, string departmentName)
+        {
+            Expander department = new Expander();
+            department.Margin = new Thickness(0, 5, 0, 0);
+            department.HorizontalAlignment = HorizontalAlignment.Stretch;
+            department.Header = departmentName;
+            department.BorderBrush = Brushes.Black;
+            department.Background = new SolidColorBrush(Color.FromRgb(128, 169, 237));
+            department.Name = "D" + (index + 1).ToString();
+
+            return department;
+        }
+
         /* ------------------------ Method For Changing Color Of Labels ------------------------ */
         public static void ChangeLabelColor(Expander department, int index, byte[] color)
         {
