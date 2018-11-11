@@ -2796,8 +2796,9 @@ namespace StackingProgrammingTool
 
             saveData.Add("NameOfTheDepartments", departmentNames);
             saveData.Add("NumberOfPrograms", numOfPrograms);
-
             saveData.Add("Functions", functions);
+            saveData.Add("TotalGSF", this.totalGSF);
+            saveData.Add("TotalRawDepartmentCost", this.totalRawDepartmentCost);
 
             // Json String Of The Save Data
             string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -2862,16 +2863,18 @@ namespace StackingProgrammingTool
                         this.boxesOfTheProject = ((JObject)loadData["BoxesOfTheProject"]).ToObject<Dictionary<string, Box>>();
                         this.colorsOfBoxes = ((JObject)loadData["Colors"]).ToObject<Dictionary<string, byte[]>>();
                         this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
-
+                        this.totalGSF = (float)((double)loadData["TotalGSF"]);
+                        this.totalRawDepartmentCost = ((float)(double)loadData["TotalRawDepartmentCost"]);
+                       
                         functions = ((JObject)loadData["Functions"]).ToObject<Dictionary<String, Dictionary<String, float>>>();
 
-                        numOfPrograms =  ((JArray)loadData["NumberOfPrograms"]).ToObject<List<int>>();
+                        numOfPrograms = ((JArray)loadData["NumberOfPrograms"]).ToObject<List<int>>();
                         departmentNames = ((JArray)loadData["NameOfTheDepartments"]).ToObject<List<string>>();
 
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error: Data is Corupted: " + ex.Message);
+                        MessageBox.Show("Error: Data is Corupted, " + ex.Message);
                         return;
                     }
 
@@ -2900,7 +2903,7 @@ namespace StackingProgrammingTool
                         // Adding A Color Picker For Each Department
                         VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
                             ColorPicker_Changed);
-                        
+
                         for (int j = 0; j < numOfPrograms[i]; j++)
                         {
                             // Calculating Length Of Each Program Based On Total Area of The Program And Width Of The Project Box
@@ -2909,12 +2912,6 @@ namespace StackingProgrammingTool
                             Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                             Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
                             this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
-
-                            // Adding To Total GSF And Total Raw Cost
-                            float GSF = ((float)(keyRooms.Value * DGSF.Value));
-                            float rawCost = GSF * functions[((ComboBoxItem)program.SelectedItem).Content.ToString()]["cost"];
-                            this.totalGSF += GSF;
-                            this.totalRawDepartmentCost += rawCost;
 
                             // Generate Gradient Colors For Programs Of Each Department
                             float stop = ((float)j / (float)(numOfPrograms[i]));
@@ -2929,31 +2926,23 @@ namespace StackingProgrammingTool
                                 this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
-                            Box programBox = new Box(programBoxName, programBoxCenter);
-                            programBox.boxDims = programBoxDims;
-                            programBox.departmentHeader = department.Header.ToString();
-                            programBox.boxColor = Color.FromRgb(gradient[0], gradient[1], gradient[2]);
-                            programBox.function = ((ComboBoxItem)program.SelectedItem).Content.ToString();
-                            programBox.keyRooms = (int)keyRooms.Value;
-                            programBox.DGSF = (float)DGSF.Value;
-                            programBox.cost = functions[programBox.function]["cost"];
-                            programBox.boxTotalGSFValue = GSF;
-                            programBox.totalRawCostValue = rawCost;
-                            programBox.floor = Convert.ToInt32(Math.Floor(((float)programBox.boxCenter.Z) / programBoxDims[2]));
-                            programBox.visualizationLabel = labelElement.Content.ToString();
-
                             GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
                                 programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
 
                             // Visualizations Of The Labels Of The Boxes
                             VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
-                                programBoxCenter, programBoxDims, programBox.boxColor);
+                                programBoxCenter, programBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
 
                             this.stackingVisualization.Children.Add(programBoxVisualization);
                         }
                     }
 
+                    // All The Calculation, Prepration, And Visualization Of The Output Data
+                    CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
+                    // Generate And Visualize Stacking Data Of The Stacking Tab
+                    ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
+                        StackingButton_Click, OnKeyUpHandler);
                 }
 
                 // Handeling Selected File Not Exist.

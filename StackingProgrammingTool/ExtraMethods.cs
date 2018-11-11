@@ -646,7 +646,7 @@ namespace StackingProgrammingTool
             Grid programsStackingGrid)
         {
             Label label = LogicalTreeHelper.FindLogicalNode(programsStackingGrid, boxName + "StackingLabel") as Label;
-
+         
             label.Background = new SolidColorBrush(color);
 
             int mid = (color.R + color.B + color.G) / 3;
