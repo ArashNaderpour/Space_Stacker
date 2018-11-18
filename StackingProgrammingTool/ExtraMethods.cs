@@ -442,11 +442,17 @@ namespace StackingProgrammingTool
                 {
                     if (functions[functionName]["DGSFMax"] != 0 && functions[functionName]["keyMax"] != 0)
                     {
-                        program.Items.Add(functionName);
+                        ComboBoxItem item = new ComboBoxItem();
+                        item.Content = functionName;
+                        program.Items.Add(item);
+
+                        if (functionName == boxes[programBoxName].function)
+                        {
+                            program.SelectedItem = item;
+                        }
                     }
                 }
 
-                program.SelectedItem = boxes[programBoxName].function;
                 program.HorizontalAlignment = HorizontalAlignment.Stretch;
                 program.Margin = new Thickness(0, 5, 2, 0);
                 program.SelectionChanged += ComboBox_SelectionChanged;
@@ -457,9 +463,6 @@ namespace StackingProgrammingTool
                 programs.Children.Add(p);
                 Grid.SetColumn(p, 0);
                 Grid.SetRow(p, i);
-
-                // First Item Of The ComboBox
-                string firstItem = (string)program.Items[0];
 
                 // Keys
                 Label keyLabel = new Label();
@@ -626,7 +629,7 @@ namespace StackingProgrammingTool
         {
             // Index Of The Row For each new Program
             int rowIndex = 1;
-
+           
             for (int i = 0; i < departmentsWrapper.Children.Count; i++)
             {
                 Expander department = departmentsWrapper.Children[i] as Expander;
@@ -636,14 +639,14 @@ namespace StackingProgrammingTool
                 // Add A New Row For The Headers
                 RowDefinition gridRow = new RowDefinition();
                 subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
-
+                
                 foreach (DockPanel element in programs.Children)
                 {
                     if (Grid.GetColumn(element) == 0)
                     {
                         // Add Row For Each Program
                         gridRow = new RowDefinition();
-                        gridRow.Height = new GridLength(40);
+                        gridRow.Height = new GridLength(1, GridUnitType.Star);
                         subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
 
                         // The Label Of The Program From The Controller Window
@@ -651,7 +654,7 @@ namespace StackingProgrammingTool
 
                         // Name Of The ProgramBox
                         string boxName = original.Name.Replace("Label", "ProgramBox");
-
+                        
                         // Generate And Display Label Of Each Program
                         Label programLabel = new Label();
                         programLabel.Content = original.Content;

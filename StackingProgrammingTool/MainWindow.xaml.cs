@@ -819,7 +819,7 @@ namespace StackingProgrammingTool
                                     ComboBox program = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "ComboBox")) as ComboBox;
                                     Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "Rooms")) as Slider;
                                     Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "DGSF")) as Slider;
-
+                                 
                                     // Subtracting From Total GSF And Total Raw Cost
                                     this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
                                     this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) *
@@ -938,6 +938,7 @@ namespace StackingProgrammingTool
                         ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                             StackingButton_Click, OnKeyUpHandler);
                     }
+
                     // Input Is Equal To Existing Number Of Departments
                     if (existingDepartments == input)
                     {
@@ -2892,24 +2893,114 @@ namespace StackingProgrammingTool
                         return;
                     }
 
+                    // Enable The Disabled Controllers
+                    if (this.DepartmentsWrapper.Children.Count == 0)
+                    {
+                        // Enabling The Disabled Controllers
+                        this.ProjectWidth.IsEnabled = true;
+                        this.ProjectWidthButton.IsEnabled = true;
+                        this.Seperator.Visibility = Visibility.Visible;
+
+                        this.ProjectLength.IsEnabled = true;
+                        this.ProjectLengthButton.IsEnabled = true;
+
+                        this.ProjectHeight.IsEnabled = true;
+                        this.ProjectHeightButton.IsEnabled = true;
+
+                        this.FloorHeight.IsEnabled = true;
+                        this.FloorHeightButton.IsEnabled = true;
+
+                        this.NumberOfDepartments.IsEnabled = true;
+
+                        this.NumberOfDepartmentsButton.IsEnabled = true;
+                        this.ResetDepartmentsButton.IsEnabled = true;
+
+                        this.TotalBudget.IsEnabled = true;
+                        this.TotalBudgetButton.IsEnabled = true;
+
+                        this.CirculationSlider.IsEnabled = true;
+                        this.MEPSlider.IsEnabled = true;
+                        this.ExteriorStackSlider.IsEnabled = true;
+
+                        this.IndirectMultiplier.IsEnabled = true;
+                        this.IndirectMultiplierButton.IsEnabled = true;
+
+                        this.LandCost.IsEnabled = true;
+                        this.LandCostButton.IsEnabled = true;
+
+                        this.GeneralCosts.IsEnabled = true;
+                        this.GeneralCostsButton.IsEnabled = true;
+
+                        this.DesignContingency.IsEnabled = true;
+                        this.DesignContingencyButton.IsEnabled = true;
+
+                        this.BuildContingency.IsEnabled = true;
+                        this.BuildContingencyButton.IsEnabled = true;
+
+                        this.CCIP.IsEnabled = true;
+                        this.CCIPButton.IsEnabled = true;
+
+                        this.CMFee.IsEnabled = true;
+                        this.CMFeeButton.IsEnabled = true;
+
+                        this.GenearateProjectInformationButton.IsEnabled = true;
+
+                        this.ModifyInputsButton.IsEnabled = true;
+
+                        this.ProjectBoxColorPicker.IsEnabled = true;
+                    }
+
+                    else
+                    {
+                        this.DepartmentsWrapper.Children.Clear();
+                        this.programVisualizationLabelsGroup.Children.Clear();
+                        this.DepartmentsColorPicker.Children.Clear();
+                        this.DepartmentsColorPicker.RowDefinitions.Clear();
+
+                        // SubWindows: Programs Window
+                        if (this.programsWindow != null)
+                        {
+                            this.programsWindow.Close();
+                        }
+
+                        // SubWindows: Excel Image Window
+                        if (this.excelImageWindow != null)
+                        {
+                            this.excelImageWindow.Close();
+                        }
+
+                        // SubWindows: Initial Input Data Window
+                        if (this.generateInitialDataWindow != null)
+                        {
+                            this.generateInitialDataWindow.Close();
+                        }
+
+                        // SubWindows: Modify Input Data Window
+                        if (this.modifyInputDataWindow != null)
+                        {
+                            this.modifyInputDataWindow.Close();
+                        }
+                    }
+
                     // ProjectBox Visualization
                     string projectBoxName = "ProjectBox";
                     Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
                     float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
 
+                    // Redraw The Project Box
                     GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
                     this.stackingVisualization.Children.Clear();
-                    this.programVisualizationLabelsGroup.Children.Clear();
-
                     this.stackingVisualization.Children.Add(projectVisualizationBox);
 
                     for (int i = 0; i < this.boxesOfTheProject.Count; i++)
                     {
+                        // Placeholders For Visualization Boxes
                         GeometryModel3D placeHolder = new GeometryModel3D();
                         this.stackingVisualization.Children.Add(placeHolder);
 
+                        // Placeholder For Visualization Labels
                         TextVisual3D placeHolderLabelLeft = new TextVisual3D();
                         TextVisual3D placeHolderLabelRight = new TextVisual3D();
                         programVisualizationLabelsGroup.Children.Add(placeHolderLabelLeft);
@@ -2960,7 +3051,7 @@ namespace StackingProgrammingTool
                                 programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
 
                             // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, 
+                            VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup,
                                 this.boxesOfTheProject[programBoxName].visualizationIndex,
                                 this.boxesOfTheProject[programBoxName].visualizationIndex,
                                 this.boxesOfTheProject[programBoxName].visualizationLabel,
@@ -2977,6 +3068,7 @@ namespace StackingProgrammingTool
                     // Generate And Visualize Stacking Data Of The Stacking Tab
                     ExtraMethods.GenerateProgramsStacking(this.boxesOfTheProject, this.DepartmentsWrapper, this.ProgramsStackingGrid,
                         StackingButton_Click, OnKeyUpHandler);
+
                 }
 
                 // Handeling Selected File Not Exist.
