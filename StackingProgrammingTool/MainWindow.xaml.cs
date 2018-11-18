@@ -237,7 +237,7 @@ namespace StackingProgrammingTool
                     this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                 }
             }
-
+            
             // All The Calculation, Prepration, And Visualization Of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
@@ -638,7 +638,7 @@ namespace StackingProgrammingTool
                         this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                     }
                 }
-
+           
                 xlWorkBook.Close(true, null, null);
                 xlApp.Quit();
 
@@ -1892,12 +1892,15 @@ namespace StackingProgrammingTool
             int programIndex = this.boxesOfTheProject[programBoxName].indexInDepartment;
             string selectedFunction = ((ComboBoxItem)cbx.SelectedItem).Content.ToString();
 
+            // Save The New Selected Value
+            this.boxesOfTheProject[programBoxName].function = selectedFunction;
+
             // Extracting The Department That Changed
             Expander department = this.DepartmentsWrapper.Children[departmentIndex] as Expander;
 
             // Extracting The Sliders That Need Changes
-            String keyRoomsSliderName = cbx.Name.Replace("ComboBox", "Rooms");
-            String DGSFSliderName = cbx.Name.Replace("ComboBox", "DGSF");
+            string keyRoomsSliderName = cbx.Name.Replace("ComboBox", "Rooms");
+            string DGSFSliderName = cbx.Name.Replace("ComboBox", "DGSF");
 
             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, keyRoomsSliderName) as Slider;
             Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, DGSFSliderName) as Slider;
@@ -1989,9 +1992,10 @@ namespace StackingProgrammingTool
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
             // Calculating The Length Difference Of The ProgramBox 
             float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
-
+            
             for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
             {
+
                 if (this.boxesOfTheProject[this.stackingVisualization.Children[i].GetName()].floor == programBoxFloor)
                 {
                     // The Changed Program
@@ -2769,13 +2773,18 @@ namespace StackingProgrammingTool
         /* ----------------------------------- Handeling Save Button  ----------------------------------- */
         private void SaveProject_Click(object sender, RoutedEventArgs e)
         {
+            saveData.Clear();
+
             Stream stream = null;
             StreamWriter streamWriter = null;
 
             List<string> departmentNames = new List<string>();
             List<int> numOfPrograms = new List<int>();
+            List<string> projectDimensions = new List<string> { this.ProjectWidth.Text, this.ProjectLength.Text, this.ProjectHeight.Text };
 
             // Store Required Data Into The Dictionary
+
+            saveData.Add("ProjectDimensions", projectDimensions);
             saveData.Add("Colors", this.colorsOfBoxes);
             saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
             saveData.Add("NumberOfTheDepartments", this.NumberOfDepartments.Text);
@@ -2860,12 +2869,17 @@ namespace StackingProgrammingTool
                     // Load The Project
                     try
                     {
+                        List<string> projectDimensions = ((JArray)loadData["ProjectDimensions"]).ToObject<List<string>>();
+                        this.ProjectWidth.Text = projectDimensions[0];
+                        this.ProjectLength.Text = projectDimensions[1];
+                        this.ProjectHeight.Text = projectDimensions[2];
+
                         this.boxesOfTheProject = ((JObject)loadData["BoxesOfTheProject"]).ToObject<Dictionary<string, Box>>();
                         this.colorsOfBoxes = ((JObject)loadData["Colors"]).ToObject<Dictionary<string, byte[]>>();
                         this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
                         this.totalGSF = (float)((double)loadData["TotalGSF"]);
                         this.totalRawDepartmentCost = ((float)(double)loadData["TotalRawDepartmentCost"]);
-                       
+
                         functions = ((JObject)loadData["Functions"]).ToObject<Dictionary<String, Dictionary<String, float>>>();
 
                         numOfPrograms = ((JArray)loadData["NumberOfPrograms"]).ToObject<List<int>>();
@@ -2878,6 +2892,9 @@ namespace StackingProgrammingTool
                         return;
                     }
 
+                    this.stackingVisualization.Children.Clear();
+                    this.programVisualizationLabelsGroup.Children.Clear();
+
                     // ProjectBox Visualization
                     string projectBoxName = "ProjectBox";
                     Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -2886,13 +2903,22 @@ namespace StackingProgrammingTool
                     GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
+                    this.stackingVisualization.Children.Add(projectVisualizationBox);
+
+                    for (int i = 0; i < this.boxesOfTheProject.Count; i++)
+                    {
+                        GeometryModel3D placeHolder = new GeometryModel3D();
+                        this.stackingVisualization.Children.Add(placeHolder);
+                    }
+
                     for (int i = 0; i < Convert.ToInt32(this.NumberOfDepartments.Text); i++)
                     {
                         // Setting Up Initial Departments' Expanders
                         Expander department = ExtraMethods.LoadDepartment(i, departmentNames[i]);
 
-                        ExtraMethods.departmentExpanderGenerator(department, numOfPrograms[i],
-                            functions, DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
+                        ExtraMethods.departmentExpanderLoad(department, numOfPrograms[i],
+                            functions, this.boxesOfTheProject,
+                            DepartmentNameAndNumberButton_Click, SelectedProgram_Chenged,
                             ProgramSlider_ValueChanged, OnKeyUpHandler);
 
                         this.DepartmentsWrapper.Children.Add(department);
@@ -2911,7 +2937,7 @@ namespace StackingProgrammingTool
                             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                             Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                             Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
-                            this.initialProgramLength = ((float)(keyRooms.Value * DGSF.Value)) / this.initialProjectBoxDims[0];
+                            float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(ProjectWidth.Text);
 
                             // Generate Gradient Colors For Programs Of Each Department
                             float stop = ((float)j / (float)(numOfPrograms[i]));
@@ -2920,10 +2946,9 @@ namespace StackingProgrammingTool
                             // Setting Program Label Background Color
                             ExtraMethods.ChangeLabelColor(department, j, gradient);
 
-                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), this.initialProgramLength, this.initialProgramHeight };
                             string programBoxName = department.Name + "ProgramBox" + j.ToString();
-                            Point3D programBoxCenter = new Point3D(0, ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (float.Parse(ProjectLength.Text) * 0.5),
-                                this.initialProgramHeight * 0.5 + (i * this.initialProgramHeight));
+                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, this.initialProgramHeight };
+                            Point3D programBoxCenter = this.boxesOfTheProject[programBoxName].boxCenter;
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
                             GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName,
@@ -2933,7 +2958,8 @@ namespace StackingProgrammingTool
                             VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
                                 programBoxCenter, programBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
 
-                            this.stackingVisualization.Children.Add(programBoxVisualization);
+                            this.stackingVisualization.Children.RemoveAt(this.boxesOfTheProject[programBoxName].visualizationIndex);
+                            this.stackingVisualization.Children.Insert(this.boxesOfTheProject[programBoxName].visualizationIndex, programBoxVisualization);
                         }
                     }
 

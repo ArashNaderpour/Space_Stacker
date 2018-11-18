@@ -73,7 +73,7 @@ namespace StackingProgrammingTool
             {
                 programLabel.Foreground = Brushes.Black;
             }
-           
+
             programLabel.Background = new SolidColorBrush(Color.FromRgb(color[0], color[1], color[2]));
         }
 
@@ -292,6 +292,223 @@ namespace StackingProgrammingTool
             department.Content = expanderWrapper;
         }
 
+        /* ------------------------ Method For Loading Elements Inisde Each Department's Expander ------------------------ */
+        public static void departmentExpanderLoad(Expander department, int numberOfProgramsInput,
+            Dictionary<string, Dictionary<string, float>> functions, Dictionary<string, Box> boxes,
+            RoutedEventHandler Button_Clicked, SelectionChangedEventHandler ComboBox_SelectionChanged,
+            RoutedPropertyChangedEventHandler<double> Slider_ValueChanged, KeyEventHandler OnKeyUpHandler)
+        {
+            // The Main Container of the Expander
+            StackPanel expanderWrapper = new StackPanel();
+            expanderWrapper.Name = department.Name + "Wrapper";
+            expanderWrapper.Background = Brushes.White;
+
+            // Column Definition for Grids
+            ColumnDefinition c0 = new ColumnDefinition();
+            ColumnDefinition c1 = new ColumnDefinition();
+            ColumnDefinition c2 = new ColumnDefinition();
+
+            /*--- The Grid for setting up the name of the department input---*/
+            Grid departmentName = new Grid();
+            departmentName.Margin = new Thickness(2, 5, 2, 0);
+
+            c0.Width = new GridLength(1, GridUnitType.Auto);
+            c1.Width = new GridLength(2, GridUnitType.Star);
+            c2.Width = new GridLength(1, GridUnitType.Star);
+
+            departmentName.ColumnDefinitions.Add(c0);
+            departmentName.ColumnDefinitions.Add(c1);
+            departmentName.ColumnDefinitions.Add(c2);
+
+            // Label of "Name of the Department"
+            TextBlock name = new TextBlock();
+            name.Text = "Name of Department";
+            name.Margin = new Thickness(0, 0, 2, 0);
+
+            // TextBox for getting the Department's Name
+            TextBox nameInput = new TextBox();
+            nameInput.HorizontalAlignment = HorizontalAlignment.Stretch;
+            nameInput.Name = department.Name + "NameInputTextBox";
+            nameInput.Padding = new Thickness(2);
+            nameInput.KeyUp += OnKeyUpHandler;
+
+            // Button for setting the Departments Name
+            Button setName = new Button();
+            setName.Content = "SET";
+            setName.Name = nameInput.Name + "Button";
+            setName.Click += Button_Clicked;
+
+            departmentName.Children.Add(name);
+            Grid.SetColumn(name, 0);
+            departmentName.Children.Add(nameInput);
+            Grid.SetColumn(nameInput, 1);
+            departmentName.Children.Add(setName);
+            Grid.SetColumn(setName, 2);
+
+            expanderWrapper.Children.Add(departmentName);
+
+            /*--- The Grid for setting up the Number of Programs input ---*/
+            Grid numOfPrograms = new Grid();
+            numOfPrograms.Margin = new Thickness(2, 5, 2, 15);
+
+            c0 = new ColumnDefinition();
+            c1 = new ColumnDefinition();
+            c2 = new ColumnDefinition();
+            c0.Width = new GridLength(1, GridUnitType.Auto);
+            c1.Width = new GridLength(2, GridUnitType.Star);
+            c2.Width = new GridLength(1, GridUnitType.Star);
+
+            numOfPrograms.ColumnDefinitions.Add(c0);
+            numOfPrograms.ColumnDefinitions.Add(c1);
+            numOfPrograms.ColumnDefinitions.Add(c2);
+
+            // Label of "Number Of The Programs"
+            TextBlock number = new TextBlock();
+            number.Text = "Number of Programs";
+            number.Margin = new Thickness(0, 0, 2, 0);
+
+            // TextBox for getting the Department's Number Of Programs
+            TextBox numberInput = new TextBox();
+            numberInput.Text = numberOfProgramsInput.ToString();
+            numberInput.HorizontalAlignment = HorizontalAlignment.Stretch;
+            numberInput.Name = department.Name + "NumberInputTextBox";
+            numberInput.Padding = new Thickness(2);
+            numberInput.KeyUp += OnKeyUpHandler;
+
+            // Button for setting the Departments Name
+            Button setNumber = new Button();
+            setNumber.Content = "SET";
+            setNumber.Name = numberInput.Name + "Button";
+            setNumber.Click += Button_Clicked;
+
+            numOfPrograms.Children.Add(number);
+            Grid.SetColumn(number, 0);
+            numOfPrograms.Children.Add(numberInput);
+            Grid.SetColumn(numberInput, 1);
+            numOfPrograms.Children.Add(setNumber);
+            Grid.SetColumn(setNumber, 2);
+
+            expanderWrapper.Children.Add(numOfPrograms);
+
+            /*--- Adding the programs properties ---*/
+            Grid programs = new Grid();
+            programs.Name = department.Name + "Programs";
+
+            c0 = new ColumnDefinition();
+            c1 = new ColumnDefinition();
+            c2 = new ColumnDefinition();
+            c0.Width = new GridLength(1, GridUnitType.Star);
+            c1.Width = new GridLength(1, GridUnitType.Star);
+            c2.Width = new GridLength(1, GridUnitType.Star);
+
+            programs.ColumnDefinitions.Add(c0);
+            programs.ColumnDefinitions.Add(c1);
+            programs.ColumnDefinitions.Add(c2);
+
+            char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+            for (int i = 0; i < numberOfProgramsInput; i++)
+            {
+                string programBoxName = department.Name + "ProgramBox" + i.ToString();
+
+                //Dynamically adding Rows to the Grid
+                RowDefinition rowDef = new RowDefinition();
+                rowDef.Height = new GridLength(1, GridUnitType.Star);
+                programs.RowDefinitions.Add(rowDef);
+
+                // Defining Dock panels for the properties of the Department Programs
+                DockPanel p = new DockPanel();
+                p.HorizontalAlignment = HorizontalAlignment.Stretch;
+                DockPanel k = new DockPanel();
+                //k.Orientation = Orientation.Horizontal;
+                k.HorizontalAlignment = HorizontalAlignment.Stretch;
+                k.Name = "keys";
+                DockPanel r = new DockPanel();
+                r.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+                // Programs
+                Label programLabel = new Label();
+                programLabel.Name = department.Name + "Label" + i.ToString();
+                programLabel.Content = alphabet[i];
+                programLabel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
+                programLabel.Margin = new Thickness(2, 5, 2, 0);
+                programLabel.Width = 25;
+
+                ComboBox program = new ComboBox();
+                program.Name = department.Name + "ComboBox" + i.ToString();
+
+                foreach (string functionName in functions.Keys)
+                {
+                    if (functions[functionName]["DGSFMax"] != 0 && functions[functionName]["keyMax"] != 0)
+                    {
+                        program.Items.Add(functionName);
+                    }
+                }
+
+                program.SelectedItem = boxes[programBoxName].function;
+                program.HorizontalAlignment = HorizontalAlignment.Stretch;
+                program.Margin = new Thickness(0, 5, 2, 0);
+                program.SelectionChanged += ComboBox_SelectionChanged;
+
+                p.Children.Add(programLabel);
+                p.Children.Add(program);
+
+                programs.Children.Add(p);
+                Grid.SetColumn(p, 0);
+                Grid.SetRow(p, i);
+
+                // First Item Of The ComboBox
+                string firstItem = (string)program.Items[0];
+
+                // Keys
+                Label keyLabel = new Label();
+                keyLabel.Content = "Rooms";
+                Slider keyRooms = new Slider();
+                keyRooms.Name = department.Name + "Rooms" + i.ToString();
+                keyRooms.Minimum = functions[boxes[programBoxName].function]["keyMin"];
+                keyRooms.Value = boxes[programBoxName].keyRooms;
+                keyRooms.Maximum = functions[boxes[programBoxName].function]["keyMax"];
+                keyRooms.TickFrequency = 1;
+                keyRooms.IsSnapToTickEnabled = true;
+                keyRooms.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
+                keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                keyRooms.Margin = new Thickness(0, 5, 0, 0);
+                keyRooms.ValueChanged += Slider_ValueChanged;
+
+                k.Children.Add(keyLabel);
+                k.Children.Add(keyRooms);
+
+                programs.Children.Add(k);
+                Grid.SetColumn(k, 1);
+                Grid.SetRow(k, i);
+
+                // DGSF
+                Label DGSFLabel = new Label();
+                DGSFLabel.Content = "DGSF";
+                Slider DGSF = new Slider();
+                DGSF.Name = department.Name + "DGSF" + i.ToString();
+                DGSF.Minimum = functions[boxes[programBoxName].function]["DGSFMin"];
+                DGSF.Value = boxes[programBoxName].DGSF;
+                DGSF.Maximum = functions[boxes[programBoxName].function]["DGSFMax"];
+                DGSF.TickFrequency = 10;
+                DGSF.IsSnapToTickEnabled = true;
+                DGSF.TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight;
+                DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
+                DGSF.Margin = new Thickness(0, 5, 0, 0);
+                DGSF.ValueChanged += Slider_ValueChanged;
+
+                r.Children.Add(DGSFLabel);
+                r.Children.Add(DGSF);
+                programs.Children.Add(r);
+                Grid.SetColumn(r, 2);
+                Grid.SetRow(r, i);
+            }
+            expanderWrapper.Children.Add(programs);
+
+            department.Content = expanderWrapper;
+        }
+
         /* --------------------- Method For Adding Programs To An Existing Department --------------------- */
         public static void AddProgram(Grid ppt, int count, int start, Expander department,
             Dictionary<string, Dictionary<string, float>> functions, SelectionChangedEventHandler ComboBox_SelectionChanged,
@@ -323,7 +540,7 @@ namespace StackingProgrammingTool
                 programLabel.HorizontalContentAlignment = HorizontalAlignment.Center;
                 programLabel.Margin = new Thickness(2, 5, 2, 0);
                 programLabel.Width = 25;
-        
+
                 if (i < alphabet.Length)
                 {
                     programLabel.Content = alphabet[i];
@@ -372,7 +589,7 @@ namespace StackingProgrammingTool
                 keyRooms.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
                 keyRooms.Margin = new Thickness(0, 5, 0, 0);
                 keyRooms.ValueChanged += Slider_ValueChanged;
-            
+
                 k.Children.Add(keyLabel);
                 k.Children.Add(keyRooms);
 
@@ -394,7 +611,7 @@ namespace StackingProgrammingTool
                 DGSF.AutoToolTipPlacement = System.Windows.Controls.Primitives.AutoToolTipPlacement.TopLeft;
                 DGSF.Margin = new Thickness(0, 5, 0, 0);
                 DGSF.ValueChanged += Slider_ValueChanged;
-               
+
                 r.Children.Add(DGSFLabel);
                 r.Children.Add(DGSF);
                 ppt.Children.Add(r);
@@ -413,7 +630,7 @@ namespace StackingProgrammingTool
             for (int i = 0; i < departmentsWrapper.Children.Count; i++)
             {
                 Expander department = departmentsWrapper.Children[i] as Expander;
-             
+
                 Grid programs = LogicalTreeHelper.FindLogicalNode(departmentsWrapper, department.Name + "Programs") as Grid;
 
                 // Add A New Row For The Headers
@@ -428,13 +645,13 @@ namespace StackingProgrammingTool
                         gridRow = new RowDefinition();
                         gridRow.Height = new GridLength(40);
                         subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
-               
+
                         // The Label Of The Program From The Controller Window
                         Label original = element.Children[0] as Label;
- 
+
                         // Name Of The ProgramBox
                         string boxName = original.Name.Replace("Label", "ProgramBox");
-                  
+
                         // Generate And Display Label Of Each Program
                         Label programLabel = new Label();
                         programLabel.Content = original.Content;
@@ -646,7 +863,7 @@ namespace StackingProgrammingTool
             Grid programsStackingGrid)
         {
             Label label = LogicalTreeHelper.FindLogicalNode(programsStackingGrid, boxName + "StackingLabel") as Label;
-         
+
             label.Background = new SolidColorBrush(color);
 
             int mid = (color.R + color.B + color.G) / 3;
