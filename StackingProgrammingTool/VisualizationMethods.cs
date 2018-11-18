@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using Xceed.Wpf.Toolkit;
-
+using System.Collections.Generic;
 
 namespace StackingProgrammingTool
 {
@@ -45,7 +45,7 @@ namespace StackingProgrammingTool
         }
 
         /*------------ Change Foreground Color Of The Visualization Labels ------------*/
-        public static void ChangeVisualizationLabelColor(TextGroupVisual3D textGroup, 
+        public static void ChangeVisualizationLabelColor(TextGroupVisual3D textGroup,
             int index, byte[] color)
         {
             TextVisual3D labelLeft = textGroup.Children[(2 * index) - 2] as TextVisual3D;
@@ -151,13 +151,13 @@ namespace StackingProgrammingTool
                 labelLeft.Foreground = Brushes.Black;
                 labelRight.Foreground = Brushes.Black;
             }
-           
+
             textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 1);
             textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 2);
 
             textGroup.Children.Insert((2 * newBoxIndex) - 2, labelLeft);
             textGroup.Children.Insert((2 * newBoxIndex) - 1, labelRight);
-            
+
         }
 
         /*------------ Add Visualization Boxes' Labels ------------*/
@@ -200,7 +200,7 @@ namespace StackingProgrammingTool
                 labelLeft.Foreground = Brushes.Black;
                 labelRight.Foreground = Brushes.Black;
             }
-            
+
             textGroup.Children.Insert((2 * visBoxIndex) - 2, labelLeft);
             textGroup.Children.Insert((2 * visBoxIndex) - 1, labelRight);
         }
@@ -241,6 +241,27 @@ namespace StackingProgrammingTool
             Grid.SetRow(colorPicker, rowIndex);
             grid.Children.Add(colorPicker);
             colorPicker.SelectedColorChanged += Color_Changed;
+        }
+
+        /*------------ Decrease Color Picker ------------*/
+        public static void DecreaseColorPicker(Grid grid)
+        {
+            List<UIElement> elementsToRemove = new List<UIElement>();
+
+            foreach (UIElement element in grid.Children)
+            {
+                if (Grid.GetRow(element) == grid.RowDefinitions.Count - 1)
+                {
+                    elementsToRemove.Add(element);
+                }
+            }
+
+            foreach (UIElement element in elementsToRemove)
+            {
+                grid.Children.Remove(element);
+            }
+
+            grid.RowDefinitions.RemoveAt(grid.RowDefinitions.Count - 1);
         }
     }
 }

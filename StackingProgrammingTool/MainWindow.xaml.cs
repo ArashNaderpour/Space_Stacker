@@ -840,6 +840,9 @@ namespace StackingProgrammingTool
                             // Removing Departments' Expanders' Properties
                             this.DepartmentsWrapper.Children.RemoveAt(lastIndex);
                             this.colorsOfBoxes.Remove(department.Name);
+
+                            // Remove Color Picker Of The Removed Departments
+                            VisualizationMethods.DecreaseColorPicker(this.DepartmentsColorPicker);
                         }
 
                         // All The Calculation, Prepration, And Visualization Of The Output Data
