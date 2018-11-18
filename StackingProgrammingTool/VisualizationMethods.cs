@@ -151,7 +151,7 @@ namespace StackingProgrammingTool
                 labelLeft.Foreground = Brushes.Black;
                 labelRight.Foreground = Brushes.Black;
             }
-
+           
             textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 1);
             textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 2);
 
@@ -160,7 +160,7 @@ namespace StackingProgrammingTool
             
         }
 
-        /*------------ Replace Visualization Boxes' Labels ------------*/
+        /*------------ Add Visualization Boxes' Labels ------------*/
         public static void AddVisualizationLabel(TextGroupVisual3D textGroup, int visBoxIndex, string content,
             Point3D center, float[] dims, Color color)
         {

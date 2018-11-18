@@ -237,7 +237,7 @@ namespace StackingProgrammingTool
                     this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                 }
             }
-            
+
             // All The Calculation, Prepration, And Visualization Of The Output Data
             CalculationsAndOutputs(this.totalGSF, this.totalRawDepartmentCost);
 
@@ -638,7 +638,7 @@ namespace StackingProgrammingTool
                         this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
                     }
                 }
-           
+
                 xlWorkBook.Close(true, null, null);
                 xlApp.Quit();
 
@@ -1992,7 +1992,7 @@ namespace StackingProgrammingTool
             float newProgramLength = (((float)(keyRooms.Value * DGSF.Value)) / float.Parse(this.ProjectWidth.Text));
             // Calculating The Length Difference Of The ProgramBox 
             float programLengthDifference = newProgramLength - this.boxesOfTheProject[programBoxName].boxDims[1];
-            
+
             for (int i = programBoxVisualizationIndex; i < this.stackingVisualization.Children.Count; i++)
             {
 
@@ -2892,9 +2892,6 @@ namespace StackingProgrammingTool
                         return;
                     }
 
-                    this.stackingVisualization.Children.Clear();
-                    this.programVisualizationLabelsGroup.Children.Clear();
-
                     // ProjectBox Visualization
                     string projectBoxName = "ProjectBox";
                     Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
@@ -2903,12 +2900,20 @@ namespace StackingProgrammingTool
                     GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
                         new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
 
+                    this.stackingVisualization.Children.Clear();
+                    this.programVisualizationLabelsGroup.Children.Clear();
+
                     this.stackingVisualization.Children.Add(projectVisualizationBox);
 
                     for (int i = 0; i < this.boxesOfTheProject.Count; i++)
                     {
                         GeometryModel3D placeHolder = new GeometryModel3D();
                         this.stackingVisualization.Children.Add(placeHolder);
+
+                        TextVisual3D placeHolderLabelLeft = new TextVisual3D();
+                        TextVisual3D placeHolderLabelRight = new TextVisual3D();
+                        programVisualizationLabelsGroup.Children.Add(placeHolderLabelLeft);
+                        programVisualizationLabelsGroup.Children.Add(placeHolderLabelRight);
                     }
 
                     for (int i = 0; i < Convert.ToInt32(this.NumberOfDepartments.Text); i++)
@@ -2955,7 +2960,10 @@ namespace StackingProgrammingTool
                                 programBoxCenter, programBoxDims, programBoxMaterial, programBoxMaterial);
 
                             // Visualizations Of The Labels Of The Boxes
-                            VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                            VisualizationMethods.ReplaceVisualizationLabel(this.programVisualizationLabelsGroup, 
+                                this.boxesOfTheProject[programBoxName].visualizationIndex,
+                                this.boxesOfTheProject[programBoxName].visualizationIndex,
+                                this.boxesOfTheProject[programBoxName].visualizationLabel,
                                 programBoxCenter, programBoxDims, this.boxesOfTheProject[programBoxName].boxColor);
 
                             this.stackingVisualization.Children.RemoveAt(this.boxesOfTheProject[programBoxName].visualizationIndex);
