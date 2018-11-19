@@ -819,7 +819,7 @@ namespace StackingProgrammingTool
                                     ComboBox program = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "ComboBox")) as ComboBox;
                                     Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "Rooms")) as Slider;
                                     Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, programBoxName.Replace("ProgramBox", "DGSF")) as Slider;
-                                 
+
                                     // Subtracting From Total GSF And Total Raw Cost
                                     this.totalGSF -= ((float)(keyRooms.Value * DGSF.Value));
                                     this.totalRawDepartmentCost -= ((float)(keyRooms.Value * DGSF.Value)) *
@@ -2789,6 +2789,7 @@ namespace StackingProgrammingTool
             // Store Required Data Into The Dictionary
 
             saveData.Add("ProjectDimensions", projectDimensions);
+            saveData.Add("ProjectBoxColor", this.ProjectBoxColorPicker.SelectedColor.Value);
             saveData.Add("Colors", this.colorsOfBoxes);
             saveData.Add("BoxesOfTheProject", this.boxesOfTheProject);
             saveData.Add("NumberOfTheDepartments", this.NumberOfDepartments.Text);
@@ -2812,6 +2813,12 @@ namespace StackingProgrammingTool
             saveData.Add("Functions", functions);
             saveData.Add("TotalGSF", this.totalGSF);
             saveData.Add("TotalRawDepartmentCost", this.totalRawDepartmentCost);
+            saveData.Add("TotalBudget", this.totalBudget);
+            saveData.Add("CirculationMultiplier", (float)this.CirculationSlider.Value);
+            saveData.Add("MEPMultiplier", (float)this.MEPSlider.Value);
+            saveData.Add("ExteriorMultiplier", (float)this.ExteriorStackSlider.Value);
+            saveData.Add("IndirectMultiplier", this.indirectMultiplier);
+            saveData.Add("LandCost", this.landCost);
 
             // Json String Of The Save Data
             string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -2883,6 +2890,13 @@ namespace StackingProgrammingTool
                         this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
                         this.totalGSF = (float)((double)loadData["TotalGSF"]);
                         this.totalRawDepartmentCost = ((float)(double)loadData["TotalRawDepartmentCost"]);
+                        this.totalBudget = (float)((double)loadData["TotalBudget"]);
+                        this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
+
+                        this.indirectMultiplier = (float)((double)loadData["IndirectMultiplier"]);
+                        this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
+                        this.landCost = (float)((double)loadData["LandCost"]);
+                        this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
 
                         functions = ((JObject)loadData["Functions"]).ToObject<Dictionary<String, Dictionary<String, float>>>();
 
@@ -2895,6 +2909,11 @@ namespace StackingProgrammingTool
                         MessageBox.Show("Error: Data is Corupted, " + ex.Message);
                         return;
                     }
+
+                    // Set Value Of The Cost Tab's Sliders
+                    this.ExteriorStackSlider.Value = ((double)loadData["ExteriorMultiplier"]);
+                    this.CirculationSlider.Value = (float)((double)loadData["CirculationMultiplier"]);
+                    this.MEPSlider.Value = float.Parse(loadData["MEPMultiplier"].ToString());
 
                     // Enable The Disabled Controllers
                     if (this.DepartmentsWrapper.Children.Count == 0)
@@ -2987,15 +3006,29 @@ namespace StackingProgrammingTool
 
                     // ProjectBox Visualization
                     string projectBoxName = "ProjectBox";
-                    Point3D projectBoxCenter = new Point3D(0, 0, float.Parse(this.ProjectHeight.Text) * 0.5);
-                    float[] projectBoxDims = new float[] { float.Parse(ProjectWidth.Text), float.Parse(ProjectLength.Text), float.Parse(ProjectHeight.Text) };
 
-                    // Redraw The Project Box
-                    GeometryModel3D projectVisualizationBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter, projectBoxDims,
-                        new SpecularMaterial(Brushes.Transparent, 1), MaterialHelper.CreateMaterial(Colors.Gray));
+                    // Set Colour Of The Project's Box
+                    string colour = loadData["ProjectBoxColor"].ToString();
+
+                    this.ProjectBoxColorPicker.SelectedColor = (Color)ColorConverter.ConvertFromString(colour);
+
+                    Point3D projectBoxCenter = new Point3D(0, 0, this.initialProjectBoxDims[2] * 0.5);
+                    Material projectBoxMaterial = new SpecularMaterial(Brushes.Transparent, 1);
+                    Material projectBoxInsideMaterial = MaterialHelper.CreateMaterial(this.ProjectBoxColorPicker.SelectedColor.Value);
+
+                    GeometryModel3D projectBox = VisualizationMethods.GenerateBox(projectBoxName, projectBoxCenter,
+                        new float[] { this.initialProjectBoxDims[0], this.initialProjectBoxDims[1], this.initialProjectBoxDims[2] },
+                        projectBoxMaterial, projectBoxInsideMaterial);
+
+                    // Setting Dimensions Of The ProjectBox
+                    projectBox.Transform = new ScaleTransform3D(float.Parse(this.ProjectWidth.Text) / this.initialProjectBoxDims[0],
+                                float.Parse(this.ProjectLength.Text) / this.initialProjectBoxDims[1],
+                                float.Parse(this.ProjectHeight.Text) / this.initialProjectBoxDims[2],
+                                0, this.initialProjectBoxDims[1] * -0.5, 0);
+
 
                     this.stackingVisualization.Children.Clear();
-                    this.stackingVisualization.Children.Add(projectVisualizationBox);
+                    this.stackingVisualization.Children.Add(projectBox);
 
                     for (int i = 0; i < this.boxesOfTheProject.Count; i++)
                     {
