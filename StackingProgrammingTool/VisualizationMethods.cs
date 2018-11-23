@@ -151,7 +151,7 @@ namespace StackingProgrammingTool
                 labelLeft.Foreground = Brushes.Black;
                 labelRight.Foreground = Brushes.Black;
             }
-
+            
             textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 1);
             textGroup.Children.RemoveAt((2 * oldVisBoxIndex) - 2);
 

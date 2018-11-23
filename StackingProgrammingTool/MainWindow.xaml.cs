@@ -876,6 +876,29 @@ namespace StackingProgrammingTool
                             VisualizationMethods.GenerateColorPicker(this.DepartmentsColorPicker, department.Header.ToString(), color,
                                 ColorPicker_Changed);
 
+                            float startingY = new float();
+                            int insertVisIndex = 0;
+
+                            for (int k = this.stackingVisualization.Children.Count - 1; k > 0; k--)
+                            {
+                                string boxName = this.stackingVisualization.Children[k].GetName();
+
+                                if (this.boxesOfTheProject[boxName].floor == this.DepartmentsWrapper.Children.Count - 1)
+                                {
+                                    startingY += this.boxesOfTheProject[boxName].boxDims[1];
+
+                                    if (this.boxesOfTheProject[boxName].visualizationIndex > insertVisIndex)
+                                    {
+                                        insertVisIndex = this.boxesOfTheProject[boxName].visualizationIndex + 1;
+                                    }
+                                }
+
+                                if (this.boxesOfTheProject[boxName].floor > this.DepartmentsWrapper.Children.Count - 1)
+                                {
+                                    this.boxesOfTheProject[boxName].visualizationIndex += this.initialNumberOfPrograms;
+                                }
+                            }
+
                             for (int j = 0; j < this.initialNumberOfPrograms; j++)
                             {
                                 // Calculating Raw Cost And GSF Of Each Program
@@ -902,7 +925,7 @@ namespace StackingProgrammingTool
                                 float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), GSF/float.Parse(this.ProjectWidth.Text),
                                     float.Parse(this.FloorHeight.Text) };
                                 Point3D programBoxCenter = new Point3D(0,
-                                    ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
+                                    startingY + ((programBoxDims[1] * 0.5) + (j * programBoxDims[1])) - (this.initialProjectBoxDims[1] * 0.5),
                                     float.Parse(this.FloorHeight.Text) * 0.5 + ((i + (int.Parse(this.NumberOfDepartments.Text) - difference)) * float.Parse(this.FloorHeight.Text)));
                                 Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
@@ -922,12 +945,26 @@ namespace StackingProgrammingTool
                                 GeometryModel3D programBoxVisualization = VisualizationMethods.GenerateBox(programBoxName, programBoxCenter, programBoxDims,
                                     programBoxMaterial, programBoxMaterial);
 
-                                // Visualizations Of The Labels Of The Boxes
-                                VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
-                                    programBoxCenter, programBoxDims, programBox.boxColor);
-
                                 this.boxesOfTheProject.Add(programBox.name, programBox);
-                                this.stackingVisualization.Children.Add(programBoxVisualization);
+
+                                if (insertVisIndex == 0)
+                                {
+                                    this.stackingVisualization.Children.Add(programBoxVisualization);
+
+                                    // Visualizations Of The Labels Of The Boxes
+                                    VisualizationMethods.GenerateVisualizationLabel(this.programVisualizationLabelsGroup, labelElement.Content.ToString(),
+                                        programBoxCenter, programBoxDims, programBox.boxColor);
+                                }
+                                else
+                                {
+                                    this.stackingVisualization.Children.Insert(insertVisIndex, programBoxVisualization);
+
+                                    // Visualizations Of The Labels Of The Boxes
+                                    VisualizationMethods.AddVisualizationLabel(this.programVisualizationLabelsGroup, insertVisIndex, 
+                                        labelElement.Content.ToString(), programBoxCenter, programBoxDims, programBox.boxColor);
+
+                                    insertVisIndex++;
+                                }
 
                                 // Add Index Of The Box To The Dictionary
                                 this.boxesOfTheProject[programBox.name].visualizationIndex = this.stackingVisualization.Children.IndexOf(programBoxVisualization);
