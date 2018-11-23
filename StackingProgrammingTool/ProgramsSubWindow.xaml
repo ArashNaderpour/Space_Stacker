@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StackingProgrammingTool"
         mc:Ignorable="d"
-        Title="ProgramsSubWindow" Height="900" Width="900">
+        Title="ProgramsSubWindow" Height="900" Width="900" 
+        Icon="/Resources/SPT_Icon.ico">
 
 
 

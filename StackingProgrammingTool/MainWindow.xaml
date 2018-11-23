@@ -7,7 +7,8 @@
         xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:StackingProgrammingTool"
         mc:Ignorable="d"
-        Title="Stacking Programming" WindowState="Maximized" MinHeight="600" MinWidth="1000">
+        Title="Stacking Programming" WindowState="Maximized" MinHeight="600" 
+        MinWidth="1000" Icon="/Resources/SPT_Icon.ico">
 
     <!-- Setting up window.DataContext-->
     <!--<Window.DataContext>

@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -195,6 +196,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ExcelFile.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SPT_Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SPT_Image.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StackingProgrammingTool"
         mc:Ignorable="d"
-        Title="Generate Data" Height="910" Width="910">
+        Title="Generate Data" Height="910" Width="910" Icon="/Resources/SPT_Icon.ico">
 
 
     <Border x:Name="InitialDataSubWindowContainer" Padding="10">
