@@ -2856,6 +2856,11 @@ namespace StackingProgrammingTool
             saveData.Add("ExteriorMultiplier", (float)this.ExteriorStackSlider.Value);
             saveData.Add("IndirectMultiplier", this.indirectMultiplier);
             saveData.Add("LandCost", this.landCost);
+            saveData.Add("GeneralCosts", this.generalCosts);
+            saveData.Add("DesignContingency", this.designContingency);
+            saveData.Add("BuildContingency", this.buildContingency);
+            saveData.Add("CCIP", this.cCIP);
+            saveData.Add("CMFee", this.cMFee);
 
             // Json String Of The Save Data
             string projectData = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -2934,6 +2939,16 @@ namespace StackingProgrammingTool
                         this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
                         this.landCost = (float)((double)loadData["LandCost"]);
                         this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+                        this.generalCosts = (float)((double)loadData["GeneralCosts"]);
+                        this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
+                        this.designContingency = (float)((double)loadData["DesignContingency"]);
+                        this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+                        this.buildContingency = (float)((double)loadData["BuildContingency"]);
+                        this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
+                        this.cCIP = (float)((double)loadData["CCIP"]);
+                        this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
+                        this.cMFee = (float)((double)loadData["CMFee"]);
+                        this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
 
                         functions = ((JObject)loadData["Functions"]).ToObject<Dictionary<String, Dictionary<String, float>>>();
 
