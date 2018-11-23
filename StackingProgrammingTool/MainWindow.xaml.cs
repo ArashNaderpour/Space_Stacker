@@ -2886,6 +2886,7 @@ namespace StackingProgrammingTool
 
             List<string> departmentNames = new List<string>();
             List<int> numOfPrograms = new List<int>();
+            List<string> projectDimensions = new List<string>();
 
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             Stream stream = null;
@@ -2922,45 +2923,45 @@ namespace StackingProgrammingTool
                     // Load The Project
                     try
                     {
-                        List<string> projectDimensions = ((JArray)loadData["ProjectDimensions"]).ToObject<List<string>>();
-                        this.ProjectWidth.Text = projectDimensions[0];
-                        this.ProjectLength.Text = projectDimensions[1];
-                        this.ProjectHeight.Text = projectDimensions[2];
-
+                        projectDimensions = ((JArray)loadData["ProjectDimensions"]).ToObject<List<string>>();
                         this.boxesOfTheProject = ((JObject)loadData["BoxesOfTheProject"]).ToObject<Dictionary<string, Box>>();
                         this.colorsOfBoxes = ((JObject)loadData["Colors"]).ToObject<Dictionary<string, byte[]>>();
-                        this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
                         this.totalGSF = (float)((double)loadData["TotalGSF"]);
                         this.totalRawDepartmentCost = ((float)(double)loadData["TotalRawDepartmentCost"]);
                         this.totalBudget = (float)((double)loadData["TotalBudget"]);
-                        this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
-
-                        this.indirectMultiplier = (float)((double)loadData["IndirectMultiplier"]);
-                        this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
-                        this.landCost = (float)((double)loadData["LandCost"]);
-                        this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+                        this.indirectMultiplier = (float)((double)loadData["IndirectMultiplier"]);     
+                        this.landCost = (float)((double)loadData["LandCost"]); 
                         this.generalCosts = (float)((double)loadData["GeneralCosts"]);
-                        this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
-                        this.designContingency = (float)((double)loadData["DesignContingency"]);
-                        this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+                        this.designContingency = (float)((double)loadData["DesignContingency"]);  
                         this.buildContingency = (float)((double)loadData["BuildContingency"]);
-                        this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
                         this.cCIP = (float)((double)loadData["CCIP"]);
-                        this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
                         this.cMFee = (float)((double)loadData["CMFee"]);
-                        this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
-
                         functions = ((JObject)loadData["Functions"]).ToObject<Dictionary<String, Dictionary<String, float>>>();
-
                         numOfPrograms = ((JArray)loadData["NumberOfPrograms"]).ToObject<List<int>>();
                         departmentNames = ((JArray)loadData["NameOfTheDepartments"]).ToObject<List<string>>();
-
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Error: Data is Corupted, " + ex.Message);
+                        colorsOfBoxes.Clear();
+                        boxesOfTheProject.Clear();
+                        functions.Clear();
                         return;
                     }
+
+                    // Set Text Value of The Controllers
+                    this.ProjectWidth.Text = projectDimensions[0];
+                    this.ProjectLength.Text = projectDimensions[1];
+                    this.ProjectHeight.Text = projectDimensions[2];
+                    this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
+                    this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
+                    this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
+                    this.LandCost.Text = ExtraMethods.CastDollar(this.landCost);
+                    this.GeneralCosts.Text = ExtraMethods.CastDollar(this.generalCosts);
+                    this.DesignContingency.Text = ExtraMethods.CastDollar(this.designContingency);
+                    this.BuildContingency.Text = ExtraMethods.CastDollar(this.buildContingency);
+                    this.CCIP.Text = ExtraMethods.CastDollar(this.cCIP);
+                    this.CMFee.Text = ExtraMethods.CastDollar(this.cMFee);
 
                     // Set Value Of The Cost Tab's Sliders
                     this.ExteriorStackSlider.Value = ((double)loadData["ExteriorMultiplier"]);
