@@ -13,8 +13,13 @@
     <Border x:Name="ProgramsSubWindowContainer" Padding="10">
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="ProgramsDataChart" Margin="0 30 0 0"
-                  MinWidth="810">
+            <DockPanel>
+                
+                <Button DockPanel.Dock="Top" Width="200" Height="30"
+                        x:Name="SaveToExcel" Content="Save Excel" Margin="0 30 0 0"/>
+                
+                <Grid x:Name="ProgramsDataChart" Margin="0 15 0 0"
+                  MinWidth="810" DockPanel.Dock="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -43,11 +48,12 @@
                 <Label Content="COST/GSF" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
                        Grid.Column="5"/>
-                <Label Content="TOTAL COST" HorizontalAlignment="Center"
+                    <Label Content="TOTAL COST" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
                        Grid.Column="6"/>
+                </Grid>
 
-            </Grid>
+            </DockPanel>
         </ScrollViewer>
     </Border>
 </Window>
