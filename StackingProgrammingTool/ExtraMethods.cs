@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.Windows.Input;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace StackingProgrammingTool
 {
@@ -629,7 +631,7 @@ namespace StackingProgrammingTool
         {
             // Index Of The Row For each new Program
             int rowIndex = 1;
-           
+
             for (int i = 0; i < departmentsWrapper.Children.Count; i++)
             {
                 Expander department = departmentsWrapper.Children[i] as Expander;
@@ -639,7 +641,7 @@ namespace StackingProgrammingTool
                 // Add A New Row For The Headers
                 RowDefinition gridRow = new RowDefinition();
                 subWindow.ProgramsDataChart.RowDefinitions.Add(gridRow);
-                
+
                 foreach (DockPanel element in programs.Children)
                 {
                     if (Grid.GetColumn(element) == 0)
@@ -654,7 +656,7 @@ namespace StackingProgrammingTool
 
                         // Name Of The ProgramBox
                         string boxName = original.Name.Replace("Label", "ProgramBox");
-                        
+
                         // Generate And Display Label Of Each Program
                         Label programLabel = new Label();
                         programLabel.Content = original.Content;
@@ -878,6 +880,49 @@ namespace StackingProgrammingTool
             else
             {
                 label.Foreground = Brushes.Black;
+            }
+        }
+
+        /* --------------------- Method For Generating An Excel File Out of A Grid --------------------- */
+        public static void ExportGridToExcel(Grid grid)
+        {
+
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog.Filter = "Excel |*.xlsx";
+
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string outputPath = saveFileDialog.FileName;
+
+                Excel.Application excel = new Excel.Application();
+                Excel.Workbook workbook = excel.Workbooks.Add(Type.Missing);
+                Excel.Worksheet sheet = (Excel.Worksheet)workbook.ActiveSheet;
+
+                for (int i = 0; i < grid.RowDefinitions.Count - 1; i++)
+                {
+                    for (int j = 0; j < grid.ColumnDefinitions.Count - 1; j++)
+                    {
+                        var element = grid.Children.Cast<UIElement>().
+                            FirstOrDefault(e => Grid.GetColumn(e) == j && Grid.GetRow(e) == i);
+
+                        if (element != null)
+                        {
+                            sheet.Cells[i + 1, j + 1].Value = ((Label)element).Content.ToString();
+                        }
+                        else
+                        {
+                            workbook.SaveAs(outputPath);
+                            workbook.Close();
+                            excel.Quit();
+
+                            return;
+                        }
+                    }
+                }
+
+                workbook.SaveAs(outputPath);
+                workbook.Close();
+                excel.Quit();
             }
         }
     }

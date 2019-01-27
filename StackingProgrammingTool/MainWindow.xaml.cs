@@ -463,7 +463,7 @@ namespace StackingProgrammingTool
 
             xlApp = new Excel.Application();
             xlWorkBook = xlApp.Workbooks.Open(filePath, 0, true, 5, "", "", true,
-                Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false,
+                Excel.XlPlatform.xlWindows, "\t", false,
                 false, 0, true, 1, 0);
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 

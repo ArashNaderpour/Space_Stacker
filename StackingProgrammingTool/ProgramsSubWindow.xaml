@@ -16,7 +16,8 @@
             <DockPanel>
                 
                 <Button DockPanel.Dock="Top" Width="200" Height="30"
-                        x:Name="SaveToExcel" Content="Save Excel" Margin="0 30 0 0"/>
+                        x:Name="SaveToExcel" Content="Save Excel" 
+                        Margin="0 30 0 0" Click="SaveExcel_Click"/>
                 
                 <Grid x:Name="ProgramsDataChart" Margin="0 15 0 0"
                   MinWidth="810" DockPanel.Dock="Bottom">

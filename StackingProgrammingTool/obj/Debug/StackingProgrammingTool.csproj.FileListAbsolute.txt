@@ -76,7 +76,6 @@ C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgramming
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
-C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojResolveAssemblyReference.cache
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ExcelImageSubWindow.g.cs
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\GenerateInitialDataWindow.g.cs
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\MainWindow.g.cs
@@ -93,3 +92,6 @@ C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgramming
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.g.resources
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.Properties.Resources.resources
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csproj.GenerateResource.Cache
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojAssemblyReference.cache
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csproj.CoreCompileInputs.cache
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csproj.CopyComplete
