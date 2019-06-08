@@ -1839,7 +1839,7 @@ namespace StackingProgrammingTool
                         int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
                         // First Box Of Each Floor
-                        if ((this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2) == this.initialProjectBoxDims[1] * -0.5)
+                        if (((float)(this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2)) == this.initialProjectBoxDims[1] * -0.5)
                         {
                             string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
                             newProgramCenterY = (this.initialProjectBoxDims[1] * -0.5) + (this.stackingVisualization.Children[i].Bounds.SizeY / 2);
