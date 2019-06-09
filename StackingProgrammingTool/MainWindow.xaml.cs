@@ -1681,7 +1681,7 @@ namespace StackingProgrammingTool
                             int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
                             // First Box In Each Floor
-                            if ((this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2) == this.initialProjectBoxDims[1] * -0.5)
+                            if (((float)(this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2)) == this.initialProjectBoxDims[1] * -0.5)
                             {
                                 double newLength = (this.stackingVisualization.Children[i].Bounds.SizeY * this.stackingVisualization.Children[i].Bounds.SizeX) / projectWidthInput;
 
@@ -1838,7 +1838,7 @@ namespace StackingProgrammingTool
                         int departmentIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[0].Replace("D", "")) - 1;
                         int programIndex = int.Parse(programBoxName.Replace("ProgramBo", "").Split('x')[1]);
 
-                        // First Box Of Each Floor
+                        // First Box In Each Floor
                         if (((float)(this.boxesOfTheProject[programBoxName].boxCenter.Y - this.stackingVisualization.Children[i].Bounds.SizeY / 2)) == this.initialProjectBoxDims[1] * -0.5)
                         {
                             string newProgramBoxName = this.stackingVisualization.Children[i].GetName();
