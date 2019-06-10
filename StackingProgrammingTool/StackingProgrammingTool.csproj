@@ -110,6 +110,9 @@
       <DependentUpon>ProgramsSubWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualizationMethods.cs" />
+    <Compile Include="GenerateDataImageSubWindow.xaml.cs">
+      <DependentUpon>GenerateDataImageSubWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="ExcelImageSubWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -136,6 +139,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProgramsSubWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GenerateDataImageSubWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -202,6 +209,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SPT_Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\GenerateData.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

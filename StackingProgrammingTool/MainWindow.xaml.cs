@@ -74,6 +74,9 @@ namespace StackingProgrammingTool
         // SubWindows: Excel Image Window
         ExcelImageSubWindow excelImageWindow = new ExcelImageSubWindow();
 
+        // SubWindows: Generate Data Image Window
+        GenerateDataImageSubWindow generateDataImageWindow = new GenerateDataImageSubWindow();
+
         // Random Object
         Random random = new Random(20);
 
@@ -2675,7 +2678,7 @@ namespace StackingProgrammingTool
         /* ########################################################### Introduction Tab Events ########################################################### */
 
         /* ----------------------------------- Handeling Programs Excel Image Maximize Image Event ----------------------------------- */
-        private void MaximizeImage(object sender, RoutedEventArgs e)
+        private void MaximizeExcelImage(object sender, RoutedEventArgs e)
         {
             bool isOpen = false;
 
@@ -2708,6 +2711,43 @@ namespace StackingProgrammingTool
                 this.excelImageWindow.Owner = this;
 
                 this.excelImageWindow.Show();
+            }
+        }
+
+        /* ----------------------------------- Handeling GenearateData Image Maximize Image Event ----------------------------------- */
+        private void MaximizeGenerateDataImage(object sender, RoutedEventArgs e)
+        {
+            bool isOpen = false;
+          
+            foreach (Window objWindow in Application.Current.Windows)
+            {
+                string[] splitedNamespace = (objWindow.ToString()).Split('.');
+                string aClassNameFromCollection = splitedNamespace[splitedNamespace.Length - 1];
+            
+                if (aClassNameFromCollection == "GenerateDataImageSubWindow")
+                {
+                    if (objWindow.Visibility == Visibility.Visible)
+                    {
+                        isOpen = true;
+                        break;
+                    }
+                }
+            }
+
+            // Window Is Already Open
+            if (isOpen)
+            {
+                this.generateDataImageWindow.Close();
+            }
+
+            // Window Is Not Already Open
+            else
+            {
+                // Initiate A New Program Window
+                this.generateDataImageWindow = new GenerateDataImageSubWindow();
+                this.generateDataImageWindow.Owner = this;
+
+                this.generateDataImageWindow.Show();
             }
         }
 
