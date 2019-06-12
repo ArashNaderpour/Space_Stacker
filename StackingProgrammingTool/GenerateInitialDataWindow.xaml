@@ -38,7 +38,7 @@
                     <Label Content="Name" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
                        Grid.Column="0" Grid.Row="0"/>
-                    <Label Content="Cost" HorizontalAlignment="Center"
+                    <Label Content="Cost/FT²" HorizontalAlignment="Center"
                        FontSize="16" FontWeight="Bold" 
                        Grid.Column="1" Grid.Row="0"/>
                     <Label Content="Initial Count" HorizontalAlignment="Center"
