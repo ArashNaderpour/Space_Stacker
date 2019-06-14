@@ -146,8 +146,8 @@
                                 from inside the project by going to "Scenario" tab an pressing the "Generate Programs" button. 
                                 Doing this opens a new window (image below) that allows the user to generate programs
                                 of the project. <LineBreak/>
-                                </TextBlock>
-                                <!-- GenerateDataImage -->
+                            </TextBlock>
+                            <!-- GenerateDataImage -->
                             <Border BorderThickness="1" BorderBrush="Black">
                                 <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
                                    Cursor="Hand" MouseLeftButtonUp="MaximizeGenerateDataImage">
@@ -168,14 +168,11 @@
                                 <LineBreak/>
                             </TextBlock>
                             <!--=============-->
-                            <!-- ExcelImage -->
+                            <!-- ProgramsInformationImage -->
                             <Border BorderThickness="1" BorderBrush="Black">
                                 <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
-                                   Cursor="Hand" MouseLeftButtonUp="MaximizeExcelImage">
-                                    <Image.Source>
-                                        <BitmapImage UriSource="Images/ExcelFile.JPG"/>
-                                    </Image.Source>
-                                </Image>
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeProgramsInformationImage"
+                                       Source="Images/ProgramsInformation.JPG"/>
                             </Border>
                             <!--============-->
                             <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 20 0 0"
@@ -233,14 +230,14 @@
                                 the project. Image below illustrate a 3D viewport and explains each provided information in the viewport.
                                 <LineBreak/>
                             </TextBlock>
-                            
+
                             <!--=============-->
-                            <!-- ExcelImage -->
+                            <!-- ViewportImage -->
                             <Border BorderThickness="1" BorderBrush="Black">
                                 <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
-                                   Cursor="Hand" MouseLeftButtonUp="MaximizeExcelImage">
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeViewportImage">
                                     <Image.Source>
-                                        <BitmapImage UriSource="Images/ExcelFile.JPG"/>
+                                        <BitmapImage UriSource="Images/3DViewport.JPG"/>
                                     </Image.Source>
                                 </Image>
                             </Border>
@@ -275,7 +272,7 @@
                                         Click="OpenSpreadSheet_Click"/>
                                 <!--=================-->
                             </Grid>
-                            
+
                             <!--BGSF Visualization-->
                             <TextBlock Text="BGSF Visualization" HorizontalAlignment="Stretch"
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
@@ -644,8 +641,8 @@
                     <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
                                       CanContentScroll="False">
                         <StackPanel>
-                        <!--Departments' Colors-->
-                        <TextBlock Text="Visualization Colors" HorizontalAlignment="Stretch"
+                            <!--Departments' Colors-->
+                            <TextBlock Text="Visualization Colors" HorizontalAlignment="Stretch"
                                    Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
                                        Background="#ced6e2" TextAlignment="Center"/>
 
@@ -668,7 +665,7 @@
                                        HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center" 
                                        BorderBrush="Black" BorderThickness="0.3"/>
-                                
+
                                 <!-- ColorPicker For The Project's Box -->
                                 <wpfTool:ColorPicker x:Name="ProjectBoxColorPicker"
                                                  IsEnabled="False" Grid.Column="1"

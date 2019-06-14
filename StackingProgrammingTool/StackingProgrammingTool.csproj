@@ -106,8 +106,14 @@
     <Compile Include="ModifyProgramDataWindow.xaml.cs">
       <DependentUpon>ModifyProgramDataWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProgramsInformationSubWindow.xaml.cs">
+      <DependentUpon>ProgramsInformationSubWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProgramsSubWindow.xaml.cs">
       <DependentUpon>ProgramsSubWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewportImageSubWindow.xaml.cs">
+      <DependentUpon>ViewportImageSubWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="VisualizationMethods.cs" />
     <Compile Include="GenerateDataImageSubWindow.xaml.cs">
@@ -138,11 +144,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ProgramsInformationSubWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProgramsSubWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GenerateDataImageSubWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewportImageSubWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -212,6 +226,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\GenerateData.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ProgramsInformation.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\3DViewport.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

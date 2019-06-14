@@ -96,4 +96,7 @@ C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgramming
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csproj.CopyComplete
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\GenerateDataImageSubWindow.g.cs
 C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\GenerateDataImageSubWindow.baml
-C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\StackingProgrammingTool.csprojAssemblyReference.cache
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ProgramsInformationSubWindow.g.cs
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ProgramsInformationSubWindow.baml
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ViewportImageSubWindow.g.cs
+C:\Users\anaderpour\Desktop\Personal\C#\Programming_Stacking\StackingProgrammingTool\obj\Debug\ViewportImageSubWindow.baml

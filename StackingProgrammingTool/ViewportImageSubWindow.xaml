@@ -1,17 +1,16 @@
-﻿<Window x:Class="StackingProgrammingTool.GenerateDataImageSubWindow"
+﻿<Window x:Class="StackingProgrammingTool.ViewportImageSubWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StackingProgrammingTool"
         mc:Ignorable="d"
-        Title="Generate Data Sample" Height="420" Width="890" Icon="/Resources/SPT_Icon.ico">
+        Title="3D Viewport" Height="1200" Width="1500" Icon="/Resources/SPT_Icon.ico">
     <Grid>
         <Image HorizontalAlignment="Stretch" Margin="10 10 10 10">
             <Image.Source>
-                <BitmapImage UriSource="Images/GenerateData.JPG"/>
+                <BitmapImage UriSource="Images/3DViewport.JPG"/>
             </Image.Source>
         </Image>
-
     </Grid>
 </Window>

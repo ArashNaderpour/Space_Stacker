@@ -77,6 +77,12 @@ namespace StackingProgrammingTool
         // SubWindows: Generate Data Image Window
         GenerateDataImageSubWindow generateDataImageWindow = new GenerateDataImageSubWindow();
 
+        // SubWindows: Programs Information Image Window
+        ProgramsInformationSubWindow programsInformationSubWindow = new ProgramsInformationSubWindow();
+
+        // SubWindows: Viewport Image Window
+        ViewportImageSubWindow viewportImageSubWindow = new ViewportImageSubWindow();
+
         // Random Object
         Random random = new Random(20);
 
@@ -2622,10 +2628,10 @@ namespace StackingProgrammingTool
 
             float exteriorStackCost = (((float)this.ExteriorStackSlider.Value) / 100) * totalGSF * functions["BES"]["cost"];
 
-            this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost +
-                this.landCost + this.generalCosts + this.designContingency + this.buildContingency + this.cCIP + this.cMFee;
+            this.constructionCost = totalRawDepartmentCost + circulationCost + MEPCost + exteriorStackCost + 
+                this.generalCosts + this.designContingency + this.buildContingency + this.cCIP + this.cMFee;
 
-            this.projectCost = this.constructionCost * this.indirectMultiplier;
+            this.projectCost = (this.constructionCost + this.landCost) * this.indirectMultiplier;
 
             // Information Outputs
             this.ConstructionCost.Text = ExtraMethods.CastDollar(this.constructionCost);
@@ -2748,6 +2754,80 @@ namespace StackingProgrammingTool
                 this.generateDataImageWindow.Owner = this;
 
                 this.generateDataImageWindow.Show();
+            }
+        }
+
+        /* ----------------------------------- Handeling ProgramsInformation Image Maximize Image Event ----------------------------------- */
+        private void MaximizeProgramsInformationImage(object sender, RoutedEventArgs e)
+        {
+            bool isOpen = false;
+
+            foreach (Window objWindow in Application.Current.Windows)
+            {
+                string[] splitedNamespace = (objWindow.ToString()).Split('.');
+                string aClassNameFromCollection = splitedNamespace[splitedNamespace.Length - 1];
+
+                if (aClassNameFromCollection == "ProgramsINformationImageSubWindow")
+                {
+                    if (objWindow.Visibility == Visibility.Visible)
+                    {
+                        isOpen = true;
+                        break;
+                    }
+                }
+            }
+
+            // Window Is Already Open
+            if (isOpen)
+            {
+                this.programsInformationSubWindow.Close();
+            }
+
+            // Window Is Not Already Open
+            else
+            {
+                // Initiate A New Program Window
+                this.programsInformationSubWindow = new ProgramsInformationSubWindow();
+                this.programsInformationSubWindow.Owner = this;
+
+                this.programsInformationSubWindow.Show();
+            }
+        }
+
+        /* ----------------------------------- Handeling Programs Viewport Image Maximize Image Event ----------------------------------- */
+        private void MaximizeViewportImage(object sender, RoutedEventArgs e)
+        {
+            bool isOpen = false;
+
+            foreach (Window objWindow in Application.Current.Windows)
+            {
+                string[] splitedNamespace = (objWindow.ToString()).Split('.');
+                string aClassNameFromCollection = splitedNamespace[splitedNamespace.Length - 1];
+
+                if (aClassNameFromCollection == "ViewportImageSubWindow")
+                {
+                    if (objWindow.Visibility == Visibility.Visible)
+                    {
+                        isOpen = true;
+                        break;
+                    }
+                }
+            }
+
+            // Window Is Already Open
+            if (isOpen)
+            {
+                this.viewportImageSubWindow.Close();
+            }
+
+            // Window Is Not Already Open
+            else
+            {
+                // Initiate A New Program Window
+                this.viewportImageSubWindow = new ViewportImageSubWindow();
+                this.viewportImageSubWindow.Owner = this;
+
+                this.viewportImageSubWindow.Show();
             }
         }
 
