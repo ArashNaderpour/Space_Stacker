@@ -1,0 +1,847 @@
+﻿<Window x:Class="SpaceStacker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:HelixToolkit="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
+        xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:local="clr-namespace:SpaceStacker"
+        mc:Ignorable="d"
+        Title="Stacking Programming" WindowState="Maximized" MinHeight="600" 
+        MinWidth="1000" Icon="/Resources/SpaceStacker_Icon.ico">
+
+    <!-- Setting up window.DataContext-->
+    <!--<Window.DataContext>
+        <local:Stacking/>
+    </Window.DataContext>-->
+
+    <Border x:Name="Container" Padding="10">
+        <!--Discriminate Controller from Viewport-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <!--Controller Windows-->
+            <TabControl>
+                <!--Description Tab-->
+                <TabItem Header="Introduction" Padding="5">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
+                                      CanContentScroll="False">
+                        <StackPanel Orientation="Vertical">
+                            <!--Welcome Header-->
+                            <TextBlock Text="Welcome" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <!--==============-->
+                            <!-- Welcome Note-->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping="Wrap" TextAlignment="Justify">
+                                Thank you for choosing Stacking Programming Tool.<LineBreak/>
+                                For more information about the author please visit:
+                                <Hyperlink>https://www.arashnaderpour.com/</Hyperlink>
+                            </TextBlock>
+                            <!--=============-->
+                            <!--Description Header-->
+                            <TextBlock Text="Description" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <!--==============-->
+                            <!-- Description Note-->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                "Stacking Programming Tool" was designed to provide assistance for 
+                                architects and project managers during programming phase of the project.<LineBreak/>
+                                This tool generates a simple visualization of project's building that contains
+                                various functions in each floor based on the data of the project given as inputs.
+                                This schematic illustration provides information about occupied and unoccupied space 
+                                in each floor of the building based on the area of each funtionality. It is also 
+                                possible to change the floor of every functionality of the project to fit them properly
+                                in the boundary limits of the building.<LineBreak/>
+                                Apart from that, it generates vaious approximate information about project costs,
+                                like "Construction Cost", "Project Cost", "Budget Difference", and "Cost per Square Foot"
+                                based on given information like area of each functionality of the project, construction cost
+                                per square foot for each function, "Land Cost", etc.
+                            </TextBlock>
+                            <!--=============-->
+                            <!--Instruction Header-->
+                            <TextBlock Text="Instruction" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <!--==============-->
+                            <!-- Instruction Note -->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                There are two methods to start the project:<LineBreak/>
+                                1- Using a spread sheet that contains initial information about the project.<LineBreak/>
+                                2- Generate the initial project's information directly from inside of the software.<LineBreak/>
+                                <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold"> SPREAD SHEET</Run> <LineBreak/>
+                                The first method requires an Excel file that contains some specific information
+                                about the project. <LineBreak/>
+                                For consistency purposes, this method was designed in a way to work with Excel files 
+                                that contains data in a certain format. Image below illustrates the required format 
+                                of data in the Excel file. <LineBreak/>
+                            </TextBlock>
+                            <!--=============-->
+                            <!-- ExcelImage -->
+                            <Border BorderThickness="1" BorderBrush="Black">
+                                <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeExcelImage">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="Images/ExcelFile.JPG"/>
+                                    </Image.Source>
+                                </Image>
+                            </Border>
+                            <!--============-->
+                            <!-- Instruction Note Continue -->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                The red in the Excel file are the required cells that have to be peresent in the
+                                Excel file with the excat similar format that is illustrated in the image.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Name:</Run> The header for the column that
+                                contains names of the functions that might exsit in the project. <LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Cost:</Run> The header for the column that 
+                                contains construction cost per square foor for each function that might appear in the 
+                                project.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Key Rooms Slider Minimum:</Run> The header of 
+                                the column that contains lowest number of each functionality that might appear in each 
+                                floor, or each department of the project, which also defines the lower bounds of the 
+                                "KeyRooms" sliders in the "Scenario" tab of the tool.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Key Rooms Slider Value:</Run> The header of 
+                                the column that contains the initial values of the "KeyRooms" sliders in the "Scenario" 
+                                tab of the tool. This values have to be between Key Rooms Sliders' Minimum and 
+                                Key Rooms Sliders' Maximum.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Key Rooms Slider Maximum:</Run> The header of 
+                                the column that contains highest number of each functionality that might appear in each 
+                                floor, or each department of the project, which also defines the upper bounds of the 
+                                "KeyRooms" sliders in the "Scenario" tab of the tool.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">DGSF Slider Minimum:</Run> The header of 
+                                the column that contains lowest ground square feet of each functionality that might 
+                                appear in each floor, or each department of the project, which also defines the lower 
+                                bounds of the "DGSF" sliders in the "Scenario" tab of the tool.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">DGSF Slider Value:</Run> The header of the column 
+                                that contains the initial values of the "DGSF" sliders in the "Scenario" tab of 
+                                the tool. This values have to be between DGSF Slider Minimum and DGSF Maximum.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">MEP:</Run> The header of the Row that contains 
+                                the cost per square foot for mechanical, electrical, and plumbing of the project. Required 
+                                area for "MEP" will be defined by the user from the "Cost Information" tab of the tool
+                                based on percentage of the total occupied area of the project.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">Circulation:</Run> The header of the Row that 
+                                contains the cost per square foot for "Circulation" areas of the project, like stairs and 
+                                corridors. Required area for Circulatio will be defined by the user from the "Cost Information"
+                                tab of the tool based on percentage of the total occupied area of the project.<LineBreak/>
+                                <Run Foreground="Red" FontWeight="Bold">BES:</Run> The header of the Row that 
+                                contains the cost per square foot for "Building Exterior Skin" areas of the project.
+                                Required area for "BES" will be defined by the user from the "Cost Information" tab of 
+                                the tool based on percentage of the total occupied area of the project.<LineBreak/>
+                                <Run Foreground="Orange" FontWeight="Bold">Orange Cells:</Run> Names of all of the 
+                                functionalities that project might contains. These names will appear in the programs' 
+                                rollouts of each departmnet in the "Scenario" tab.<LineBreak/>
+                                <Run Foreground="Green" FontWeight="Bold">Green Cells:</Run> All the information related
+                                to each functionality that might occupy space in each department of the project.<LineBreak/>
+                                <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold"> GENERATE DATA</Run> <LineBreak/>
+                                The second method for starting the project is to generate the initial project's information 
+                                from inside the project by going to "Scenario" tab an pressing the "Generate Programs" button. 
+                                Doing this opens a new window (image below) that allows the user to generate programs
+                                of the project. <LineBreak/>
+                            </TextBlock>
+                            <!-- GenerateDataImage -->
+                            <Border BorderThickness="1" BorderBrush="Black">
+                                <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeGenerateDataImage">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="Images/GenerateData.JPG"/>
+                                    </Image.Source>
+                                </Image>
+                            </Border>
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                            <Run FontSize="16" FontWeight="Bold">Show Information</Run>
+                            <LineBreak/>
+                            Pressing "Show Information" button in Scenario tab opens "Programs Information" window, 
+                                which visualize all the spatial and econamic information related to each program of 
+                                the project in a seperate window. 
+                                It is also possible to save this information to a spread sheet from inside the
+                                "Programs Information" window by pressing "Save Excel" button (image bellow).
+                                <LineBreak/>
+                            </TextBlock>
+                            <!--=============-->
+                            <!-- ProgramsInformationImage -->
+                            <Border BorderThickness="1" BorderBrush="Black">
+                                <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeProgramsInformationImage"
+                                       Source="Images/ProgramsInformation.JPG"/>
+                            </Border>
+                            <!--============-->
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 20 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                <Run FontSize="16" FontWeight="Bold">SCENARIO TAB</Run> <LineBreak/>
+                                From the "Scenario" tab of the tool, open the Excel file that contains the required data of 
+                                the project by pressing the <Run Foreground="Green" FontWeight="DemiBold">Spread Sheet</Run>
+                                button. "Scenario" tab also provides control over the dimenstions of the project's building, 
+                                plus name and number of departments of the project. The Expanders of each department contains
+                                controllers that modify information about the programs of that department.<LineBreak/>
+                                <Run FontWeight="Bold">Function Rollout:</Run> The element that allows the user to 
+                                select, or change the functionality of the program based on the data provided in the 
+                                spread sheet.<LineBreak/>
+                                <Run FontWeight="Bold">Rooms:</Run> The slider allows the user to define, or modify 
+                                the number of rooms of the program based on the data provided in the spread sheet.<LineBreak/>
+                               <Run FontWeight="Bold"> DGSF:</Run> The slider allows the user to define, or modify the 
+                                ground square feet of each room of the program based on the data provided in the 
+                                spread sheet.<LineBreak/>
+                                <Run FontWeight="Bold">Programs CheckBox:</Run> Filling the CheckBox generates a chart that 
+                                contains all the information related to each program of the project in the sequence of their 
+                                departments.<LineBreak/>
+                                <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold">COST INFORMATION TAB</Run> <LineBreak/>
+                                This tab contains information and setting about budget and costs of the
+                                project.<LineBreak/>
+                                <Run FontWeight="Bold">Gross Multiplier:</Run> This section carries three sliders that 
+                                modifies required area of MEP, Circulatio, and Buildings Exterior Stacking (skin) of the 
+                                project based on a percentage of the total occupied area of the building. Designated area 
+                                and construction cost for each of these parameters will be calculated and added to the 
+                                building's total occupied area (BGSF) and costs (Construction/Total) of the project.<LineBreak/>
+                                <Run FontWeight="Bold">Indirect Multiplier:</Run> The "Construction Cost" will be 
+                                multiplied by this value and the result will be added to the "Project Cost".<LineBreak/>
+                                <Run FontWeight="Bold">Method:</Run> Allows the user to change the method for entering 
+                                "Other Costs" information of the project. "Percentage" method allows the user to enter 
+                                the cost as a percentage of the total costs, while "Amount" method allows the user to enter
+                                the exact amount of the costs. <LineBreak/>
+                                <Run FontWeight="Bold">User Inputs:</Run> This section carries elements for entering additional 
+                                costs of the project. These inputs will be added to the construction and directly affect total 
+                                project cost. Parameters like "CM Fee" (Construction Management Fee) and CCIP 
+                                (Contractor Controlled Insurance Program) exist in this section. <LineBreak/>
+                                    <LineBreak/>
+                                <Run FontSize="16" FontWeight="Bold">STACKING TAB</Run><LineBreak/>
+                                This tab allows the user to change the floor of the programs of the project to fit them better 
+                                in the building's bounds or based on their relation togther. Changing the floor of the programs 
+                                does not change the department of them, therefor their controllers will stay in the expande of 
+                                their department.<LineBreak/>
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Stretch" FontSize="14" Margin="0 10 0 0"
+                                       TextWrapping ="Wrap" TextAlignment="Justify">
+                                <Run FontSize="16" FontWeight="Bold">3D VIEWPORT</Run><LineBreak/>
+                                3D viewport of the software visualizes all departments of the project by a specific color contained
+                                in a big box, which represent boundaries of the project's building. Programs of each specific 
+                                department are visualized by different tones of that department's color.
+                                Apart from visualizing building, departments and programs, 3D viewport provides extra information about 
+                                the project. Image below illustrate a 3D viewport and explains each provided information in the viewport.
+                                <LineBreak/>
+                            </TextBlock>
+
+                            <!--=============-->
+                            <!-- ViewportImage -->
+                            <Border BorderThickness="1" BorderBrush="Black">
+                                <Image HorizontalAlignment="Stretch" Margin="0 5 0 5" 
+                                   Cursor="Hand" MouseLeftButtonUp="MaximizeViewportImage">
+                                    <Image.Source>
+                                        <BitmapImage UriSource="Images/3DViewport.JPG"/>
+                                    </Image.Source>
+                                </Image>
+                            </Border>
+                            <!--============-->
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <!--===============-->
+                <!--Scenario Settings-->
+                <TabItem Header="Scenario" Padding="5">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
+                                      CanContentScroll="False">
+                        <StackPanel>
+                            <!--BGSF Visualization-->
+                            <TextBlock Text="Program Definition" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--Open Program Generator Page-->
+                                <Button x:Name="GenerateInitialDataButton" Grid.Column="0"
+                                        Content="Generate Programs" Margin="0 10 2.5 0"
+                                        Click="GeneratePrograms_Click"/>
+                                <!--=================-->
+                                <!--Open Excel File Button-->
+                                <Button x:Name="OpenExcelFile" Grid.Column="1" Background="#98AD80"
+                                        Content="Load Spread Sheet" Margin="2.5 10 0 0" 
+                                        Click="OpenSpreadSheet_Click"/>
+                                <!--=================-->
+                            </Grid>
+
+                            <!--BGSF Visualization-->
+                            <TextBlock Text="BGSF Visualization" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <!--====================-->
+                            <Grid Margin="0 20 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <!-- Set Width of BGSF Box-->
+                                <TextBlock Text="Width" VerticalAlignment="Center" Grid.Column="0"
+                                           Grid.Row="0" Margin="0 0 0 5"/>
+                                <TextBox x:Name="ProjectWidth" Padding="2" HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="0" Margin="0 0 0 5" 
+                                         IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="ProjectWidthButton" Content="Set" Grid.Column="2" 
+                                        Grid.Row="0" Margin="0 0 0 5" Click="ProjectSize_Click"
+                                        IsEnabled="False"/>
+                                <!--======================-->
+                                <!-- Set Length of BGSF Box-->
+                                <TextBlock Text="Length" VerticalAlignment="Center" Grid.Column="0"
+                                           Grid.Row="1" Margin="0 0 0 5"/>
+                                <TextBox x:Name="ProjectLength" Padding="2" HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" 
+                                         IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="ProjectLengthButton" Content="Set" Grid.Column="2" 
+                                        Grid.Row="1" Margin="0 0 0 5" Click="ProjectSize_Click"
+                                        IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                <!--======================-->
+                                <!-- Set Height of BGSF Box-->
+                                <TextBlock Text="Height" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="2" Margin="0 0 0 5"/>
+                                <TextBox x:Name="ProjectHeight" Padding="2" HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" 
+                                         IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="ProjectHeightButton" Content="Set" Grid.Column="2" 
+                                        Grid.Row="2" Margin="0 0 0 5" Click="ProjectSize_Click"
+                                        IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                <!--======================-->
+                                <!-- Set Floor Height of BGSF Box-->
+                                <TextBlock Text="Floor Height" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="3" Margin="0 0 0 5"/>
+                                <TextBox x:Name="FloorHeight" Padding="2" HorizontalAlignment="Stretch" 
+                                         IsEnabled="False" Grid.Column="1" Grid.Row="3" 
+                                         Margin="0 0 0 5" KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="FloorHeightButton" Content="Set" Grid.Column="2" Grid.Row="3" 
+                                        Margin="0 0 0 5" Click="ProjectSize_Click" IsEnabled="False"/>
+                                <!--=============================-->
+                            </Grid>
+                            <!--==================================================-->
+                            <!--Programm Information-->
+                            <TextBlock Text="Program Information" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                            <!--====================-->
+                            <!--Initial Settings Grid-->
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Number of Departments" Grid.Column="0"
+                                               HorizontalAlignment="Left" Grid.Row="0"/>
+                                <!--Number of Departments TextBox and Button-->
+                                <Grid Grid.Column="0" Grid.Row="1" Margin="0 0 2.5 0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="NumberOfDepartments" Grid.Column="0" IsEnabled="False" 
+                                             Padding="2" KeyUp="OnKeyUpHandler"/>
+                                    <Button x:Name="NumberOfDepartmentsButton" Grid.Column ="1"
+                                            IsEnabled="False" Content="Set" Click="NumberOfDepartments_Click"/>
+                                </Grid>
+                                <!--=======================================-->
+                                <!--Reset Departments Button-->
+                                <Button x:Name="ModifyInputsButton" Grid.Column="1" Grid.Row="1" IsEnabled="False" 
+                                        Content="Modify Inputs" Margin="2.5 0 0 0" Click="ModifyInputs_Click"/>
+                                <!--=================-->
+                                <!--Reset Departments Button-->
+                                <Button x:Name="ResetDepartmentsButton" Grid.Column="0" Grid.Row="2" IsEnabled="False" 
+                                        Content="Reset Departments" Margin="0 10 2.5 0" Click="ResetDepartments_Click"/>
+                                <!--=================-->
+                                <!--Reset Departments Button-->
+                                <Button x:Name="GenearateProjectInformationButton" Grid.Column="1" Grid.Row="2" IsEnabled="False" 
+                                        Content="Show Information" Margin="2.5 10 0 0" Click="ProjectInformation_Click"/>
+                                <!--=================-->
+                                <!--Generate Project Inofrmation Button-->
+                                <Button x:Name="SaveProject" Grid.Column="0" Grid.Row="3"
+                                        Content="Save Project" Margin="0 5 2.5 0" Click="SaveProject_Click"/>
+                                <!--=================-->
+                                <!--Load Existing Project File Button-->
+                                <Button x:Name="LoadProject" Grid.Column="1" Grid.Row="3" Background="#98AD80"
+                                        Content="Load Project" Margin="2.5 5 0 0" Click="LoadProject_Click"/>
+                                <!--=================-->
+                            </Grid>
+                            <!--=====================-->
+                            <!--Departments Expanders-->
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="False" 
+                                              Height="600" MaxHeight="1000">
+                                <StackPanel x:Name="DepartmentsWrapper"/>
+                            </ScrollViewer>
+                            <!--=====================-->
+                            <Separator x:Name="Seperator" Margin="0 10 0 0" 
+                                       Visibility="Hidden"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <!--=============-->
+                <!--Cost Information Tab-->
+                <TabItem Header="Cost Information" Padding="5">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
+                                      CanContentScroll="False">
+                        <StackPanel>
+                            <!--Programm Information-->
+                            <TextBlock Text="Program Information" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+
+                            <!-- Set Project's Budget-->
+                            <TextBlock Text="PROJECT'S BUDGET" FontWeight="Bold" FontSize="15"
+                                       Margin="0 10 0 0"/>
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock x:Name="TotalBudgetLabel" Text="Total Budget" VerticalAlignment="Center" 
+                                           Grid.Column="0" Margin="0 0 0 5"/>
+                                <TextBox x:Name="TotalBudget" Padding="2" 
+                                         HorizontalAlignment="Stretch" Grid.Column="1" 
+                                         Margin="0 0 0 5" IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="TotalBudgetButton" Content="Set" Grid.Column="2" 
+                                        Margin="0 0 0 5" IsEnabled="False"
+                                        Click="TotalBudgetButton_Click"/>
+                            </Grid>
+                            <!--======================-->
+                            <!--Gross Miltiplier setting-->
+                            <TextBlock Text="GROSS MULTIPLIER" FontWeight="Bold" FontSize="15"
+                                       Margin="0 10 0 0"/>
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="1.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Set Circulation Multiplier-->
+                                <TextBlock Text="Circulation %" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="0" Margin="0 0 0 5"/>
+                                <Slider x:Name="CirculationSlider" Grid.Column="1" Grid.Row="0" 
+                                        HorizontalAlignment="Stretch" Minimum="0" Maximum="100"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" IsEnabled="False"
+                                        TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" 
+                                        Margin="0 0 0 5" ValueChanged="GrossMultiplierSlider_ValueChanged"/>
+                                <!--======================-->
+                                <!-- Set MEP Multiplier-->
+                                <TextBlock Text="MEP %" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="1" Margin="0 0 0 5"/>
+                                <Slider x:Name="MEPSlider" Grid.Column="1" Grid.Row="1"
+                                        HorizontalAlignment="Stretch" Minimum="0" Maximum="100"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" IsEnabled="False"
+                                        TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" 
+                                        Margin="0 0 0 5" ValueChanged="GrossMultiplierSlider_ValueChanged"/>
+                                <!--======================-->
+                                <!-- Set Exterior/Stacking Multiplier-->
+                                <TextBlock Text="Exterior/Stack %" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="2" Margin="0 0 0 5"/>
+                                <Slider x:Name="ExteriorStackSlider" Grid.Column="1" Grid.Row="2" 
+                                        HorizontalAlignment="Stretch" Minimum="0" Maximum="100"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" IsEnabled="False"
+                                        TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" 
+                                        Margin="0 0 0 5" ValueChanged="GrossMultiplierSlider_ValueChanged"/>
+                                <!--======================-->
+                                <!-- Set Indirect Multiplier-->
+                                <TextBlock Text="Indirect" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="3" Margin="0 0 0 5"/>
+                                <Grid Grid.Column="1" Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="0.75*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="IndirectMultiplier" Grid.Column="0" Padding="2" 
+                                             HorizontalAlignment="Stretch" Margin="0 0 0 5"
+                                             IsEnabled="False" KeyUp="OnKeyUpHandler"/>
+                                    <Button x:Name="IndirectMultiplierButton" Content="Set" Grid.Column="1" 
+                                            Margin="0 0 0 5" IsEnabled="False" Click="IndirectMultiplier_Click"/>
+                                </Grid>
+                                <!--======================-->
+                            </Grid>
+                            <!--========================-->
+                            <!-- Set Lands Costs And Information-->
+                            <TextBlock Text="LAND'S INFORMATION" FontWeight="Bold" FontSize="15"
+                                       Margin="0 10 0 1"/>
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock x:Name="LandCostLabel" Text="Land's Cost" 
+                                           VerticalAlignment="Center" Grid.Column="0"
+                                           Margin="0 0 0 5"/>
+                                <TextBox x:Name="LandCost" IsEnabled="False" Padding="2" 
+                                         HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Margin="0 0 0 5" KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="LandCostButton" Content="Set" 
+                                        Grid.Column="2" Margin="0 0 0 5" IsEnabled="False"
+                                        Click="LandCost_Click"/>
+                            </Grid>
+                            <!--================================-->
+                            <!--====================-->
+                            <!--Other Costs-->
+                            <TextBlock Text="Other Costs" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+
+                            <TextBlock Text="METHOD" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
+
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="Input Method" VerticalAlignment="Center" 
+                                           Grid.Column="0"/>
+                                <RadioButton x:Name="Amount" Content="Amount" IsChecked="True" 
+                                             Grid.Column="1" HorizontalAlignment="Stretch" 
+                                             VerticalAlignment="Center" IsEnabled="False"/>
+                                <RadioButton x:Name="Percentage" Content="Percentage" 
+                                             Grid.Column="2" HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Center" IsEnabled="False"/>
+                            </Grid>
+
+                            <TextBlock Text="EXTRA COSTS" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
+
+                            <Grid Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <!-- Set General Requirements/GC's -->
+                                <TextBlock Text="General Costs" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="0" Margin="0 0 0 5"/>
+                                <TextBox x:Name="GeneralCosts" Padding="2" 
+                                         HorizontalAlignment="Stretch" Grid.Column="1" 
+                                         Grid.Row="0" Margin="0 0 0 5" IsEnabled="False" 
+                                         KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="GeneralCostsButton" Content="Set" 
+                                        Grid.Column="2" Grid.Row="0" Margin="0 0 0 5"
+                                        Click="GeneralCosts_Click" IsEnabled="False"/>
+                                <!--======================-->
+                                <!-- Set Design Contingency -->
+                                <TextBlock Text="Design Contingency" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="1" Margin="0 0 0 5"/>
+                                <TextBox x:Name="DesignContingency" Padding="2" HorizontalAlignment="Stretch" 
+                                             Grid.Column="1" Grid.Row="1" Margin="0 0 0 5" IsEnabled="False" 
+                                         KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="DesignContingencyButton" Content="Set" Grid.Column="2" Grid.Row="1" 
+                                        Margin="0 0 0 5" Click="DesignContingency_Click" IsEnabled="False"/>
+                                <!--======================-->
+                                <!-- Set Build Contingency -->
+                                <TextBlock Text="Build Contingency" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="2" Margin="0 0 0 5"/>
+                                <TextBox x:Name="BuildContingency" Padding="2" HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="2" Margin="0 0 0 5" IsEnabled="False"
+                                         KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="BuildContingencyButton" Content="Set" Grid.Column="2" Grid.Row="2" 
+                                        Margin="0 0 0 5" Click="BuildContingency_Click" IsEnabled="False"/>
+                                <!--======================-->
+                                <!-- Set CCIP -->
+                                <TextBlock Text="CCIP" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="3" Margin="0 0 0 5"/>
+                                <TextBox x:Name="CCIP" Padding="2" HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="3" Margin="0 0 0 5" IsEnabled="False"
+                                         KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="CCIPButton" Content="Set" Grid.Column="2" Grid.Row="3" 
+                                        Margin="0 0 0 5" Click="CCIP_Click" IsEnabled="False"/>
+                                <!-- Set CM FEE -->
+                                <TextBlock Text="CM Fee" VerticalAlignment="Center" Grid.Column="0"
+                                               Grid.Row="4" Margin="0 0 0 5"/>
+                                <TextBox x:Name="CMFee" Padding="2" HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="4" Margin="0 0 0 5" IsEnabled="False"
+                                         KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="CMFeeButton" Content="Set" Grid.Column="2" Grid.Row="4" 
+                                        Margin="0 0 0 5" Click="CMFee_Click" IsEnabled="False"/>
+                                <!-- Set Percentage -->
+                                <TextBlock Text="Percentage" VerticalAlignment="Center" 
+                                           Grid.Column="0" Grid.Row="5" Margin="0 0 0 5"/>
+                                <TextBox x:Name="OtherCostsPercentage" Padding="2" IsEnabled="False" 
+                                         HorizontalAlignment="Stretch" 
+                                         Grid.Column="1" Grid.Row="5" 
+                                         Margin="0 0 0 5" Background="#e2e2e2"
+                                         KeyUp="OnKeyUpHandler"/>
+                                <Button x:Name="OtherCostsPercentageButton" IsEnabled="False" 
+                                        Content="Set" Grid.Column="2" Grid.Row="5" 
+                                        Margin="0 0 0 5"/>
+                            </Grid>
+                            <!--========================-->
+                            <!--====================-->
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <!--===================-->
+                <!--Stacking Tab-->
+                <TabItem Header="Stacking" Padding="5">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
+                                      CanContentScroll="False">
+                        <StackPanel VerticalAlignment="Stretch">
+                            <!--Stacking Programs Controllers-->
+                            <TextBlock Text="Stacking Programs" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+
+                            <Grid x:Name="ProgramsStackingGrid" Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.25*"/>
+                                    <ColumnDefinition Width="1.25*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <!--=========================-->
+                <!--Visualization Settings Tab-->
+                <TabItem Header="Visualization" Padding="5">
+                    <ScrollViewer Padding="5" VerticalScrollBarVisibility="Auto"
+                                      CanContentScroll="False">
+                        <StackPanel>
+                            <!--Departments' Colors-->
+                            <TextBlock Text="Visualization Colors" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+
+                            <!--Project Color-->
+                            <TextBlock Text="PROJECT'S COLOR" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
+
+                            <Grid x:Name="ProjectColorPicker" HorizontalAlignment="Stretch"
+                                  Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Label For ProjectBox's ColorPicker -->
+                                <Label Content="PROJECT" Height="30" FontSize="14"
+                                       FontWeight="DemiBold" Grid.Column="0"
+                                       HorizontalContentAlignment="Left"
+                                       VerticalContentAlignment="Center"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Center" 
+                                       BorderBrush="Black" BorderThickness="0.3"/>
+
+                                <!-- ColorPicker For The Project's Box -->
+                                <wpfTool:ColorPicker x:Name="ProjectBoxColorPicker"
+                                                 IsEnabled="False" Grid.Column="1"
+                                                 SelectedColorChanged="ColorPicker_Changed"
+                                                 Height="30" HorizontalAlignment="Stretch"
+                                                 VerticalAlignment="Center" SelectedColor="Gray"/>
+                            </Grid>
+
+                            <!--Departments' Colors-->
+                            <TextBlock Text="DEPARTMENTS' COLOR" FontSize="15" 
+                                       FontWeight="Bold" Margin="0 10 0 0"/>
+                            <Grid x:Name="DepartmentsColorPicker" HorizontalAlignment="Stretch"
+                                  Margin="0 10 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <!--=========================-->
+            </TabControl>
+            <!--=====================-->
+            <!-- Output Tab -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Visualization Frame-->
+                <HelixToolkit:HelixViewport3D x:Name="Viewport" Grid.Row="0"
+                                          ZoomExtentsWhenLoaded="True" 
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch">
+
+                    <!-- Remember to add light to the scene -->
+                    <HelixToolkit:SunLight/>
+
+                    <!-- The content of this visual is defined in MainViewModel.cs -->
+                    <ModelVisual3D x:Name="Visualization" Content="{Binding Model}"/>
+
+                    <!-- You can also add elements here in the xaml -->
+                    <HelixToolkit:GridLinesVisual3D Width="300" Length="300" MinorDistance="10" MajorDistance="100" Thickness="0.5"/>
+                </HelixToolkit:HelixViewport3D>
+                <!--===================-->
+                <!--Output Data Window-->
+                <Border BorderBrush="Black" BorderThickness="0.5"  Grid.Row="1"
+                        Padding="5 0 0 0">
+                    <Grid x:Name="OutputData">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Detail Column-->
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Construction Cost TextBlock-->
+                            <Grid Grid.Row ="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="ConstructionCostLable" Grid.Row ="0"
+                                   Text="Construction Cost: " FontSize="18" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                                <TextBlock x:Name="ConstructionCost" Grid.Row ="1"
+                                       FontSize="18" FontWeight="SemiBold"
+                                       VerticalAlignment="Top"/>
+                            </Grid>
+
+                            <!--Project Cost TextBlock-->
+                            <Grid Grid.Row ="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="ProjectCostLabel" Grid.Row ="0"
+                                   Text="Project Cost: " FontSize="18" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                                <TextBlock x:Name="ProjectCost" Grid.Row ="1"
+                                       FontSize="18" FontWeight="SemiBold"
+                                       VerticalAlignment="Top"/>
+                            </Grid>
+
+                            <!--Budget Difference TextBlock-->
+                            <Grid Grid.Row ="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="BudgetDifferenceLabel" Grid.Row ="0"
+                                   Text="Budget Difference: " FontSize="18" FontWeight="Bold"
+                                   VerticalAlignment="Center"/>
+                                <TextBlock x:Name="BudgetDifference" Grid.Row ="1"
+                                       FontSize="18" FontWeight="SemiBold"
+                                       VerticalAlignment="top"/>
+                            </Grid>
+                        </Grid>
+                        <!--=============-->
+                        <!--General Information-->
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*"/>
+                                <RowDefinition Height="3*"/>
+                            </Grid.RowDefinitions>
+                            <!--Cost Per GSF -->
+                            <Grid Grid.Row="0" Background="#8eead4">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="CostPerGSFLable" Grid.Row="0" 
+                                       Text="Cost/GSF (Mid, Inluding Land Cost):"
+                                       FontSize="18" FontWeight="Bold"
+                                       VerticalAlignment="Top" Padding="5 0 0 0"/>
+                                <TextBlock x:Name="CostPerGSF" Grid.Row="1" 
+                                           VerticalAlignment="Stretch" FontWeight="SemiBold"
+                                           FontSize="18" Padding="5 0 0 0"/>
+                                <Grid/>
+                            </Grid>
+                            <!--===================-->
+
+                            <!-- BGSF Total and Limit-->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--Total BGSF-->
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="TotalBGSFLabel" Grid.Row="0"
+                                           Text="Total BGSF"
+                                           HorizontalAlignment="Center"
+                                           FontSize="30" FontWeight="Bold"
+                                           TextBlock.Foreground="#53c4e8"/>
+                                    <TextBlock x:Name="TotalBGSF" Grid.Row="1"
+                                           HorizontalAlignment="Center"
+                                           FontSize="30" FontWeight="SemiBold"
+                                           TextBlock.Foreground="#53c4e8"/>
+                                </Grid>
+
+                                <!--BGSF Limit-->
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="BGSFLimitLabel" Grid.Row="0"
+                                           Text="BGSF Limit"
+                                           HorizontalAlignment="Center"
+                                           FontSize="30" FontWeight="Bold"/>
+                                    <TextBlock x:Name="BGSFLimit" Grid.Row="1"
+                                           HorizontalAlignment="Center" 
+                                           FontSize="30" FontWeight="SemiBold"/>
+                                </Grid>
+                            </Grid>
+                            <!--=====================-->
+                        </Grid>
+                        <!--====================-->
+                    </Grid>
+                </Border>
+                <!--===========-->
+            </Grid>
+            <!--============-->
+        </Grid>
+        <!--===================================-->
+    </Border>
+</Window>

@@ -1,0 +1,104 @@
+﻿<Window x:Class="SpaceStacker.GenerateInitialDataWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SpaceStacker"
+        mc:Ignorable="d"
+        Title="Generate Data" Height="910" Width="910" Icon="/Resources/SpaceStacker_Icon.ico">
+
+
+    <Border x:Name="InitialDataSubWindowContainer" Padding="10">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!--Welcome Header-->
+                <TextBlock Text="Generate Initial Program Data" HorizontalAlignment="Stretch"
+                                   Margin="0 20 0 0" FontWeight="Bold" FontSize="20" 
+                                       Background="#ced6e2" TextAlignment="Center"/>
+                <!--==============-->
+                <Grid x:Name="ProgramsDataChart" Margin="0 30 0 0"
+                  HorizontalAlignment="Stretch" MinWidth="870">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="Name" HorizontalAlignment="Center"
+                       FontSize="16" FontWeight="Bold" 
+                       Grid.Column="0" Grid.Row="0"/>
+                    <Label Content="Cost/FT²" HorizontalAlignment="Center"
+                       FontSize="16" FontWeight="Bold" 
+                       Grid.Column="1" Grid.Row="0"/>
+                    <Label Content="Initial Count" HorizontalAlignment="Center"
+                       FontSize="16" FontWeight="Bold" 
+                       Grid.Column="2" Grid.Row="0"/>
+                    <Label Content="Count Range" HorizontalAlignment="Center"
+                       FontSize="16" FontWeight="Bold" 
+                       Grid.Column="3" Grid.Row="0"/>
+                    <Label Content="Initial Gross(FT²)" HorizontalAlignment="Center"
+                       FontSize="16" FontWeight="Bold" 
+                       Grid.Column="4" Grid.Row="0"/>
+                    <Label Content="Gross Range(FT²)" HorizontalAlignment="Center"
+                       FontSize="16" FontWeight="Bold" 
+                       Grid.Column="5" Grid.Row="0"/>
+
+                    <Label Content="MEP" HorizontalAlignment="Center"
+                       FontSize="14" FontWeight="DemiBold"
+                       Grid.Column="0" Grid.Row="1" Margin="2.5 10 2.5 2.5"/>
+                    <TextBox x:Name="MEPCost" Padding="2" Margin="2.5 10 2.5 2.5"
+                             Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+
+                    <Label Content="Circulation" HorizontalAlignment="Center"
+                       FontSize="14" FontWeight="DemiBold"
+                       Grid.Column="0" Grid.Row="2" Margin="2.5 0 2.5 2.5"/>
+                    <TextBox x:Name="CirculationCost" Padding="2" Margin="2.5 0 2.5 2.5"
+                             Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"/>
+
+                    <Label Content="BES" HorizontalAlignment="Center"
+                       FontSize="14" FontWeight="DemiBold" 
+                       Grid.Column="0" Grid.Row="3" Margin="2.5 0 2.5 5"/>
+                    <TextBox x:Name="BESCost" Padding="2" Margin="2.5 0 2.5 5"
+                             Grid.Column="1" Grid.Row="3" VerticalAlignment="Center"/>
+                </Grid>
+
+                <Grid Width="300">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="AddRemoveGrid" Margin="0 10 0 0"
+                      Grid.Row="0" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="AddProgramButton" Content="Add Program"
+                            Grid.Column="0" HorizontalAlignment="Stretch"
+                                Margin="0 0 2.5 0" Click="AddProgramData_Click"/>
+                        <Button x:Name="RemoveProgramButton" Content="Remove Program"
+                            Grid.Column="2" HorizontalAlignment="Stretch"
+                                Margin="2.5 0 0 0" Click="RemoveProgramData_Click"/>
+                    </Grid>
+
+                    <Button x:Name="SetInitialDataButton" Content="Generate Programs"
+                            VerticalAlignment="Stretch"  Grid.Row="1" 
+                            Margin="0 5 0 0" Click="GenerateProgramData_Click"/>
+                </Grid>
+            </StackPanel>
+
+        </ScrollViewer>
+    </Border>
+</Window>
