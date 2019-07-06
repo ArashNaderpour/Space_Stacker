@@ -11,6 +11,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Windows.Navigation;
+using System.Diagnostics;
 
 namespace SpaceStacker
 {
@@ -2682,6 +2684,13 @@ namespace SpaceStacker
         }
 
         /* ########################################################### Introduction Tab Events ########################################################### */
+
+        /* ----------------------------------- Handeling Website Hyperlink ----------------------------------- */
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
 
         /* ----------------------------------- Handeling Programs Excel Image Maximize Image Event ----------------------------------- */
         private void MaximizeExcelImage(object sender, RoutedEventArgs e)
