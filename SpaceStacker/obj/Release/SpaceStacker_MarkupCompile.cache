@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Debug\
+C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Release\
 SpaceStacker
 none
 false
-DEBUG;TRACE
+TRACE
 C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\App.xaml
 8896789306
 
-19-1389488737
+151857382909
 78-948931854
 ExcelImageSubWindow.xaml;GenerateInitialDataWindow.xaml;MainWindow.xaml;ModifyProgramDataWindow.xaml;ProgramsInformationSubWindow.xaml;ProgramsSubWindow.xaml;GenerateDataImageSubWindow.xaml;ViewportImageSubWindow.xaml;
 
-True
+False
 
