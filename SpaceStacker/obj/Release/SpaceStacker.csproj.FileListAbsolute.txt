@@ -52,3 +52,4 @@ C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Release\S
 C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Release\SpaceStacker.csproj.CopyComplete
 C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Release\SpaceStacker.exe
 C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Release\SpaceStacker.pdb
+C:\Users\anaderpour\Desktop\Personal\C#\Space_Stacker\SpaceStacker\obj\Release\SpaceStacker.csprojAssemblyReference.cache

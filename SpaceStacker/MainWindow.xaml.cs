@@ -2950,7 +2950,7 @@ namespace SpaceStacker
 
             List<string> departmentNames = new List<string>();
             List<int> numOfPrograms = new List<int>();
-            List<string> projectDimensions = new List<string> { this.ProjectWidth.Text, this.ProjectLength.Text, this.ProjectHeight.Text };
+            List<string> projectDimensions = new List<string> { this.ProjectWidth.Text, this.ProjectLength.Text, this.ProjectHeight.Text, this.FloorHeight.Text };
 
             // Store Required Data Into The Dictionary
 
@@ -3082,6 +3082,7 @@ namespace SpaceStacker
                     this.ProjectWidth.Text = projectDimensions[0];
                     this.ProjectLength.Text = projectDimensions[1];
                     this.ProjectHeight.Text = projectDimensions[2];
+                    this.FloorHeight.Text = projectDimensions[3];
                     this.NumberOfDepartments.Text = (string)loadData["NumberOfTheDepartments"];
                     this.TotalBudget.Text = ExtraMethods.CastDollar(this.totalBudget);
                     this.IndirectMultiplier.Text = this.indirectMultiplier.ToString();
@@ -3251,7 +3252,6 @@ namespace SpaceStacker
                             Slider keyRooms = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Rooms" + j.ToString()) as Slider;
                             Slider DGSF = LogicalTreeHelper.FindLogicalNode(department, department.Name + "DGSF" + j.ToString()) as Slider;
                             Label labelElement = LogicalTreeHelper.FindLogicalNode(department, department.Name + "Label" + j.ToString()) as Label;
-                            float programLength = ((float)(keyRooms.Value * DGSF.Value)) / float.Parse(ProjectWidth.Text);
 
                             // Generate Gradient Colors For Programs Of Each Department
                             float stop = ((float)j / (float)(numOfPrograms[i]));
@@ -3261,7 +3261,8 @@ namespace SpaceStacker
                             ExtraMethods.ChangeLabelColor(department, j, gradient);
 
                             string programBoxName = department.Name + "ProgramBox" + j.ToString();
-                            float[] programBoxDims = { float.Parse(this.ProjectWidth.Text), programLength, this.initialProgramHeight };
+                            float[] programBoxDims = { this.boxesOfTheProject[programBoxName].boxDims[0], this.boxesOfTheProject[programBoxName].boxDims[1],
+                                this.boxesOfTheProject[programBoxName].boxDims[2] };
                             Point3D programBoxCenter = this.boxesOfTheProject[programBoxName].boxCenter;
                             Material programBoxMaterial = MaterialHelper.CreateMaterial(Color.FromRgb(gradient[0], gradient[1], gradient[2]));
 
